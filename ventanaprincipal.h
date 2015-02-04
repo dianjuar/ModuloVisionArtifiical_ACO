@@ -1,7 +1,8 @@
 #ifndef VENTANAPRINCIPAL_H
 #define VENTANAPRINCIPAL_H
 
-#include <QMainWindow>
+#include "INCLUDE_QTstuff.h"
+#include "stand_capturadorimagen.h"
 
 namespace Ui {
 class VentanaPrincipal;
@@ -13,10 +14,21 @@ class VentanaPrincipal : public QMainWindow
     
 public:
     explicit VentanaPrincipal(QWidget *parent = 0);
+    void set_labelDisplay( QImage QI);
     ~VentanaPrincipal();
     
+private slots:
+    void on_pushButton_clicked();
+    void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
+    void listen_matFromVideoCapture(QImage qi);
+    void contectar_HiloCapturadorWITHVentanaPrincipal();
+
+
 private:
     Ui::VentanaPrincipal *ui;
+    STAND_capturadorImagen *cap;
+
+    QImage convert_Mat2QImage(Mat);
 };
 
 #endif // VENTANAPRINCIPAL_H

@@ -9,10 +9,16 @@ QT       += core gui
 TARGET = ModuloDeVisionArtificial_1_1+GIT
 TEMPLATE = app
 
+LIBS += `pkg-config opencv --libs`
+
 
 SOURCES += main.cpp\
-        ventanaprincipal.cpp
+        ventanaprincipal.cpp \
+    stand_capturadorimagen.cpp
 
-HEADERS  += ventanaprincipal.h
+HEADERS  += ventanaprincipal.h \
+    stand_capturadorimagen.h \
+    INCLUDE_opencv.h \
+    INCLUDE_QTstuff.h
 
 FORMS    += ventanaprincipal.ui
