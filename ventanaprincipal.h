@@ -3,9 +3,12 @@
 
 #include "INCLUDE_QTstuff.h"
 #include "stand_capturadorimagen.h"
+#include "config_cropper.h"
+#include "stand_Tools.h"
 
-namespace Ui {
-class VentanaPrincipal;
+namespace Ui
+{
+    class VentanaPrincipal;
 }
 
 class VentanaPrincipal : public QMainWindow
@@ -14,35 +17,30 @@ class VentanaPrincipal : public QMainWindow
     
 public:
     explicit VentanaPrincipal(QWidget *parent = 0);
-    void set_labelDisplay( QImage QI);
+    void set_labelDisplay( Mat );
     ~VentanaPrincipal();
     
 private slots:
-    void on_pushButton_clicked();
     void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
-    void listen_matFromVideoCapture(QImage qi);
-
-
+    void listen_matFromVideoCapture();
     void on_btn_siguiente_clicked();
-
     void on_tabWidget_currentChanged(int index);
-
     void on_btn_atras_clicked();
 
 private:
     Ui::VentanaPrincipal *ui;
-    STAND_capturadorImagen *cap;
+
+    //objetos de las clases necesarias para la calibración
+    STAND::capturadorImagen *cap;
+    CONFIG::cropper crop;
+
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
-    void set_valueProgresBar(int value);
 
     int config_index;
     int config_Netapas;
-    int config_progresStatus;
-    bool *config_etapaCompletada;
 
     bool F1_dispositivoValido;
-    QImage convert_Mat2QImage(Mat);
 };
 
 #endif // VENTANAPRINCIPAL_H

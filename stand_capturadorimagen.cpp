@@ -1,26 +1,36 @@
 #include "stand_capturadorimagen.h"
 
+using namespace STAND;
 
-void STAND_capturadorImagen::run()
+void capturadorImagen::run()
 {
-    if(modo_elegido==Modo_Video && vc.isOpened())
-    {
+   // if(modo_elegido==Modo_Video && vc.isOpened())
+   // {
         while(1)
         {
             {
                 QMutexLocker locker(&m_mutex);
                 if (thread_stop) break;
                 ///////////////////////////
-                vc >> Imagen;
-                this->tell_Mat( Mat2QImage(Imagen) );
+                switch(modo_elegido)
+                {
+                    case Modo_Video:
+                        vc >> Imagen;
+                        this->tell();
+                    break;
+
+                    case Modo_ImagenStatica:
+                        this->tell();
+                    break;
+                }
                 ///////////////////////////
             }
-            msleep(1);
+            msleep( modo_elegido == Modo_Video? 1:150 );
         }
-    }
+    //}
 }
 
-STAND_capturadorImagen::STAND_capturadorImagen(int modo, int devise)
+capturadorImagen::capturadorImagen(int modo, int devise)
 {
     thread_stop = false;
 
@@ -39,52 +49,25 @@ STAND_capturadorImagen::STAND_capturadorImagen(int modo, int devise)
     }
 }
 
-STAND_capturadorImagen::~STAND_capturadorImagen()
+capturadorImagen::~capturadorImagen()
 {
     stop();
     vc.release();
 }
 
-void STAND_capturadorImagen::stop()
+Mat capturadorImagen::getImagen()
+{
+    return Imagen;
+}
+
+void capturadorImagen::stop()
 {
     QMutexLocker locker(&m_mutex);
     thread_stop = true;
 }
 
-QImage STAND_capturadorImagen::Mat2QImage(Mat m)
+bool capturadorImagen::isCamaraAbierta()
 {
-    if(Imagen.type()==CV_8UC1)
-    {
-        // Set the color table (used to translate colour indexes to qRgb values)
-        QVector<QRgb> colorTable;
-        for (int i=0; i<256; i++)
-            colorTable.push_back(qRgb(i,i,i));
-        // Copy input Mat
-        const uchar *qImageBuffer = (const uchar*)Imagen.data;
-        // Create QImage with same dimensions as input Mat
-        QImage img(qImageBuffer, Imagen.cols, Imagen.rows, Imagen.step, QImage::Format_Indexed8);
-        img.setColorTable(colorTable);
-
-        return img;
-    }
-    // 8-bits unsigned, NO. OF CHANNELS=3
-    if(Imagen.type()==CV_8UC3)
-    {
-        // Copy input Mat
-        const uchar *qImageBuffer = (const uchar*)Imagen.data;
-        // Create QImage with same dimensions as input Mat
-        QImage img(qImageBuffer, Imagen.cols, Imagen.rows, Imagen.step, QImage::Format_RGB888);
-        return img.rgbSwapped();
-    }
-    else
-    {
-        qDebug() << "ERROR: Mat could not be converted to QImage.";
-        return QImage();
-    }
-}
-
-bool STAND_capturadorImagen::isCamaraAbierta()
-{
-    return vc.isOpened();
+    return modo_elegido==Modo_Video? vc.isOpened() : true;
 }
 

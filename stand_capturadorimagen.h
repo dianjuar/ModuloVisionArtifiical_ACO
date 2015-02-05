@@ -4,26 +4,30 @@
 #include "INCLUDE_opencv.h"
 #include "INCLUDE_QTstuff.h"
 
-class STAND_capturadorImagen : public QThread
+namespace STAND
+{
+
+class capturadorImagen : public QThread
 {
     Q_OBJECT
 public:
     static int const Modo_ImagenStatica=0;
     static int const Modo_Video=1;
 
-    STAND_capturadorImagen(int modo=0, int devise=-1);
-    STAND_capturadorImagen(){}
-    ~STAND_capturadorImagen();
+    capturadorImagen(int modo=0, int devise=-1);
+    capturadorImagen(){}
+    ~capturadorImagen();
 
-    Mat getImagen_MatCV();
+    Mat getImagen();
 
     bool isCamaraAbierta();
+
 
 public slots:
         void stop();
 
 signals:
-        void tell_Mat(QImage);
+        void tell();
 private:
 
     //sincronización del hilo
@@ -42,5 +46,7 @@ private:
     void run();
 
 };
+
+}
 
 #endif // STAND_CAPTURADORIMAGEN_H

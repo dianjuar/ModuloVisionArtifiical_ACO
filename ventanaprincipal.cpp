@@ -11,36 +11,32 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     for(int i=1;i<ui->tabWidget->count();i++)
         ui->tabWidget->setTabEnabled(i,false);
 
-    cap = new STAND_capturadorImagen( STAND_capturadorImagen::Modo_Video, ui->Q_Ndispositivo_SpinBox->value() );
-
+    cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_ImagenStatica, ui->Q_Ndispositivo_SpinBox->value() );
     contectar_HiloCapturadorWITHVentanaPrincipal();
+    crop = CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
-    config_etapaCompletada = new bool[ config_Netapas ];
-    config_progresStatus =0;
-
-    for(int i =0; i < config_Netapas; i++)
-        config_etapaCompletada[i] = false;
-
-
-
 }
 
-void VentanaPrincipal::set_labelDisplay(QImage QI)
+void VentanaPrincipal::set_labelDisplay(Mat m)
 {
-    ui->label_display->setPixmap( QPixmap::fromImage(QI) );
-}
+    switch(config_index)
+    {
+        case 0:
+            ui->label_displayF0->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage(m) ) );
+        break;
+        case 1:
+            crop.calibracion( m );
+            ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop.get_ImagenRayada() ) ) );
+        break;
+    }
 
+}
 
 VentanaPrincipal::~VentanaPrincipal()
 {
     delete ui;
-}
-
-void VentanaPrincipal::on_pushButton_clicked()
-{
-    ui->tabWidget->setTabEnabled(2,false);
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
@@ -49,24 +45,21 @@ void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
         disconnect(cap, SIGNAL(tell_Mat(QImage)),
                    this, SLOT(listen_matFromVideoCapture(QImage)));
 
-    cap->~STAND_capturadorImagen();
-    set_labelDisplay( QImage("./media/CamNOT_FOUND.png") );
+    cap->~capturadorImagen();
+    ui->label_displayF0->setPixmap( QPixmap::fromImage(QImage("./media/CamNOT_FOUND.png")) );
 
-    cap = new STAND_capturadorImagen(STAND_capturadorImagen::Modo_Video, arg1 );
-
+    cap = new STAND::capturadorImagen(STAND::capturadorImagen::Modo_Video, arg1 );
     contectar_HiloCapturadorWITHVentanaPrincipal();
 }
 
-void VentanaPrincipal::listen_matFromVideoCapture(QImage qi)
+void VentanaPrincipal::listen_matFromVideoCapture()
 {
-    set_labelDisplay(qi);
+    set_labelDisplay( cap->getImagen() );
 }
 
-//el hilo lanzará la matriz proveniente de la camara y VentanaPrincipal la captará y la pondrá en la pantalla
+//el hilo hará una llamada cada vez que capture una imagen por la cámara y la ventana principal atenderá esa llamada
 void VentanaPrincipal::contectar_HiloCapturadorWITHVentanaPrincipal()
 {
-
-
     F1_dispositivoValido = false;
     cap->start();
 
@@ -74,19 +67,13 @@ void VentanaPrincipal::contectar_HiloCapturadorWITHVentanaPrincipal()
     {
         F1_dispositivoValido=true;
 
-        connect(cap, SIGNAL(tell_Mat(QImage)),
-            this, SLOT(listen_matFromVideoCapture(QImage)));
+        connect(cap, SIGNAL(tell()),
+                this, SLOT(listen_matFromVideoCapture()));
     }
     else
     {
         qDebug()<<"no se pudo abrir el dispositivo";
     }
-}
-
-void VentanaPrincipal::set_valueProgresBar(int value)
-{
-    config_progresStatus = value;
-    ui->progressBar->setValue( config_progresStatus );
 }
 
 void VentanaPrincipal::on_btn_siguiente_clicked()
@@ -99,8 +86,15 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->btn_atras->setEnabled(true);
                 ui->tabWidget->setCurrentIndex(config_index);
+                qDebug()<<config_index;
+            }
+        break;
 
-                set_valueProgresBar( config_progresStatus+10 );
+        case 1:
+            if(crop.hayContenedor())
+            {
+                ui->tabWidget->setTabEnabled(++config_index,true);
+                ui->tabWidget->setCurrentIndex(config_index);
 
                 qDebug()<<config_index;
             }
@@ -111,6 +105,21 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 void VentanaPrincipal::on_tabWidget_currentChanged(int index)
 {
     config_index=index;
+
+    switch(config_index)
+    {
+        case 0:
+            ui->progressBar->setValue( 0);
+        break;
+
+        case 1:
+            ui->progressBar->setValue( 10 );
+        break;
+
+        case 2:
+            ui->progressBar->setValue( 30 );
+        break;
+    }
 }
 
 void VentanaPrincipal::on_btn_atras_clicked()
@@ -120,12 +129,5 @@ void VentanaPrincipal::on_btn_atras_clicked()
         ui->tabWidget->setCurrentIndex(--config_index);
         if(config_index ==0)
             ui->btn_atras->setEnabled(false);
-
-        switch(config_index)
-        {
-            case 0:
-                set_valueProgresBar(0);
-            break;
-        }
     }
 }

@@ -14,11 +14,14 @@ LIBS += `pkg-config opencv --libs`
 
 SOURCES += main.cpp\
         ventanaprincipal.cpp \
-    stand_capturadorimagen.cpp
+    stand_capturadorimagen.cpp \
+    config_cropper.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
     INCLUDE_opencv.h \
-    INCLUDE_QTstuff.h
+    INCLUDE_QTstuff.h \
+    config_cropper.h \
+    stand_Tools.h
 
 FORMS    += ventanaprincipal.ui
