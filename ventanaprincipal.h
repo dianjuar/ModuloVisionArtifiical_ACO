@@ -23,11 +23,23 @@ private slots:
     void listen_matFromVideoCapture(QImage qi);
 
 
+    void on_btn_siguiente_clicked();
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_btn_atras_clicked();
+
 private:
     Ui::VentanaPrincipal *ui;
     STAND_capturadorImagen *cap;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
+    void set_valueProgresBar(int value);
+
+    int config_index;
+    int config_Netapas;
+    int config_progresStatus;
+    bool *config_etapaCompletada;
 
     bool F1_dispositivoValido;
     QImage convert_Mat2QImage(Mat);

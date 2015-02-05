@@ -15,6 +15,16 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     contectar_HiloCapturadorWITHVentanaPrincipal();
 
+    config_index =0;
+    config_Netapas = ui->tabWidget->count();
+    config_etapaCompletada = new bool[ config_Netapas ];
+    config_progresStatus =0;
+
+    for(int i =0; i < config_Netapas; i++)
+        config_etapaCompletada[i] = false;
+
+
+
 }
 
 void VentanaPrincipal::set_labelDisplay(QImage QI)
@@ -70,5 +80,52 @@ void VentanaPrincipal::contectar_HiloCapturadorWITHVentanaPrincipal()
     else
     {
         qDebug()<<"no se pudo abrir el dispositivo";
+    }
+}
+
+void VentanaPrincipal::set_valueProgresBar(int value)
+{
+    config_progresStatus = value;
+    ui->progressBar->setValue( config_progresStatus );
+}
+
+void VentanaPrincipal::on_btn_siguiente_clicked()
+{
+    switch(config_index)
+    {
+        case 0:
+            if(cap->isCamaraAbierta())
+            {
+                ui->tabWidget->setTabEnabled(++config_index,true);
+                ui->btn_atras->setEnabled(true);
+                ui->tabWidget->setCurrentIndex(config_index);
+
+                set_valueProgresBar( config_progresStatus+10 );
+
+                qDebug()<<config_index;
+            }
+        break;
+    }
+}
+
+void VentanaPrincipal::on_tabWidget_currentChanged(int index)
+{
+    config_index=index;
+}
+
+void VentanaPrincipal::on_btn_atras_clicked()
+{
+    if(config_index!=0)
+    {
+        ui->tabWidget->setCurrentIndex(--config_index);
+        if(config_index ==0)
+            ui->btn_atras->setEnabled(false);
+
+        switch(config_index)
+        {
+            case 0:
+                set_valueProgresBar(0);
+            break;
+        }
     }
 }
