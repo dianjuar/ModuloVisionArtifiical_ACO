@@ -3,7 +3,7 @@
 
 void STAND_capturadorImagen::run()
 {
-    if(modo_elegido==Modo_Video)
+    if(modo_elegido==Modo_Video && vc.isOpened())
     {
         while(1)
         {
@@ -43,7 +43,6 @@ STAND_capturadorImagen::~STAND_capturadorImagen()
 {
     stop();
     vc.release();
-    //delete this;
 }
 
 void STAND_capturadorImagen::stop()

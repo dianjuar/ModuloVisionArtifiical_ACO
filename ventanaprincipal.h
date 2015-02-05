@@ -21,13 +21,15 @@ private slots:
     void on_pushButton_clicked();
     void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
     void listen_matFromVideoCapture(QImage qi);
-    void contectar_HiloCapturadorWITHVentanaPrincipal();
 
 
 private:
     Ui::VentanaPrincipal *ui;
     STAND_capturadorImagen *cap;
 
+    void contectar_HiloCapturadorWITHVentanaPrincipal();
+
+    bool F1_dispositivoValido;
     QImage convert_Mat2QImage(Mat);
 };
 
