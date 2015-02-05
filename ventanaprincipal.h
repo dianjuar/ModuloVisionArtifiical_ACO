@@ -4,6 +4,7 @@
 #include "INCLUDE_QTstuff.h"
 #include "stand_capturadorimagen.h"
 #include "config_cropper.h"
+#include "config_umbralizador.h"
 #include "stand_Tools.h"
 
 namespace Ui
@@ -27,12 +28,16 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_btn_atras_clicked();
 
+    void on_slider_umbralBlackAndWhite_valueChanged(int value);
+
 private:
     Ui::VentanaPrincipal *ui;
 
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
-    CONFIG::cropper crop;
+    CONFIG::cropper *crop;
+    CONFIG::umbralizador *umb;
+
 
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();

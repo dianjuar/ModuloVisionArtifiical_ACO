@@ -13,7 +13,9 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_ImagenStatica, ui->Q_Ndispositivo_SpinBox->value() );
     contectar_HiloCapturadorWITHVentanaPrincipal();
-    crop = CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
+
+    crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
+    umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -27,8 +29,15 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             ui->label_displayF0->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage(m) ) );
         break;
         case 1:
-            crop.calibracion( m );
-            ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop.get_ImagenRayada() ) ) );
+            crop->calibracion( m );
+            ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop->get_ImagenRayada() ) ) );
+        break;
+        case 2:
+
+            Mat mCropeed = m.clone() ;
+            crop->cortarImagen(mCropeed);            
+            umb->calibracion( mCropeed );
+            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite() ) ) );
         break;
     }
 
@@ -91,7 +100,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
         break;
 
         case 1:
-            if(crop.hayContenedor())
+            if(crop->hayContenedor())
             {
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
@@ -119,6 +128,10 @@ void VentanaPrincipal::on_tabWidget_currentChanged(int index)
         case 2:
             ui->progressBar->setValue( 30 );
         break;
+
+        case 3:
+            ui->progressBar->setValue( 40 );
+        break;
     }
 }
 
@@ -130,4 +143,9 @@ void VentanaPrincipal::on_btn_atras_clicked()
         if(config_index ==0)
             ui->btn_atras->setEnabled(false);
     }
+}
+
+void VentanaPrincipal::on_slider_umbralBlackAndWhite_valueChanged(int value)
+{
+    umb->setUmbral( value );
 }

@@ -27,6 +27,21 @@ void cropper::calibracion(Mat mat)
     rectangle(imagen_Rayada,contenedor,Scalar(0,0,255), 2);
 }
 
+void cropper::cortarImagen(Mat &m)
+{
+    m = m( contenedor );
+
+    bool ahorroDeCodigo = m.rows > m.cols;
+    tamano_XxX_MatrizCroped = ahorroDeCodigo ? m.rows : m.cols;
+    int centrado = ahorroDeCodigo ? (tamano_XxX_MatrizCroped-m.cols)/2:(tamano_XxX_MatrizCroped-m.rows)/2;
+    copyMakeBorder(m.clone(), m,
+                   ahorroDeCodigo ?  0:centrado,
+                   ahorroDeCodigo ?  0:(centrado + (tamano_XxX_MatrizCroped/2)%2),
+                   ahorroDeCodigo ?  centrado:0,
+                   ahorroDeCodigo ?  (centrado+ (tamano_XxX_MatrizCroped/2)%2):0  ,
+                   BORDER_CONSTANT);
+}
+
 Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
 {
     if(contours.size()!=0)
@@ -62,16 +77,6 @@ cropper::cropper(int canny_umbral_1, int canny_umbral_2)
     this->canny_umbral_1 = canny_umbral_1;
     this->canny_umbral_2 = canny_umbral_2;
     hay_Contenedor = false;
-}
-
-Mat cropper::get_ImagenRayada()
-{
-    return imagen_Rayada;
-}
-
-bool cropper::hayContenedor()
-{
-    return hay_Contenedor;
 }
 
 

@@ -350,7 +350,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider">
+           <widget class="QSlider" name="slider_umbralBlackAndWhite">
             <property name="maximum">
              <number>255</number>
             </property>
@@ -409,7 +409,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_displayF0_2">
+           <widget class="QLabel" name="label_displayF2">
             <property name="text">
              <string/>
             </property>
@@ -549,7 +549,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>horizontalSlider</sender>
+   <sender>slider_umbralBlackAndWhite</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_7</receiver>
    <slot>setNum(int)</slot>
