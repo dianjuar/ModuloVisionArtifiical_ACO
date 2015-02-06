@@ -20,6 +20,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
                                      ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
                                      ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
+    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n_SEGUIMIENTO());
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -170,6 +171,8 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
             {
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
+
+                IntMatB->set_P_InicioYFin( cirD->get_PuntoInicio_SEGUIMIENTO(),cirD->get_PuntoFin_SEGUIMIENTO() );
             }
             break;
         }

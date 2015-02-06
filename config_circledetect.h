@@ -32,6 +32,8 @@ public:
     bool get_calibracionCorrecta(){ return calibracionCorrecta; }
     Point get_Inicio();
     Point get_Fin();
+    Point* get_PuntoInicio_SEGUIMIENTO();
+    Point* get_PuntoFin_SEGUIMIENTO();
 
     //set
     void set_HOUGH_min_dist( int i){ HOUGH_min_dist = i; }

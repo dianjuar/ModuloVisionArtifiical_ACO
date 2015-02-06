@@ -26,6 +26,21 @@ Point circleDetect::get_Fin()
     return c1_esMayor ? c1->centro: c2->centro;
 }
 
+Point *circleDetect::get_PuntoInicio_SEGUIMIENTO()
+{
+    bool c1_esMayor = c1->radio > c2->radio; //el circulo mayor es el de llegada
+
+   return c1_esMayor ? &c2->centro: &c1->centro;
+}
+
+Point *circleDetect::get_PuntoFin_SEGUIMIENTO()
+{
+
+    bool c1_esMayor = c1->radio > c2->radio; //el circulo mayor es el de llegada
+
+    return c1_esMayor ? &c1->centro: &c2->centro;
+}
+
 void circleDetect::calibrar(Mat  &mat_original)
 {
     vector<Vec3f> circulosDetectados;

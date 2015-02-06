@@ -14,14 +14,6 @@ void partirNcuadros::calibrar(Mat &mat_original)
     if(primeraVez)
         set_n(n);
 
-   /* float a = *tamano_XxX_MatrizCroped;
-    float b = n;
-
-    qreal qral=a/b;
-    qDebug()<<*tamano_XxX_MatrizCroped;
-    qDebug()<<"->"<<+qral<<tamano_CuadroPartido_N<<*tamano_XxX_MatrizCroped-tamano_CuadroPartido_N*n<< esNecesarioOtroCuadro<<cuantosCuadrosSonNecesarios;
-    qDebug()<<"****************";*/
-
     Scalar color = Scalar(0,255,0);
 
     for(int i=1; i<n;i++)

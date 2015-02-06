@@ -25,6 +25,7 @@ public:
 
     //getter
     int get_n(){ return n; }
+    int* get_n_SEGUIMIENTO(){ return &n; }
     int get_cuantosCuadrosSonNecesarios(){ return cuantosCuadrosSonNecesarios; }
     bool get_esNecesarioOtroCuadro(){ return esNecesarioOtroCuadro; }
 };

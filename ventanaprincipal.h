@@ -9,6 +9,7 @@
 #include "config_umbralizador.h"
 #include "config_circledetect.h"
 #include "config_partirncuadros.h"
+#include "config_INTMatBuilder.h"
 
 namespace Ui
 {
@@ -49,6 +50,7 @@ private:
     CONFIG::umbralizador *umb;
     CONFIG::circleDetect *cirD;
     CONFIG::partirNcuadros *PNcuadros;
+    CONFIG::INTMatBuilder *IntMatB;
 
 
 
