@@ -40,7 +40,7 @@ public:
     void set_HOUGH_min_radius( int i){ HOUGH_min_radius = i; }
     void set_HOUGH_max_radius( int i){ HOUGH_max_radius = i; }
 
-    void calibracion(Mat &mat_original);
+    void calibrar(Mat &mat_original);
 };
 
 }

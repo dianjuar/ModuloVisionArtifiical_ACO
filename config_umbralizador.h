@@ -15,7 +15,7 @@ class umbralizador
 public:
     umbralizador(int);
 
-    void calibracion(Mat m);
+    void calibrar(Mat m);
     Mat get_BlackAndWhite(){ return blackAndWhite; }
 
     int getUmbral(){ return umbral; }    

@@ -25,7 +25,8 @@ public:
     void set_cannyU_1(int);
     void set_cannyU_2(int);
     Mat get_ImagenRayada(){ return imagen_Rayada; }
-    int get_tamano_MatrizCroped(){ return tamano_XxX_MatrizCroped; }    
+    int get_tamano_MatrizCroped(){ return tamano_XxX_MatrizCroped; }
+    int* get_tamano_MatrizCroped_SEGUIMIENTO(){ return &tamano_XxX_MatrizCroped; }
     bool hayContenedor(){  return hay_Contenedor; }
 
     void calibracion(Mat mat);

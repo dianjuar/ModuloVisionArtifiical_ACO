@@ -26,7 +26,7 @@ Point circleDetect::get_Fin()
     return c1_esMayor ? c1->centro: c2->centro;
 }
 
-void circleDetect::calibracion(Mat  &mat_original)
+void circleDetect::calibrar(Mat  &mat_original)
 {
     vector<Vec3f> circulosDetectados;
 
