@@ -19,7 +19,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     cirD = new CONFIG::circleDetect( ui->slider_HOUGH_min_dist->value(),
                                      ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
                                      ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
-    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
+    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -44,31 +44,31 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case 2:
         {
-            Mat mCropeed = m.clone();
-            crop->cortarImagen(mCropeed);
-            umb->calibracion( mCropeed );
+            Mat mCropped = m.clone();
+            crop->cortarImagen(mCropped);
+            umb->calibrar( mCropped );
             ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite(),true,420 ) ) );
             break;
         }
 
         case 3:
         {
-            Mat mCropeed = m.clone();
-            crop->cortarImagen(mCropeed);
-            cirD->calibracion(mCropeed);
+            Mat mCropped = m.clone();
+            crop->cortarImagen(mCropped);
+            cirD->calibrar(mCropped);
 
-            ui->label_displayF3->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true ) ) );
+            ui->label_displayF3->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true ) ) );
             break;
         }
 
         case 4:
         {
-            Mat mCropeed = m.clone();
-            crop->cortarImagen(mCropeed);
-            cirD->calibracion(mCropeed);
+            Mat mCropped = m.clone();
+            crop->cortarImagen(mCropped);
+            PNcuadros->calibrar(mCropped);
 
-            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true,350) ) );
-            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true,350 ) ) );
+            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350) ) );
+            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350 ) ) );
             break;
         }
 
