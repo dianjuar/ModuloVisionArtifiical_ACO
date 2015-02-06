@@ -43,7 +43,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             mCropeed = m.clone();
             crop->cortarImagen(mCropeed);            
             umb->calibracion( mCropeed );
-            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite() ) ) );
+            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite(),true,480 ) ) );
         break;
 
         case 3:
@@ -104,37 +104,61 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
     switch(config_index)
     {
         case 0:
+        {
             if(cap->isCamaraAbierta())
             {
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->btn_atras->setEnabled(true);
                 ui->tabWidget->setCurrentIndex(config_index);
-                qDebug()<<config_index;
             }
-        break;
+            break;
+        }
 
         case 1:
+       {
             if(crop->hayContenedor())
             {
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
-
-                qDebug()<<config_index;
             }
-        break;
+            break;
+        }
 
         case 2:
+        {
+            ui->tabWidget->setTabEnabled(++config_index,true);
+            ui->tabWidget->setCurrentIndex(config_index);
+
+            qreal hipotenusa = qSqrt( 2*qPow( crop->get_tamano_MatrizCroped(),2 ) );
+            ui->slider_HOUGH_param_2->setMaximum( hipotenusa );
+            ui->slider_HOUGH_param_1->setMaximum( hipotenusa );
+            ui->slider_HOUGH_min_radius->setMaximum( hipotenusa );
+            ui->slider_HOUGH_min_dist->setMaximum( hipotenusa );
+            ui->slider_HOUGH_max_radius->setMaximum( hipotenusa );
+            break;
+        }
+
+        case 3:
+        {
+            if(cirD->get_calibracionCorrecta())
+            {
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
+            }
+            break;
+        }
+        break;
 
-                qreal hipotenusa = qSqrt( 2*qPow( crop->get_tamano_MatrizCroped(),2 ) );
-                ui->slider_HOUGH_param_2->setMaximum( hipotenusa );
-                ui->slider_HOUGH_param_1->setMaximum( hipotenusa );
-                ui->slider_HOUGH_min_radius->setMaximum( hipotenusa );
-                ui->slider_HOUGH_min_dist->setMaximum( hipotenusa );
-                ui->slider_HOUGH_max_radius->setMaximum( hipotenusa );
+        case 4:
+        {
 
-                qDebug()<<config_index;
+        }
+        break;
+
+        case 5:
+        {
+
+        }
         break;
     }
 }
