@@ -16,7 +16,8 @@ SOURCES += main.cpp\
         ventanaprincipal.cpp \
     stand_capturadorimagen.cpp \
     config_cropper.cpp \
-    config_umbralizador.cpp
+    config_umbralizador.cpp \
+    config_circledetect.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -24,6 +25,7 @@ HEADERS  += ventanaprincipal.h \
     INCLUDE_QTstuff.h \
     config_cropper.h \
     stand_Tools.h \
-    config_umbralizador.h
+    config_umbralizador.h \
+    config_circledetect.h
 
 FORMS    += ventanaprincipal.ui

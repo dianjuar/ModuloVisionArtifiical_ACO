@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>773</height>
+    <height>779</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -475,7 +475,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_CannyU_3">
+           <widget class="QSlider" name="slider_HOUGH_min_dist">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -560,7 +560,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_CannyU_4">
+           <widget class="QSlider" name="slider_HOUGH_param_1">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -632,7 +632,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_CannyU_5">
+           <widget class="QSlider" name="slider_HOUGH_param_2">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -717,7 +717,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_CannyU_6">
+           <widget class="QSlider" name="slider_HOUGH_min_radius">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -789,7 +789,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_CannyU_7">
+           <widget class="QSlider" name="slider_HOUGH_max_radius">
             <property name="minimum">
              <number>1</number>
             </property>
@@ -1012,7 +1012,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_CannyU_3</sender>
+   <sender>slider_HOUGH_min_dist</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_9</receiver>
    <slot>setNum(int)</slot>
@@ -1028,7 +1028,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_CannyU_4</sender>
+   <sender>slider_HOUGH_param_1</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_11</receiver>
    <slot>setNum(int)</slot>
@@ -1044,7 +1044,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_CannyU_5</sender>
+   <sender>slider_HOUGH_param_2</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_13</receiver>
    <slot>setNum(int)</slot>
@@ -1060,7 +1060,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_CannyU_6</sender>
+   <sender>slider_HOUGH_min_radius</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_15</receiver>
    <slot>setNum(int)</slot>
@@ -1076,7 +1076,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_CannyU_7</sender>
+   <sender>slider_HOUGH_max_radius</sender>
    <signal>valueChanged(int)</signal>
    <receiver>label_17</receiver>
    <slot>setNum(int)</slot>

@@ -16,6 +16,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
+    cirD = new CONFIG::circleDetect();
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -164,3 +165,29 @@ void VentanaPrincipal::on_slider_umbralBlackAndWhite_valueChanged(int value)
 {
     umb->setUmbral( value );
 }
+
+void VentanaPrincipal::on_slider_HOUGH_min_dist_valueChanged(int value)
+{
+    cirD->set_HOUGH_min_dist( value );
+}
+
+void VentanaPrincipal::on_slider_HOUGH_param_1_valueChanged(int value)
+{
+    cirD->set_HOUGH_param_1( value );
+}
+
+void VentanaPrincipal::on_slider_HOUGH_param_2_valueChanged(int value)
+{
+    cirD->set_HOUGH_param_2( value );
+}
+
+void VentanaPrincipal::on_slider_HOUGH_min_radius_valueChanged(int value)
+{
+    cirD->set_HOUGH_min_radius( value );
+}
+
+void VentanaPrincipal::on_slider_HOUGH_max_radius_valueChanged(int value)
+{
+    cirD->set_HOUGH_max_radius( value );
+}
+
