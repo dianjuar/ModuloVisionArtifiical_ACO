@@ -108,6 +108,13 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
                 qDebug()<<config_index;
             }
         break;
+
+        case 2:
+                ui->tabWidget->setTabEnabled(++config_index,true);
+                ui->tabWidget->setCurrentIndex(config_index);
+
+                qDebug()<<config_index;
+        break;
     }
 }
 
@@ -118,19 +125,27 @@ void VentanaPrincipal::on_tabWidget_currentChanged(int index)
     switch(config_index)
     {
         case 0:
-            ui->progressBar->setValue( 0);
+            ui->progressBar->setValue( 0 );
         break;
 
         case 1:
-            ui->progressBar->setValue( 10 );
+            ui->progressBar->setValue( 1*100/11 );
         break;
 
         case 2:
-            ui->progressBar->setValue( 30 );
+            ui->progressBar->setValue( 3*100/11 );
         break;
 
         case 3:
-            ui->progressBar->setValue( 40 );
+            ui->progressBar->setValue( 4*100/11 );
+        break;
+
+        case 4:
+            ui->progressBar->setValue( 9*100/11 );
+        break;
+
+        case 5:
+            ui->progressBar->setValue( 10*100/11);
         break;
     }
 }
