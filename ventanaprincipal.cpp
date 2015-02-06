@@ -16,7 +16,9 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
-    cirD = new CONFIG::circleDetect();
+    cirD = new CONFIG::circleDetect( ui->slider_HOUGH_min_dist->value(),
+                                     ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
+                                     ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -24,21 +26,32 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
 {
+    Mat mCropeed;
+
     switch(config_index)
     {
         case 0:
             ui->label_displayF0->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage(m) ) );
         break;
+
         case 1:
             crop->calibracion( m );
             ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop->get_ImagenRayada() ) ) );
         break;
-        case 2:
 
-            Mat mCropeed = m.clone() ;
+        case 2:
+            mCropeed = m.clone();
             crop->cortarImagen(mCropeed);            
             umb->calibracion( mCropeed );
             ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite() ) ) );
+        break;
+
+        case 3:
+            mCropeed = m.clone();
+            crop->cortarImagen(mCropeed);
+            cirD->calibracion(mCropeed);
+
+            ui->label_displayF3->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true ) ) );
         break;
     }
 

@@ -23,14 +23,13 @@ public:
     ~VentanaPrincipal();
     
 private slots:
-    void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
     void listen_matFromVideoCapture();
+
+    void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
     void on_btn_siguiente_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_btn_atras_clicked();
-
     void on_slider_umbralBlackAndWhite_valueChanged(int value);
-
     void on_slider_HOUGH_min_dist_valueChanged(int value);
     void on_slider_HOUGH_param_1_valueChanged(int value);
     void on_slider_HOUGH_param_2_valueChanged(int value);

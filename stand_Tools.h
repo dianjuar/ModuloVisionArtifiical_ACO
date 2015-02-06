@@ -21,8 +21,11 @@ public:
         return aux;
     }
 
-    static QImage Mat2QImage(Mat m)
+    static QImage Mat2QImage(Mat m, bool resize = false, int n=400)
     {
+        if(resize==true)
+            cv::resize(m,m,Size(n,n),0,0,INTER_LINEAR);
+
         if(m.type()==CV_8UC1)
         {
             // Set the color table (used to translate colour indexes to qRgb values)
@@ -52,6 +55,21 @@ public:
             return QImage();
         }
     }
+};
+
+class circulo
+{
+public:
+    Point centro;
+    int radio;
+
+    circulo(Point centro, int radio)
+    {
+        this->centro = centro;
+        this->radio = radio;
+    }
+
+    circulo(){ radio = -1; }
 };
 
 }
