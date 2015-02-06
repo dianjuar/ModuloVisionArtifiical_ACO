@@ -114,6 +114,13 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
 
+                qreal hipotenusa = qSqrt( 2*qPow( crop->get_tamano_MatrizCroped(),2 ) );
+                ui->slider_HOUGH_param_2->setMaximum( hipotenusa );
+                ui->slider_HOUGH_param_1->setMaximum( hipotenusa );
+                ui->slider_HOUGH_min_radius->setMaximum( hipotenusa );
+                ui->slider_HOUGH_min_dist->setMaximum( hipotenusa );
+                ui->slider_HOUGH_max_radius->setMaximum( hipotenusa );
+
                 qDebug()<<config_index;
         break;
     }

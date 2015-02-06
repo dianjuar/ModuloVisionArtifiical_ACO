@@ -1,6 +1,7 @@
 #ifndef INCLUDE_QTSTUFF_H
 #define INCLUDE_QTSTUFF_H
 
+#include <QtCore/qmath.h>
 #include <QString>
 #include <QThread>
 #include <QMainWindow>

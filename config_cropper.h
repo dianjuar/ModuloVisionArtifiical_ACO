@@ -14,17 +14,18 @@ class cropper
     bool hay_Contenedor;
 
     int canny_umbral_1, canny_umbral_2;
-    Rect contenedorMasGrande( vector< vector<Point> > contours );
-
     int tamano_XxX_MatrizCroped;
+
+    Rect contenedorMasGrande( vector< vector<Point> > contours );
 
 public:
     cropper(int canny_umbral_1, int canny_umbral_2);
 
+    //setter y getters
     void set_cannyU_1(int);
     void set_cannyU_2(int);
     Mat get_ImagenRayada(){ return imagen_Rayada; }
-    int get_tamano_MatrizCroped(){ return tamano_XxX_MatrizCroped; }
+    int get_tamano_MatrizCroped(){ return tamano_XxX_MatrizCroped; }    
     bool hayContenedor(){  return hay_Contenedor; }
 
     void calibracion(Mat mat);
