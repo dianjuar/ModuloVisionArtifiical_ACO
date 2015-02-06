@@ -4,13 +4,23 @@ using namespace CONFIG;
 
 partirNcuadros::partirNcuadros(int n, int *tamano_XxX_MatrizCroped)
 {
-    this->n = n;
     this->tamano_XxX_MatrizCroped = tamano_XxX_MatrizCroped;
+    this->n = n;
+    primeraVez = true;
 }
 
 void partirNcuadros::calibrar(Mat &mat_original)
 {
-    tamano_CuadroPartido_N = *tamano_XxX_MatrizCroped/ n;
+    if(primeraVez)
+        set_n(n);
+
+   /* float a = *tamano_XxX_MatrizCroped;
+    float b = n;
+
+    qreal qral=a/b;
+    qDebug()<<*tamano_XxX_MatrizCroped;
+    qDebug()<<"->"<<+qral<<tamano_CuadroPartido_N<<*tamano_XxX_MatrizCroped-tamano_CuadroPartido_N*n<< esNecesarioOtroCuadro<<cuantosCuadrosSonNecesarios;
+    qDebug()<<"****************";*/
 
     Scalar color = Scalar(0,255,0);
 
@@ -29,5 +39,25 @@ void partirNcuadros::calibrar(Mat &mat_original)
         line(mat_original,pV1,pV2, color,2);
         }
     }
+}
+
+void partirNcuadros::set_n(int n)
+{
+    this->n = n;
+
+    tamano_CuadroPartido_N = *tamano_XxX_MatrizCroped/ n;
+    esNecesarioOtroCuadro = (*tamano_XxX_MatrizCroped-tamano_CuadroPartido_N*n)>tamano_CuadroPartido_N;
+
+    if(esNecesarioOtroCuadro)
+    {
+        cuantosCuadrosSonNecesarios = (*tamano_XxX_MatrizCroped-tamano_CuadroPartido_N*n) / tamano_CuadroPartido_N;
+        this->n += cuantosCuadrosSonNecesarios;
+        tamano_CuadroPartido_N = *tamano_XxX_MatrizCroped/ this->n;
+        qDebug()<<cuantosCuadrosSonNecesarios;
+    }
+    else
+        cuantosCuadrosSonNecesarios = 0;
+
+    primeraVez = false;
 }
 

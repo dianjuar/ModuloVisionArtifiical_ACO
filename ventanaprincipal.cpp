@@ -67,6 +67,8 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             crop->cortarImagen(mCropped);
             PNcuadros->calibrar(mCropped);
 
+            //ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
+
             ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350) ) );
             ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350 ) ) );
             break;
@@ -263,4 +265,5 @@ void VentanaPrincipal::on_slider_HOUGH_max_radius_valueChanged(int value)
 void VentanaPrincipal::on_slider_n_valueChanged(int value)
 {
     PNcuadros->set_n( ui->slider_n->value() );
+    ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
 }

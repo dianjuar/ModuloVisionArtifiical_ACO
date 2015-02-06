@@ -34,11 +34,12 @@ void cropper::cortarImagen(Mat &m)
     bool ahorroDeCodigo = m.rows > m.cols;
     tamano_XxX_MatrizCroped = ahorroDeCodigo ? m.rows : m.cols;
     int centrado = ahorroDeCodigo ? (tamano_XxX_MatrizCroped-m.cols)/2:(tamano_XxX_MatrizCroped-m.rows)/2;
+
     copyMakeBorder(m.clone(), m,
                    ahorroDeCodigo ?  0:centrado,
-                   ahorroDeCodigo ?  0:(centrado + (tamano_XxX_MatrizCroped/2)%2),
+                   ahorroDeCodigo ?  0:(centrado /*+ (tamano_XxX_MatrizCroped/2)%2*/),
                    ahorroDeCodigo ?  centrado:0,
-                   ahorroDeCodigo ?  (centrado+ (tamano_XxX_MatrizCroped/2)%2):0  ,
+                   ahorroDeCodigo ?  (centrado /*+ (tamano_XxX_MatrizCroped/2)%2*/):0  ,
                    BORDER_CONSTANT);
 }
 
