@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>693</height>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,6 +107,19 @@
            </spacer>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_27">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -327,6 +340,19 @@
           </item>
          </layout>
         </item>
+        <item>
+         <spacer name="verticalSpacer_26">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_3">
@@ -438,6 +464,19 @@
            </spacer>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_25">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -901,6 +940,19 @@
           </item>
          </layout>
         </item>
+        <item>
+         <spacer name="verticalSpacer_24">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_5">
@@ -924,7 +976,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="slider_umbralBlackAndWhite_2">
+           <widget class="QSlider" name="slider_n">
             <property name="maximum">
              <number>40</number>
             </property>
@@ -1036,6 +1088,19 @@
           </item>
          </layout>
         </item>
+        <item>
+         <spacer name="verticalSpacer_23">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_6">
@@ -1110,12 +1175,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>545</x>
-     <y>165</y>
+     <x>306</x>
+     <y>138</y>
     </hint>
     <hint type="destinationlabel">
      <x>755</x>
-     <y>177</y>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -1126,12 +1191,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>360</x>
-     <y>97</y>
+     <x>306</x>
+     <y>105</y>
     </hint>
     <hint type="destinationlabel">
-     <x>724</x>
-     <y>98</y>
+     <x>755</x>
+     <y>108</y>
     </hint>
    </hints>
   </connection>
@@ -1142,12 +1207,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>671</x>
-     <y>109</y>
+     <x>491</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
-     <x>768</x>
-     <y>122</y>
+     <x>781</x>
+     <y>113</y>
     </hint>
    </hints>
   </connection>
@@ -1158,12 +1223,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>716</x>
-     <y>96</y>
+     <x>275</x>
+     <y>116</y>
     </hint>
     <hint type="destinationlabel">
-     <x>744</x>
-     <y>96</y>
+     <x>755</x>
+     <y>113</y>
     </hint>
    </hints>
   </connection>
@@ -1174,12 +1239,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>720</x>
-     <y>130</y>
+     <x>273</x>
+     <y>224</y>
     </hint>
     <hint type="destinationlabel">
-     <x>746</x>
-     <y>130</y>
+     <x>755</x>
+     <y>221</y>
     </hint>
    </hints>
   </connection>
@@ -1190,12 +1255,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>713</x>
-     <y>161</y>
+     <x>273</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
-     <x>745</x>
-     <y>155</y>
+     <x>755</x>
+     <y>275</y>
     </hint>
    </hints>
   </connection>
@@ -1206,12 +1271,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>713</x>
-     <y>191</y>
+     <x>297</x>
+     <y>385</y>
     </hint>
     <hint type="destinationlabel">
-     <x>754</x>
-     <y>190</y>
+     <x>755</x>
+     <y>382</y>
     </hint>
    </hints>
   </connection>
@@ -1222,12 +1287,28 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>717</x>
-     <y>220</y>
+     <x>301</x>
+     <y>439</y>
     </hint>
     <hint type="destinationlabel">
-     <x>752</x>
-     <y>220</y>
+     <x>755</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_n</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_19</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>648</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>766</x>
+     <y>100</y>
     </hint>
    </hints>
   </connection>

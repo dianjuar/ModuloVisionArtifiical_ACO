@@ -3,10 +3,12 @@
 
 #include "INCLUDE_QTstuff.h"
 #include "stand_capturadorimagen.h"
+#include "stand_Tools.h"
+
 #include "config_cropper.h"
 #include "config_umbralizador.h"
 #include "config_circledetect.h"
-#include "stand_Tools.h"
+#include "config_partirncuadros.h"
 
 namespace Ui
 {
@@ -36,6 +38,8 @@ private slots:
     void on_slider_HOUGH_min_radius_valueChanged(int value);
     void on_slider_HOUGH_max_radius_valueChanged(int value);
 
+    void on_slider_n_valueChanged(int value);
+
 private:
     Ui::VentanaPrincipal *ui;
 
@@ -44,6 +48,7 @@ private:
     CONFIG::cropper *crop;
     CONFIG::umbralizador *umb;
     CONFIG::circleDetect *cirD;
+    CONFIG::partirNcuadros *PNcuadros;
 
 
 

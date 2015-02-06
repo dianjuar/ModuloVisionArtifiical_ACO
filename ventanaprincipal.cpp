@@ -19,6 +19,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     cirD = new CONFIG::circleDetect( ui->slider_HOUGH_min_dist->value(),
                                      ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
                                      ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
+    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -26,33 +27,56 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
 {
-    Mat mCropeed;
-
     switch(config_index)
     {
         case 0:
+        {
             ui->label_displayF0->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage(m) ) );
-        break;
+            break;
+        }
 
         case 1:
+        {
             crop->calibracion( m );
             ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop->get_ImagenRayada() ) ) );
-        break;
+            break;
+        }
 
         case 2:
-            mCropeed = m.clone();
-            crop->cortarImagen(mCropeed);            
+        {
+            Mat mCropeed = m.clone();
+            crop->cortarImagen(mCropeed);
             umb->calibracion( mCropeed );
-            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite(),true,480 ) ) );
-        break;
+            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite(),true,420 ) ) );
+            break;
+        }
 
         case 3:
-            mCropeed = m.clone();
+        {
+            Mat mCropeed = m.clone();
             crop->cortarImagen(mCropeed);
             cirD->calibracion(mCropeed);
 
             ui->label_displayF3->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true ) ) );
-        break;
+            break;
+        }
+
+        case 4:
+        {
+            Mat mCropeed = m.clone();
+            crop->cortarImagen(mCropeed);
+            cirD->calibracion(mCropeed);
+
+            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true,350) ) );
+            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropeed,true,350 ) ) );
+            break;
+        }
+
+        case 5:
+        {
+            break;
+        }
+
     }
 
 }
@@ -235,3 +259,8 @@ void VentanaPrincipal::on_slider_HOUGH_max_radius_valueChanged(int value)
     cirD->set_HOUGH_max_radius( value );
 }
 
+
+void VentanaPrincipal::on_slider_n_valueChanged(int value)
+{
+    PNcuadros->set_n( ui->slider_n->value() );
+}
