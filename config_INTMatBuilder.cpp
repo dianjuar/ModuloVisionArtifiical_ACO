@@ -4,8 +4,8 @@ using namespace CONFIG;
 
 void INTMatBuilder::construir_INTMat_and_cartoon()
 {
-    for(int i=0;i<*n;i++)
-        for(int j=0;j<*n;j++)
+    for(int i=0;i<n;i++)
+        for(int j=0;j<n;j++)
         {
            Mat miniMat = mat_original_BlackAndWhite->rowRange(i*tamano_cuadroAnalizar_MatrizCroped,
                                                              i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
@@ -21,33 +21,37 @@ void INTMatBuilder::construir_INTMat_and_cartoon()
            miniMat.~Mat();
         }
 
-}
-
-bool INTMatBuilder::contieneNegroLosPuntos_InicioFin()
-{
-    Mat miniMat_INICIO = mat_original_BlackAndWhite->rowRange(P_Inicio->y*tamano_cuadroAnalizar_MatrizCroped,
-                                                      P_Inicio->y*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
-    miniMat_INICIO = miniMat_INICIO.colRange(P_Inicio->x*tamano_cuadroAnalizar_MatrizCroped,
-                                                  P_Inicio->x*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
-
-    Mat miniMat_FIN = mat_original_BlackAndWhite->rowRange(P_Fin->y*tamano_cuadroAnalizar_MatrizCroped,
-                                                      P_Fin->y*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
-    miniMat_FIN = miniMat_FIN.colRange(P_Fin->x*tamano_cuadroAnalizar_MatrizCroped,
-                                                  P_Fin->x*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
-
-    if( !contieneNegro(miniMat_INICIO) && !contieneNegro(miniMat_FIN) )
+    if(Validos_PuntosInicioFin())//crear matriz caricaturizada
     {
-        contieneError=false;
-
-        INT_mat[P_Inicio->y/tamano_cuadroAnalizar_MatrizCroped][P_Inicio->x/tamano_cuadroAnalizar_MatrizCroped] =
-                MAPA_inicio;
-
-        INT_mat[P_Fin->y/tamano_cuadroAnalizar_MatrizCroped][P_Fin->x/tamano_cuadroAnalizar_MatrizCroped] =
-                MAPA_fin;
-
+        contieneError = false;
+        crear_MartCartooned();
     }
     else
-        contieneError=true;
+    {
+        contieneError = true;
+        mat_cartooned = imread("./media/error.png");
+    }
+
+}
+
+bool INTMatBuilder::Validos_PuntosInicioFin()
+{
+    Point ini_INTmat,fin_INTmat;
+
+    ini_INTmat = Point(P_Inicio->x/tamano_cuadroAnalizar_MatrizCroped,
+                       P_Inicio->y/tamano_cuadroAnalizar_MatrizCroped);
+    fin_INTmat = Point(P_Fin->x/tamano_cuadroAnalizar_MatrizCroped,
+                       P_Fin->y/tamano_cuadroAnalizar_MatrizCroped);
+
+    //if( INT_mat[C1ii][C1jj] == MAPA_obstaculo || INT_mat[C2ii][C2jj] == MAPA_obstaculo )
+    if( INT_mat[ini_INTmat.y][ini_INTmat.x] == MAPA_obstaculo || INT_mat[fin_INTmat.y][fin_INTmat.x] == MAPA_obstaculo )
+        return false;
+    else
+    {
+        INT_mat[ini_INTmat.y][ini_INTmat.x] = MAPA_inicio;
+        INT_mat[fin_INTmat.y][fin_INTmat.x] = MAPA_fin;
+        return true;
+    }
 
 }
 
@@ -61,28 +65,92 @@ bool INTMatBuilder::contieneNegro(Mat m)
     return false;
 }
 
-INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int *n)
+void INTMatBuilder::set_TamanosYEscalas()
 {
-    this->mat_original_BlackAndWhite;
-    this->n = n;
-
-    contieneError = true;
-    set_n(n);
+    tamano_cuadroMatCartooned = tamano_MatCartooned / n;
+    tamano_cuadroAnalizar_MatrizCroped = *tamano_MatrizCropped/ n;
 }
 
-void INTMatBuilder::set_n(int *n)
+void INTMatBuilder::copiar_CuadroMatCartoon_a_MatCartoon(int i, int j, int valor)
+{
+    Mat m;
+
+    switch (valor)
+    {
+        case MAPA_libre:
+            m = MAT_libre;
+        break;
+
+        case MAPA_obstaculo:
+            m = MAT_obstaculo;
+        break;
+
+        case MAPA_inicio:
+            m = MAT_inicio;
+        break;
+
+        case MAPA_fin:
+            m = MAT_fin;
+        break;
+    }
+
+    Rect roi = Rect(j*tamano_cuadroMatCartooned,i*tamano_cuadroMatCartooned,
+                    tamano_cuadroMatCartooned, tamano_cuadroMatCartooned);
+
+    //Mat subView = big(roi)
+    Mat subView = mat_cartooned(roi);
+
+    Mat aux;
+    resize(m.clone(), aux,Size( tamano_cuadroMatCartooned, tamano_cuadroMatCartooned ));
+    aux.copyTo(subView);
+
+    m.~Mat();
+}
+
+void INTMatBuilder::crear_MartCartooned()
+{
+    for(int i=0;i<n;i++)
+        for(int j=0;j<n;j++)
+            copiar_CuadroMatCartoon_a_MatCartoon(i,j, INT_mat[i][j]);
+}
+
+INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_MatrizCropped)
+{
+    this->mat_original_BlackAndWhite  =mat_original_BlackAndWhite;
+    this->n = n;
+    this->tamano_MatrizCropped = tamano_MatrizCropped;
+
+    contieneError = true;
+
+    MAT_libre = imread("./media/libre.png");
+    MAT_obstaculo = imread("./media/obstaculo.png");
+    MAT_inicio = imread("./media/inicio.png");
+    MAT_fin = imread("./media/fin.png");
+
+    tamano_imagenCartoonOriginal = MAT_libre.rows;
+
+    tamano_MatCartooned = 350;
+}
+
+void INTMatBuilder::set_n(int n)
 {
     this->n = n;
+    set_TamanosYEscalas();
 
-    INT_mat = new int* [*n];
+    mat_cartooned = Mat::zeros(Size(tamano_cuadroMatCartooned*(n),tamano_cuadroMatCartooned*(n)), CV_8UC3);
 
-    for (int i = 0; i < *n; i++)
+
+    INT_mat = new int* [n];
+
+    for (int i = 0; i < n; i++)
     {
-         INT_mat[i] = new int[*n];
+         INT_mat[i] = new int[n];
 
-         for(int j=0;j<*n;j++)
+         for(int j=0;j<n;j++)
              INT_mat[i][j]=MAPA_obstaculo;
     }
+
+    construir_INTMat_and_cartoon();
 }
 
 void INTMatBuilder::set_P_InicioYFin(Point *Inicio, Point *Fin)

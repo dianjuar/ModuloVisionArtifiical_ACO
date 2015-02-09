@@ -20,7 +20,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
                                      ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
                                      ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
-    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n_SEGUIMIENTO());
+    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -68,10 +68,10 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             crop->cortarImagen(mCropped);
             PNcuadros->calibrar(mCropped);
 
-            //ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
-
-            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350) ) );
-            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,350 ) ) );
+            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,
+                                                                                          IntMatB->get_tamano_MatCartooned()) ) );
+            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( IntMatB->get_MatCartooned(),true,
+                                                                                                  IntMatB->get_tamano_MatCartooned()) ) );
             break;
         }
 
@@ -172,7 +172,8 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
                 ui->tabWidget->setTabEnabled(++config_index,true);
                 ui->tabWidget->setCurrentIndex(config_index);
 
-                IntMatB->set_P_InicioYFin( cirD->get_PuntoInicio_SEGUIMIENTO(),cirD->get_PuntoFin_SEGUIMIENTO() );
+               IntMatB->set_P_InicioYFin( cirD->get_PuntoInicio_SEGUIMIENTO(),cirD->get_PuntoFin_SEGUIMIENTO() );
+               IntMatB->set_n( PNcuadros->get_n() );
             }
             break;
         }
@@ -180,7 +181,11 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case 4:
         {
-
+            if(!IntMatB->get_contieneError())
+            {
+                ui->tabWidget->setTabEnabled(++config_index,true);
+                ui->tabWidget->setCurrentIndex(config_index);
+            }
         }
         break;
 
@@ -268,5 +273,6 @@ void VentanaPrincipal::on_slider_HOUGH_max_radius_valueChanged(int value)
 void VentanaPrincipal::on_slider_n_valueChanged(int value)
 {
     PNcuadros->set_n( ui->slider_n->value() );
+    IntMatB->set_n( PNcuadros->get_n() );
     ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
 }

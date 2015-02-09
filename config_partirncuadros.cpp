@@ -45,7 +45,7 @@ void partirNcuadros::set_n(int n)
         cuantosCuadrosSonNecesarios = (*tamano_XxX_MatrizCroped-tamano_CuadroPartido_N*n) / tamano_CuadroPartido_N;
         this->n += cuantosCuadrosSonNecesarios;
         tamano_CuadroPartido_N = *tamano_XxX_MatrizCroped/ this->n;
-        qDebug()<<cuantosCuadrosSonNecesarios;
+        //qDebug()<<cuantosCuadrosSonNecesarios;
     }
     else
         cuantosCuadrosSonNecesarios = 0;

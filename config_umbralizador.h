@@ -16,10 +16,11 @@ public:
     umbralizador(int);
 
     void calibrar(Mat m);
+
     Mat get_BlackAndWhite(){ return blackAndWhite; }
     Mat* get_BlackAndWhite_SEGUIMIENTO(){ return &blackAndWhite; }
-
     int getUmbral(){ return umbral; }    
+
     void setUmbral(int umbral){ this->umbral = umbral; }
 };
 
