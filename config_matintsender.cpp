@@ -5,7 +5,7 @@ using namespace CONFIG;
 matIntSender::matIntSender(QObject *parent) :
     QObject(parent)
 {
-    serverPort = 80;
+    serverPort = 6666;
     buenaConexion = false;
 
     MSJ_sinComprobar = "No se ha comprobado el estado de la conexión.";
@@ -31,15 +31,18 @@ void matIntSender::testConnection(QString hostDir, bool Testserio)
         buenaConexion = false;
 
     if(!Testserio)
-    client.disconnectFromHost();
+    {
+        client.write("test");
+        client.disconnectFromHost();
+    }
 }
 
 void matIntSender::enviarMatriz(QString hostDir,int **mat, int n)
 {
     testConnection(hostDir,true);
 
-    IntMat2QString(mat,n);
-    client.write( QByteArray( IntMat2QString() ) );
+    client.write( QByteArray( IntMat2QString(mat,n).toUtf8().data() ) );
+    qDebug()<<QByteArray( IntMat2QString(mat,n).toUtf8().data() ).length();
     client.disconnectFromHost();
 }
 
