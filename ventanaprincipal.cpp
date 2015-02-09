@@ -5,6 +5,13 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VentanaPrincipal)
 {
+    //para no tener problemas con los acentos
+    QTextCodec *linuxCodec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForTr(linuxCodec);
+    QTextCodec::setCodecForCStrings(linuxCodec);
+    QTextCodec::setCodecForLocale(linuxCodec);
+
+
     ui->setupUi(this);
 
     //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
@@ -21,6 +28,11 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
                                      ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
+    mSender = new CONFIG::matIntSender();
+
+    ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
+    ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
+
 
     config_index =0;
     config_Netapas = ui->tabWidget->count();
@@ -74,12 +86,6 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
                                                                                                   IntMatB->get_tamano_MatCartooned()) ) );
             break;
         }
-
-        case 5:
-        {
-            break;
-        }
-
     }
 
 }
@@ -191,7 +197,10 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case 5:
         {
-
+            if( mSender->get_buenaConexion() )
+            {
+                mSender->enviarMatriz(ui->lineEdit_setverDir_F5->text(),IntMatB->get_INT_mat(),IntMatB->get_n());
+            }
         }
         break;
     }
@@ -275,4 +284,34 @@ void VentanaPrincipal::on_slider_n_valueChanged(int value)
     PNcuadros->set_n( ui->slider_n->value() );
     IntMatB->set_n( PNcuadros->get_n() );
     ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
+}
+
+void VentanaPrincipal::on_pushButton_clicked()
+{
+    ui->label_error_F5->setText( mSender->MSJ_comprobando );
+    QMovie *movie = new QMovie( mSender->RUTAIMG_comprobando );
+    ui->label_connectionTest_F5->setMovie(movie);
+    movie->start();
+
+
+    mSender->testConnection( ui->lineEdit_setverDir_F5->text() );
+
+    if(mSender->get_buenaConexion())
+    {
+        ui->label_error_F5->setText( mSender->MSJ_correcto );
+        ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_correcto ) );
+    }
+    else
+    {
+        ui->label_error_F5->setText( mSender->MSJ_incorrecto );
+        ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
+    }
+
+}
+
+void VentanaPrincipal::on_lineEdit_setverDir_F5_textEdited(const QString &arg1)
+{
+    mSender->set_buenaConexion(false);
+    ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
+    ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
 }

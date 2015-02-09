@@ -10,6 +10,7 @@
 #include "config_circledetect.h"
 #include "config_partirncuadros.h"
 #include "config_INTMatBuilder.h"
+#include "config_matintsender.h"
 
 namespace Ui
 {
@@ -41,6 +42,10 @@ private slots:
 
     void on_slider_n_valueChanged(int value);
 
+    void on_pushButton_clicked();
+
+    void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
+
 private:
     Ui::VentanaPrincipal *ui;
 
@@ -51,8 +56,7 @@ private:
     CONFIG::circleDetect *cirD;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
-
-
+    CONFIG::matIntSender *mSender;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
 
