@@ -57,6 +57,7 @@ public:
     Mat get_MatCartooned(){  return mat_cartooned; }
     int** get_INT_mat(){ return INT_mat; }
     int get_tamano_MatCartooned(){ return tamano_MatCartooned; }
+    int get_n(){ return n; }
 };
 
 }
