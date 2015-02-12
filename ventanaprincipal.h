@@ -46,6 +46,10 @@ private slots:
 
     void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
 
+    void on_slider_CannyU_1_valueChanged(int value);
+
+    void on_slider_CannyU_2_valueChanged(int value);
+
 private:
     Ui::VentanaPrincipal *ui;
 

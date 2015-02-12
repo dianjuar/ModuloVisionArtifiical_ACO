@@ -18,7 +18,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     for(int i=1;i<ui->tabWidget->count();i++)
         ui->tabWidget->setTabEnabled(i,false);
 
-    cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_ImagenStatica, ui->Q_Ndispositivo_SpinBox->value() );
+    cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_Video, ui->Q_Ndispositivo_SpinBox->value() );
     contectar_HiloCapturadorWITHVentanaPrincipal();
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
@@ -314,4 +314,14 @@ void VentanaPrincipal::on_lineEdit_setverDir_F5_textEdited(const QString &arg1)
     mSender->set_buenaConexion(false);
     ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
     ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
+}
+
+void VentanaPrincipal::on_slider_CannyU_1_valueChanged(int value)
+{
+    crop->set_cannyU_1( value );
+}
+
+void VentanaPrincipal::on_slider_CannyU_2_valueChanged(int value)
+{
+    crop->set_cannyU_2( value );
 }

@@ -20,6 +20,9 @@ void cropper::calibracion(Mat mat)
     matTratada = STAND::Tools::tratamientoDeImagenStantdar(imagen_Rayada);
 
     Canny(matTratada, canny_edges, canny_umbral_1, canny_umbral_2);
+
+    imshow("hola",canny_edges);
+
     vector< vector<Point> > contours;
     findContours(canny_edges, contours,CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     contenedor = contenedorMasGrande(contours);
