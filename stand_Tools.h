@@ -28,31 +28,38 @@ public:
         if(resize==true)
             cv::resize(m,m,Size(x,x),0,0,INTER_LINEAR);
 
-        if(m.type()==CV_8UC1)
+        switch (m.type())
         {
-            // Set the color table (used to translate colour indexes to qRgb values)
-            QVector<QRgb> colorTable;
-            for (int i=0; i<256; i++)
-                colorTable.push_back(qRgb(i,i,i));
-            // Copy input Mat
-            const uchar *qImageBuffer = (const uchar*)m.data;
-            // Create QImage with same dimensions as input Mat
-            img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_Indexed8);
-            img.setColorTable(colorTable);
-        }
-        // 8-bits unsigned, NO. OF CHANNELS=3
-        if(m.type()==CV_8UC3)
-        {
-            // Copy input Mat
-            const uchar *qImageBuffer = (const uchar*)m.data;
-            // Create QImage with same dimensions as input Mat
-            img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_RGB888);
-            img = img.rgbSwapped();
-        }
-        else
-        {
-            qDebug() << "ERROR: Mat could not be converted to QImage.";
-            img = QImage();
+            case CV_8UC1:
+            {
+                // Set the color table (used to translate colour indexes to qRgb values)
+                QVector<QRgb> colorTable;
+                for (int i=0; i<256; i++)
+                    colorTable.push_back(qRgb(i,i,i));
+                // Copy input Mat
+                const uchar *qImageBuffer = (const uchar*)m.data;
+                // Create QImage with same dimensions as input Mat
+                img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_Indexed8);
+                img.setColorTable(colorTable);
+            }
+            break;
+
+            case CV_8UC3:
+            {
+                // Copy input Mat
+                const uchar *qImageBuffer = (const uchar*)m.data;
+                // Create QImage with same dimensions as input Mat
+                img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_RGB888);
+                img = img.rgbSwapped();
+            }
+            break;
+
+            default:
+            {
+                qDebug() << "ERROR: Mat could not be converted to QImage.";
+                img = QImage();
+            }
+            break;
         }
 
         return QPixmap::fromImage(img);
