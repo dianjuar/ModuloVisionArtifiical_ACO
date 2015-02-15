@@ -50,6 +50,8 @@ private slots:
 
     void on_slider_CannyU_2_valueChanged(int value);
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::VentanaPrincipal *ui;
 

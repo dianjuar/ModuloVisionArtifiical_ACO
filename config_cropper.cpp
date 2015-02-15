@@ -23,7 +23,8 @@ void cropper::calibracion(Mat mat)
 
     vector< vector<Point> > contours;
     findContours(canny_edges, contours,CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
-    contenedor = contenedorMasGrande(contours);
+
+    set_MayorContenedor( contenedorMasGrande(contours) );
 
     rectangle(imagen_Rayada,contenedor,Scalar(0,0,255), 2);
 }
@@ -44,6 +45,12 @@ void cropper::cortarImagen(Mat &m)
                    BORDER_CONSTANT);
 }
 
+void cropper::reset_contenedor()
+{
+    hay_Contenedor = false;
+    contenedor = Rect();
+}
+
 Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
 {
     if(contours.size()!=0)
@@ -62,13 +69,20 @@ Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
              }
         }
 
-        hay_Contenedor = true;
         return boundingRect(contours[ largest_contour_index ] );
     }
-    else
-    {
-        hay_Contenedor = false;
+    else    
         return Rect();
+
+
+}
+
+void cropper::set_MayorContenedor(Rect r)
+{
+    if(r.area() > contenedor.area())
+    {
+        hay_Contenedor = true;
+        contenedor = r;
     }
 
 }
@@ -78,6 +92,8 @@ cropper::cropper(int canny_umbral_1, int canny_umbral_2)
     this->canny_umbral_1 = canny_umbral_1;
     this->canny_umbral_2 = canny_umbral_2;
     hay_Contenedor = false;
+
+    contenedor = Rect();
 }
 
 

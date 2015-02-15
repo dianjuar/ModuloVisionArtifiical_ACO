@@ -18,6 +18,7 @@ class cropper
     int tamano_XxX_MatrizCroped;
 
     Rect contenedorMasGrande( vector< vector<Point> > contours );
+    void set_MayorContenedor(Rect r);
 
 public:
     cropper(int canny_umbral_1, int canny_umbral_2);
@@ -33,6 +34,7 @@ public:
 
     void calibracion(Mat mat);
     void cortarImagen(Mat &);
+    void reset_contenedor();
 
 };
 
