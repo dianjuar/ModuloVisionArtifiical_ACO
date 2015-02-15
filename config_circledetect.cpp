@@ -49,7 +49,11 @@ void circleDetect::calibrar(Mat  &mat_original)
                   circulosDetectados, CV_HOUGH_GRADIENT, 1,
                   HOUGH_min_dist, HOUGH_param_1, HOUGH_param_2, HOUGH_min_radius, HOUGH_max_radius );
 
-     //circulo c1,c2;
+
+    /*Mat temp;
+    Canny(mat_original,temp,HOUGH_param_1,HOUGH_param_2);
+    imshow("hola",temp);
+     //circulo c1,c2;*/
 
      for( size_t i = 0; i < circulosDetectados.size(); i++ )
      {
@@ -71,11 +75,8 @@ void circleDetect::calibrar(Mat  &mat_original)
         circle( mat_original, center, radius, Scalar(0,0,255), 2);
       }
 
-     if( circulosDetectados.size() != 2 )
-     {
-         qDebug()<<"No se ha detectado los circulos necesarios (2).  \n Modifique los parámetros para detectarlos";
+     if( circulosDetectados.size() != 2 )     
          calibracionCorrecta = false;
-     }
      else //cuando se detectan 2 ciruclos
      {
         calibracionCorrecta = true;

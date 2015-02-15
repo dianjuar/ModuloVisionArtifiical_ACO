@@ -18,7 +18,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     for(int i=1;i<ui->tabWidget->count();i++)
         ui->tabWidget->setTabEnabled(i,false);
 
-    cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_Video, ui->Q_Ndispositivo_SpinBox->value() );
+    cap = new STAND::capturadorImagen( STAND::capturadorImagen::Modo_ImagenStatica, ui->Q_Ndispositivo_SpinBox->value() );
     contectar_HiloCapturadorWITHVentanaPrincipal();
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
@@ -54,16 +54,16 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             ui->label_displayF1->setPixmap( STAND::Tools::Mat2QPixmap( crop->get_ImagenRayada() , 2)  );
             ui->label_cannyF1->setPixmap( STAND::Tools::Mat2QPixmap( crop->get_ImagenCanny(),2 ) );
 
-                if(crop->hayContenedor())
-                {
-                    ui->label_errorText_F1->setText("Todo en Orden");
-                    ui->label_errorImg_F1->setPixmap( QPixmap("./media/TestConnection/Right.png")  );
-                }
-                else
-                {
-                    ui->label_errorText_F1->setText("No se detectó ningún cuadro");
-                    ui->label_errorImg_F1->setPixmap( QPixmap("./media/TestConnection/Bad.png")  );
-                }
+            if(crop->hayContenedor())
+            {
+                ui->label_errorText_F1->setText("Todo en Orden");
+                ui->label_errorImg_F1->setPixmap( QPixmap("./media/TestConnection/Right.png")  );
+            }
+            else
+            {
+                ui->label_errorText_F1->setText("No se detectó ningún cuadro");
+                ui->label_errorImg_F1->setPixmap( QPixmap("./media/TestConnection/Bad.png")  );
+            }
             break;
         }
 
@@ -83,6 +83,17 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             cirD->calibrar(mCropped);
 
             ui->label_displayF3->setPixmap( STAND::Tools::Mat2QPixmap( mCropped,true ) );
+
+            if( cirD->get_calibracionCorrecta() )
+            {
+                ui->label_errorText_F3->setText("Todo en Orden");
+                ui->label_errorImg_F3->setPixmap( QPixmap("./media/TestConnection/Right.png")  );
+            }
+            else
+            {
+                ui->label_errorText_F3->setText("No se ha detectado los circulos necesarios");
+                ui->label_errorImg_F3->setPixmap( QPixmap("./media/TestConnection/Bad.png")  );
+            }
             break;
         }
 
