@@ -21,10 +21,12 @@ public:
         return aux;
     }
 
-    static QImage Mat2QImage(Mat m, bool resize = false, int n=400)
+    static QPixmap Mat2QPixmap(Mat m, bool resize = false, int x=400)
     {
+        QImage img;
+
         if(resize==true)
-            cv::resize(m,m,Size(n,n),0,0,INTER_LINEAR);
+            cv::resize(m,m,Size(x,x),0,0,INTER_LINEAR);
 
         if(m.type()==CV_8UC1)
         {
@@ -35,10 +37,8 @@ public:
             // Copy input Mat
             const uchar *qImageBuffer = (const uchar*)m.data;
             // Create QImage with same dimensions as input Mat
-            QImage img(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_Indexed8);
+            img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_Indexed8);
             img.setColorTable(colorTable);
-
-            return img;
         }
         // 8-bits unsigned, NO. OF CHANNELS=3
         if(m.type()==CV_8UC3)
@@ -46,15 +46,24 @@ public:
             // Copy input Mat
             const uchar *qImageBuffer = (const uchar*)m.data;
             // Create QImage with same dimensions as input Mat
-            QImage img(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_RGB888);
-            return img.rgbSwapped();
+            img = QImage(qImageBuffer, m.cols, m.rows, m.step, QImage::Format_RGB888);
+            img = img.rgbSwapped();
         }
         else
         {
             qDebug() << "ERROR: Mat could not be converted to QImage.";
-            return QImage();
+            img = QImage();
         }
+
+        return QPixmap::fromImage(img);
     }
+
+    static QPixmap Mat2QPixmap(Mat m, int scale)
+    {
+        cv::resize(m,m,Size(m.cols/scale,m.rows/scale),0,0,INTER_LINEAR);
+        return Mat2QPixmap(m);
+    }
+
 };
 
 class circulo

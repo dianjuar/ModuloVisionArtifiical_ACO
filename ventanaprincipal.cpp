@@ -44,14 +44,23 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
     {
         case 0:
         {
-            ui->label_displayF0->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage(m) ) );
+            ui->label_displayF0->setPixmap( STAND::Tools::Mat2QPixmap(m) );
             break;
         }
 
         case 1:
         {
             crop->calibracion( m );
-            ui->label_displayF1->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( crop->get_ImagenRayada() ) ) );
+            ui->label_displayF1->setPixmap( STAND::Tools::Mat2QPixmap( crop->get_ImagenRayada() , 2)  );
+
+            vector<uchar> buff;
+            vector<int> w;
+            w.push_back(CV_IMWRITE_JPEG_QUALITY);
+            w.push_back(100);
+
+            imencode(".jpg",crop->get_ImagenCanny(),buff,w);
+
+            ui->label_cannyF1->setPixmap( STAND::Tools::Mat2QPixmap( imdecode(buff, CV_LOAD_IMAGE_COLOR), 2));
             break;
         }
 
@@ -60,7 +69,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             Mat mCropped = m.clone();
             crop->cortarImagen(mCropped);
             umb->calibrar( mCropped );
-            ui->label_displayF2->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( umb->get_BlackAndWhite(),true,420 ) ) );
+            ui->label_displayF2->setPixmap( STAND::Tools::Mat2QPixmap( umb->get_BlackAndWhite(),true,420 ) );
             break;
         }
 
@@ -70,7 +79,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             crop->cortarImagen(mCropped);
             cirD->calibrar(mCropped);
 
-            ui->label_displayF3->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true ) ) );
+            ui->label_displayF3->setPixmap( STAND::Tools::Mat2QPixmap( mCropped,true ) );
             break;
         }
 
@@ -80,10 +89,10 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             crop->cortarImagen(mCropped);
             PNcuadros->calibrar(mCropped);
 
-            ui->label_displayF4->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( mCropped,true,
-                                                                                          IntMatB->get_tamano_MatCartooned()) ) );
-            ui->label_displayF4_Cartoon->setPixmap( QPixmap::fromImage( STAND::Tools::Mat2QImage( IntMatB->get_MatCartooned(),true,
-                                                                                                  IntMatB->get_tamano_MatCartooned()) ) );
+            ui->label_displayF4->setPixmap( STAND::Tools::Mat2QPixmap( mCropped,true,
+                                                                      IntMatB->get_tamano_MatCartooned()) );
+            ui->label_displayF4_Cartoon->setPixmap(  STAND::Tools::Mat2QPixmap( IntMatB->get_MatCartooned(),true,
+                                                                               IntMatB->get_tamano_MatCartooned())  );
             break;
         }
     }

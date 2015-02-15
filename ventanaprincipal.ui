@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>804</height>
+    <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -314,9 +314,6 @@
             <property name="text">
              <string/>
             </property>
-            <property name="pixmap">
-             <pixmap>media/CamNOT_FOUND.png</pixmap>
-            </property>
             <property name="scaledContents">
              <bool>false</bool>
             </property>
@@ -327,6 +324,26 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_cannyF1">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_20">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
