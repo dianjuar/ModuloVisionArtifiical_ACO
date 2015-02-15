@@ -107,8 +107,8 @@ VentanaPrincipal::~VentanaPrincipal()
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
 {
     if(cap->isCamaraAbierta())
-        disconnect(cap, SIGNAL(tell_Mat(QImage)),
-                   this, SLOT(listen_matFromVideoCapture(QImage)));
+        disconnect(cap, SIGNAL(tell()),
+                   this, SLOT(listen_matFromVideoCapture()));
 
     cap->~capturadorImagen();
     ui->label_displayF0->setPixmap( QPixmap::fromImage(QImage("./media/CamNOT_FOUND.png")) );
