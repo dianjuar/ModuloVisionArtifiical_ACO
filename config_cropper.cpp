@@ -68,7 +68,6 @@ Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
     else
     {
         hay_Contenedor = false;
-        qDebug()<<"No se encontro un ningun contorno";
         return Rect();
     }
 
