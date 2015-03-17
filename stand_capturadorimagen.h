@@ -13,18 +13,21 @@ class capturadorImagen : public QThread
 public:
     static int const Modo_ImagenStatica=0;
     static int const Modo_Video=1;
+    static int modo_elegido;
 
     capturadorImagen(int modo=0, int devise=-1);
-    capturadorImagen(){}
     ~capturadorImagen();
 
     Mat getImagen();
 
-    bool isCamaraAbierta();
+    int get_device(){ return devise; }
+    bool isCamaraAbierta();    
+    void deviceChanged(int newDevice);
 
 
 public slots:
         void stop();
+        void InicicarHilo();
 
 signals:
         void tell();
@@ -39,7 +42,6 @@ private:
 
     //funcionamiento interno
     int devise;
-    int modo_elegido;
 
     void readImage();
     QImage Mat2QImage(Mat m);

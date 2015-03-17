@@ -2,32 +2,27 @@
 
 using namespace STAND;
 
+int capturadorImagen::modo_elegido;
+
 void capturadorImagen::run()
 {
-   // if(modo_elegido==Modo_Video && vc.isOpened())
-   // {
-        while(1)
+    for(;;)
+    {
         {
+            QMutexLocker locker(&m_mutex);
+            if (thread_stop) break;
+            ///////////////////////////
+            if( modo_elegido == Modo_Video && vc.isOpened() )
             {
-                QMutexLocker locker(&m_mutex);
-                if (thread_stop) break;
-                ///////////////////////////
-                switch(modo_elegido)
-                {
-                    case Modo_Video:
-                        vc >> Imagen;
-                        this->tell();
-                    break;
-
-                    case Modo_ImagenStatica:
-                        this->tell();
-                    break;
-                }
-                ///////////////////////////
+                vc >> Imagen;
+                tell();
             }
-            msleep( modo_elegido == Modo_Video? 1:150 );
+            else
+                tell();
+            ///////////////////////////
         }
-    //}
+        msleep( modo_elegido == Modo_Video? 1:150 );
+    }
 }
 
 capturadorImagen::capturadorImagen(int modo, int devise)
@@ -47,6 +42,8 @@ capturadorImagen::capturadorImagen(int modo, int devise)
             vc.open(devise);
         break;
     }
+
+    start();
 }
 
 capturadorImagen::~capturadorImagen()
@@ -64,6 +61,16 @@ void capturadorImagen::stop()
 {
     QMutexLocker locker(&m_mutex);
     thread_stop = true;
+
+    if(vc.isOpened())
+        vc.release();
+}
+
+void capturadorImagen::InicicarHilo()
+{
+    vc.open( devise );
+    thread_stop = false;
+    start();
 }
 
 bool capturadorImagen::isCamaraAbierta()
@@ -71,3 +78,17 @@ bool capturadorImagen::isCamaraAbierta()
     return modo_elegido==Modo_Video? vc.isOpened() : true;
 }
 
+void capturadorImagen::deviceChanged(int newDevice)
+{
+    if(modo_elegido == Modo_Video)
+    {        
+        if(vc.isOpened())
+        {
+            QMutexLocker locker(&m_mutex);
+            vc.release();
+        }
+
+        vc.open(newDevice);
+        devise = newDevice;
+    }
+}
