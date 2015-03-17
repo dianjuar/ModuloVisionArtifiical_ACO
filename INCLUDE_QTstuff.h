@@ -11,5 +11,6 @@
 #include <QTcpSocket>
 #include <QMovie>
 #include <QTextCodec>
+#include <QPushButton>
 
 #endif // INCLUDE_QTSTUFF_H
