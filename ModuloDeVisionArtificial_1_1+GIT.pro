@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     config_circledetect.cpp \
     config_partirncuadros.cpp \
     config_INTMatBuilder.cpp \
-    config_matintsender.cpp
+    config_matintsender.cpp \
+    config_calibrador.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -32,6 +33,7 @@ HEADERS  += ventanaprincipal.h \
     config_circledetect.h \
     config_partirncuadros.h \
     config_INTMatBuilder.h \
-    config_matintsender.h
+    config_matintsender.h \
+    config_calibrador.h
 
 FORMS    += ventanaprincipal.ui
