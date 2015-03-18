@@ -56,8 +56,6 @@ private slots:
 
     void on_slider_n_valueChanged(int value);
 
-    void on_pushButton_clicked();
-
     void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
 
     void on_slider_CannyU_1_valueChanged(int value);
@@ -79,6 +77,8 @@ private slots:
     void on_slider_delay_F1_1_valueChanged(int value);
 
     void on_doubleSpinBox_F1_1_valueChanged(double arg1);
+
+    void on_pushButton_ProbarConexion_EstCentral_clicked();
 
 private:
     Ui::VentanaPrincipal *ui;
