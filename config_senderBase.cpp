@@ -1,0 +1,43 @@
+#include "config_senderBase.h"
+
+using namespace CONFIG;
+
+const QString senderBase::MSJ_sinComprobar = QString("No se ha comprobado el estado de la conexión.");
+const QString senderBase::MSJ_comprobando = QString("Comprobando el estado de la conexión.");
+const QString senderBase::MSJ_correcto = QString("Estado de conexión CORRECTO!.");
+const QString senderBase::MSJ_incorrecto = QString("Estado de conexión INCORRECTO!.");
+const QString senderBase::RUTAIMG_correcto = QString("./media/TestConnection/Right.png");
+const QString senderBase::RUTAIMG_incorrecto = QString("./media/TestConnection/Bad.png");
+const QString senderBase::RUTAIMG_comprobando = QString("./media/TestConnection/connecting.gif");
+
+senderBase::senderBase(QString serverDir, int serverPort)
+{
+    this->serverDir = serverDir;
+    this->serverPort = serverPort;
+    buenaConexion=false;
+}
+
+void senderBase::testConnection( bool Testserio)
+{
+    client.connectToHost(serverDir,serverPort);
+
+    if(client.waitForConnected(3000))//connected
+        buenaConexion = true;
+    else
+        buenaConexion = false;
+
+    if(!Testserio)
+    {
+        client.write("test");
+        client.disconnectFromHost();
+    }
+}
+
+void senderBase::enviar(QByteArray byte)
+{
+    testConnection(true);
+
+    client.write( byte );
+
+    client.disconnectFromHost();
+}
