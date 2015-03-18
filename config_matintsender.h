@@ -13,6 +13,7 @@ public:
     matIntSender(QString serverDir);
 
     void enviarMatriz(int **mat, int n);
+    void enviarDistanciaEntreCuadros(float dist);
 
 private:
 

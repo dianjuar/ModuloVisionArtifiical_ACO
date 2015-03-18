@@ -28,8 +28,10 @@ public:
     void set_standbay();
 
     bool get_todoEnOrden(){ return todoEnOrden; }
-
     Mat get_m(){ return m; }
+    float get_distanciaEntreCuadros(){ return distanciaEntreCuadros; }
+
+
 
 public slots:
     void stop();
@@ -58,6 +60,8 @@ private :
     int delay;
     float squareSize;
     int mode;
+
+    float distanciaEntreCuadros;
 
     static const int mode_STANDBAY = 0;
     static const int mode_CAPTURING = 1;
