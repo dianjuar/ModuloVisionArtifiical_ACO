@@ -12,5 +12,6 @@
 #include <QMovie>
 #include <QTextCodec>
 #include <QPushButton>
+#include <QByteArray>
 
 #endif // INCLUDE_QTSTUFF_H

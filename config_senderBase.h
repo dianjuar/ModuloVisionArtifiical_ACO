@@ -24,6 +24,12 @@ public:
     static const QString RUTAIMG_incorrecto;
     static const QString RUTAIMG_comprobando;
 
+    static const QString MSJEnvio_divisor;
+    static const QString MSJEnvio_DefaultTest;
+    static const QString MSJEnvio_Prefijo_Mat;
+    static const QString MSJEnvio_Prefijo_Dist;
+
+
     senderBase(QString serverDir, int serverPort);
     senderBase(){}
 

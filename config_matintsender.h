@@ -2,6 +2,7 @@
 #define CONFIG_MATINTSENDER_H
 
 #include "config_senderBase.h"
+#include "INCLUDE_QTstuff.h"
 
 namespace CONFIG
 {
@@ -12,11 +13,9 @@ public:
     static const int port = 6666;
     matIntSender(QString serverDir);
 
-    void enviarMatriz(int **mat, int n);
-    void enviarDistanciaEntreCuadros(float dist);
+    void enviarInformacion(int **mat, int n, float dist);
 
-private:
-
+private:    
     QString IntMat2QString(int **mat, int n);
 
 

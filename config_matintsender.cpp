@@ -7,18 +7,15 @@ matIntSender::matIntSender(QString serverDir):senderBase(serverDir,port)
 
 }
 
+void matIntSender::enviarInformacion(int **mat, int n, float dist)
+{
+}
+
 void matIntSender::enviarMatriz(int **mat, int n)
 {
     enviar( QByteArray( IntMat2QString(mat,n).toUtf8().data() ) );
 }
 
-void matIntSender::enviarDistanciaEntreCuadros(float dist)
-{
-    char *data;
-    sprintf(data, "%f", dist);
-
-    enviar( QByteArray(data) );
-}
 
 QString matIntSender::IntMat2QString(int **mat, int n)
 {
