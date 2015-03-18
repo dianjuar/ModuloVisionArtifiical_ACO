@@ -1,46 +1,21 @@
 #ifndef CONFIG_MATINTSENDER_H
 #define CONFIG_MATINTSENDER_H
 
-#include "INCLUDE_QTstuff.h"
+#include "config_senderBase.h"
 
 namespace CONFIG
 {
 
-class matIntSender : public QObject
+class matIntSender : public senderBase
 {
-    Q_OBJECT
 public:
-    explicit matIntSender(QObject *parent = 0);
+    static const int port = 6666;
+    matIntSender(QString serverDir);
 
-    void testConnection(QString hostDir, bool Testserio=false);
-    void enviarMatriz(QString hostDir, int **mat, int n);
-
-    void set_serverDir(QString serverDir){this->serverDir = serverDir;}
-    void set_buenaConexion(bool buenaConexion){ this->buenaConexion = buenaConexion; }
-
-    bool get_buenaConexion(){ return buenaConexion; }
-
-    QString MSJ_sinComprobar;
-    QString MSJ_comprobando;
-    QString MSJ_correcto;
-    QString MSJ_incorrecto;
-
-    QString RUTAIMG_correcto;
-    QString RUTAIMG_incorrecto;
-    QString RUTAIMG_comprobando;
-
-signals:
-
-public slots:
+    void enviarMatriz(int **mat, int n);
 
 private:
-    QTcpSocket client;
-    QString serverDir;
 
-
-
-    int serverPort;
-    bool buenaConexion;
     QString IntMat2QString(int **mat, int n);
 
 
