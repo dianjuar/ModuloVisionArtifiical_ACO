@@ -296,7 +296,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
             if( mSender->get_buenaConexion() )
             {
                 mSender->enviarMatriz(IntMatB->get_INT_mat(), IntMatB->get_n());
-                mSender->enviarDistanciaEntreCuadros( calib->get_distanciaEntreCuadros()  );
+                mSender->enviarDistanciaEntreCuadros( /*calib->get_distanciaEntreCuadros() */ 0.0 );
             }
         }
         break;
