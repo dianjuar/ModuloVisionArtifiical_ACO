@@ -52,4 +52,3 @@ void partirNcuadros::set_n(int n)
 
     primeraVez = false;
 }
-

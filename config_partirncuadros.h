@@ -26,6 +26,7 @@ public:
     //getter
     int get_n(){ return n; }
     int get_cuantosCuadrosSonNecesarios(){ return cuantosCuadrosSonNecesarios; }
+    int get_distanciaEnPXentreCuadros(){ return tamano_CuadroPartido_N; }
     bool get_esNecesarioOtroCuadro(){ return esNecesarioOtroCuadro; }
 };
 
