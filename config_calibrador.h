@@ -6,6 +6,8 @@
 #include "time.h"
 #include "stand_capturadorimagen.h"
 
+#include "iostream"
+
 namespace CONFIG
 {
 
@@ -29,9 +31,13 @@ public:
 
     bool get_todoEnOrden(){ return todoEnOrden; }
     Mat get_m(){ return m; }
-    float get_distanciaEntreCuadros(){ return distanciaEntreCuadros; }
+    float get_distanciaEntreCuadros();
+    void set_distanciaEntreCuadros(int distnaciaEntreCuadros_PX, int n);
 
+    Point point2Pixel(Point RealPoint);
+    Point pixel2Point(Point Ppx, bool undistorsioned=false);
 
+    double get_distanciaEntrePuntos(Point RealA, Point RealB);
 
 public slots:
     void stop();
@@ -76,14 +82,23 @@ private :
     Mat cameraMatrix;
     Mat distCoeffs;
     Mat rMat, tMat;
+    Mat distortionMat;
     float reprojErr;
     double totalAvgErr;
     float aspectRatio;
     std::vector<float> reprojErrs;
+    double K1,K2,K3;
+
 
     VideoCapture vc;
 
     void run();
+
+    void set_Ks();
+    void set_distortionMat();
+    void set_rMat( std::vector<Mat> rvecs );
+    void set_tMat( std::vector<Mat> tvecs );
+    Point undistortionedPoints(Point Ppx);
 
     bool runAndSave();
     bool runCalibration( std::vector<Mat> &rvecs, std::vector<Mat> &tvecs );
@@ -91,6 +106,7 @@ private :
     double computeReprojectionErrors( const std::vector<vector<Point3f> >& objectPoints,
                                       const std::vector<Mat>& rvecs, const std::vector<Mat>& tvecs,
                                       std::vector<float>& perViewErrors );
+
 
 
 };

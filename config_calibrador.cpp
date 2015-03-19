@@ -1,6 +1,7 @@
 #include "config_calibrador.h"
 
 using namespace CONFIG;
+using namespace std;
 
 //int calibrador::mode_STANDBAY;
 
@@ -55,6 +56,79 @@ void calibrador::set_standbay()
     fotoTomada(0);
 }
 
+float calibrador::get_distanciaEntreCuadros()
+{
+    return distanciaEntreCuadros;
+}
+
+void calibrador::set_distanciaEntreCuadros(int distanciaEntreCuadros_PX, int n)
+{
+    int n2 = n/2;
+
+    Point A(n2*distanciaEntreCuadros_PX,n2*distanciaEntreCuadros_PX);
+    Point B(n2*distanciaEntreCuadros_PX, (n2+1)*distanciaEntreCuadros_PX);
+
+    Point RealPointA = pixel2Point(A);
+    Point RealPointB = pixel2Point(B);
+
+    distanciaEntreCuadros = get_distanciaEntrePuntos(RealPointA, RealPointB);
+
+}
+
+Point calibrador::point2Pixel(Point RealPoint)
+{
+    Mat WordlVec = Mat::zeros(4,1,cameraMatrix.type());
+
+    WordlVec.at<double>(0,0)= RealPoint.x;
+    WordlVec.at<double>(1,0)= RealPoint.y;
+    WordlVec.at<double>(2,0)= 0.0;
+    WordlVec.at<double>(3,0)= 1;
+
+
+    Mat pixel = cameraMatrix*distortionMat*WordlVec;
+
+    return  Point(pixel.at<double>(0,0),
+                  pixel.at<double>(1,0));
+}
+
+Point calibrador::pixel2Point(Point Ppx, bool undistorsioned)
+{
+    if(!undistorsioned)
+    Ppx = undistortionedPoints( Ppx );
+
+    Mat matConst = cameraMatrix*distortionMat;
+
+    double C22, C13, C32, C12, C33, C23;
+    double C11, C31, C21;
+
+    C33 = matConst.at<double>( 3-1 , 3-1 );
+    C22 = matConst.at<double>( 2-1 , 2-1 );
+    C13 = matConst.at<double>( 1-1 , 3-1 );
+    C32 = matConst.at<double>( 3-1 , 2-1 );
+    C12 = matConst.at<double>( 1-1 , 2-1 );
+    C33 = matConst.at<double>( 3-1 , 3-1 );
+    C23 = matConst.at<double>( 2-1 , 3-1 );
+    C11 = matConst.at<double>( 1-1 , 1-1 );
+    C31 = matConst.at<double>( 3-1 , 1-1 );
+    C21 = matConst.at<double>( 2-1 , 1-1 );
+
+    double denominador = C11*C22 - C11*C32*Ppx.y - C31*C22*Ppx.x -C12*C21 + C12*C31*Ppx.y + C32*C21*Ppx.x;
+
+    double numeradorX = C33*C22*Ppx.x - C13*C22 + C13*C32*Ppx.y - C12*C33*Ppx.y + C12*C23 - C32*C23*Ppx.x;
+    double numeradorY = C11*C33*Ppx.y - C11*C23 + C23*C31*Ppx.x - C21*C33*Ppx.x + C21*C13 - C13*C31*Ppx.y;
+
+    Point ret( numeradorX/denominador ,
+               numeradorY/denominador);
+
+
+    return ret;
+}
+
+double calibrador::get_distanciaEntrePuntos(Point RealA, Point RealB)
+{
+    return qSqrt( qPow(RealA.x - RealB.x, 2) + qPow(RealA.y - RealB.y, 2) );
+}
+
 void calibrador::stop()
 {
     QMutexLocker locker(&m_mutex);
@@ -75,7 +149,6 @@ void calibrador::InicicarHilo(int device)
 
     start();
 }
-
 
 void calibrador::run()
 {    
@@ -133,7 +206,7 @@ void calibrador::run()
                 {
                     bool ok = runAndSave();
 
-                    if(mode) mode = mode_CALIBRATED; else mode = mode_STANDBAY;
+                    if(ok) mode = mode_CALIBRATED; else mode = mode_STANDBAY;
 
                     CalibracionExitosa(ok);
                 }
@@ -146,6 +219,38 @@ void calibrador::run()
     }
 }
 
+void calibrador::set_Ks()
+{
+    K1 = distCoeffs.at<double>(0,0);
+    K2 = distCoeffs.at<double>(0,1);
+    K3 = distCoeffs.at<double>(0,2);
+}
+
+void calibrador::set_distortionMat()
+{
+    Mat rvecAux = Mat(1,3,tMat.type());
+
+    for (int var = 0; var < 3; var++)
+        rvecAux.at<double>(0,var) = rMat.at<double>(var,0);
+
+    Mat R;
+    Rodrigues(rvecAux, R);
+
+    cout<<R<<endl;
+    cout<<tMat<<endl;
+    cout<<"****************"<<endl;
+
+
+    cv::Mat T = Mat::zeros(3, 3, cameraMatrix.type()); // T is 4x4
+
+    T( cv::Range(0,3), cv::Range(0,2) ) = R(cv::Range(0,3), cv::Range(0,2)) * 1; // copies R into T
+    T( cv::Range(0,3), cv::Range(2,3) ) = tMat * 1; // copies tvec into T
+
+    cout<<T<<endl;
+
+    distortionMat = T;
+}
+
 bool calibrador::runAndSave()
 {
     vector<Mat> rvecs, tvecs;
@@ -153,6 +258,14 @@ bool calibrador::runAndSave()
     bool ok = runCalibration( rvecs, tvecs);
 
     todoEnOrden = ok;
+
+    if(ok)
+    {
+        set_rMat( rvecs );
+        set_tMat( tvecs );
+        set_distortionMat();
+        set_Ks();
+    }
 
     return ok;
 }
@@ -209,6 +322,48 @@ double calibrador::computeReprojectionErrors(const std::vector< std::vector<Poin
         totalPoints += n;
     }
 
-
     return qSqrt(totalErr/totalPoints);
+}
+
+void calibrador::set_rMat(std::vector<Mat> rvecs)
+{
+    rMat = rvecs.at( rvecs.size()-1 );
+}
+
+void calibrador::set_tMat(std::vector<Mat> tvecs)
+{
+    tMat = tvecs.at( tvecs.size()-1 );
+}
+
+// Modelos computacionales en ingeniería
+// desarrollos novedosos y aplicaciones
+// Jesús Marcey García C.
+Point calibrador::undistortionedPoints(Point Ppx)
+{
+    Mat normalVecPx(3,1,rMat.type());
+    normalVecPx.at<double>(0,0) = Ppx.x;
+    normalVecPx.at<double>(1,0) = Ppx.y;
+    normalVecPx.at<double>(2,0) = 1;
+
+    Mat normalizedVecPx = cameraMatrix.inv()*normalVecPx;
+
+    double Udn,Vdn;
+    double Uin,Vin;
+
+    Udn = normalizedVecPx.at<double>(0,0);
+    Vdn = normalizedVecPx.at<double>(0,1);
+
+    Uin = Udn + Udn*( K1*( qPow(Udn,2) + qPow(Vdn,2) ) + K2*qPow((qPow(Udn,2) + qPow(Vdn,2)),2) + K3*qPow((qPow(Udn,2) + qPow(Vdn,2)),3) );
+    Vin = Vdn + Vdn*( K1*( qPow(Udn,2) + qPow(Vdn,2) ) + K2*qPow((qPow(Udn,2) + qPow(Vdn,2)),2) + K3*qPow((qPow(Udn,2) + qPow(Vdn,2)),3));
+
+    normalizedVecPx.at<double>(0,0) = Uin;
+    normalizedVecPx.at<double>(0,1) = Vin;
+
+    Mat desnomalized_undistornioned_Points = cameraMatrix*normalizedVecPx;
+
+    Point realPointsPx( desnomalized_undistornioned_Points.at<double>(0,0) ,
+                        desnomalized_undistornioned_Points.at<double>(0,1));
+
+    return realPointsPx;
+
 }
