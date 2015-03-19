@@ -9,13 +9,16 @@ matIntSender::matIntSender(QString serverDir):senderBase(serverDir,port)
 
 void matIntSender::enviarInformacion(int **mat, int n, float dist)
 {
-}
+    QString sms = senderBase::MSJEnvio_Prefijo_Mat;
+    sms.append(IntMat2QString(mat,n));
 
-void matIntSender::enviarMatriz(int **mat, int n)
-{
-    enviar( QByteArray( IntMat2QString(mat,n).toUtf8().data() ) );
-}
+    sms.append( senderBase::MSJEnvio_divisor );
 
+    sms.append(senderBase::MSJEnvio_Prefijo_Dist);
+    sms.append( QString::number(dist) );
+
+    enviar( sms.toUtf8().data() );
+}
 
 QString matIntSender::IntMat2QString(int **mat, int n)
 {
