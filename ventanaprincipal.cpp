@@ -19,7 +19,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -286,8 +286,11 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_PartinN:
         {
-            if(!IntMatB->get_contieneError())            
+            if(!IntMatB->get_contieneError())
+            {
                 pasarALaSiguienteEtapa();
+                calib->set_distanciaEntreCuadros( PNcuadros->get_distanciaEnPXentreCuadros(), PNcuadros->get_n() );
+            }
         }
         break;
 
@@ -295,8 +298,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
         {
             if( mSender->get_buenaConexion() )
             {
-                mSender->enviarMatriz(IntMatB->get_INT_mat(), IntMatB->get_n());
-                mSender->enviarDistanciaEntreCuadros( /*calib->get_distanciaEntreCuadros() */ 0.0 );
+                mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros() );
             }
         }
         break;
