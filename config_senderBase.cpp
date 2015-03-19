@@ -33,7 +33,7 @@ void senderBase::testConnection( bool Testserio)
 
     if(!Testserio)
     {
-        client.write(MSJEnvio_DefaultTest);
+        client.write(MSJEnvio_DefaultTest.toUtf8().data());
         client.disconnectFromHost();
     }
 }
