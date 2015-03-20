@@ -28,12 +28,10 @@ class INTMatBuilder
 
     void construir_INTMat_and_cartoon();
 
-    bool Validos_PuntosInicioFin();
     bool contieneNegro(Mat m);
 
     Point *P_Inicio, *P_Fin;
 
-    bool contieneError;
     void set_TamanosYEscalas();
 
     void copiar_CuadroMatCartoon_a_MatCartoon(int i, int j, int valor);
@@ -53,7 +51,6 @@ public:
     void set_P_InicioYFin(Point *Inicio, Point *Fin);
 
     //getter
-    bool get_contieneError(){ return contieneError; }
     Mat get_MatCartooned(){  return mat_cartooned; }
     int** get_INT_mat(){ return INT_mat; }
     int get_tamano_MatCartooned(){ return tamano_MatCartooned; }
