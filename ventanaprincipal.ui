@@ -1502,9 +1502,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_display_IF">
+           <widget class="STAND::ClickableLabel" name="label_display_IF">
             <property name="text">
-             <string>LABEL</string>
+             <string/>
             </property>
             <property name="pixmap">
              <pixmap>media/CamNOT_FOUND.png</pixmap>
@@ -2054,6 +2054,13 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>STAND::ClickableLabel</class>
+   <extends>QLabel</extends>
+   <header>stand_clickablelabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
