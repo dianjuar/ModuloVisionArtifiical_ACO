@@ -21,37 +21,7 @@ void INTMatBuilder::construir_INTMat_and_cartoon()
            miniMat.~Mat();
         }
 
-    if(Validos_PuntosInicioFin())//crear matriz caricaturizada
-    {
-        contieneError = false;
         crear_MartCartooned();
-    }
-    else
-    {
-        contieneError = true;
-        mat_cartooned = imread("./media/error.png");
-    }
-
-}
-
-bool INTMatBuilder::Validos_PuntosInicioFin()
-{
-    Point ini_INTmat,fin_INTmat;
-
-    ini_INTmat = Point(P_Inicio->x/tamano_cuadroAnalizar_MatrizCroped,
-                       P_Inicio->y/tamano_cuadroAnalizar_MatrizCroped);
-    fin_INTmat = Point(P_Fin->x/tamano_cuadroAnalizar_MatrizCroped,
-                       P_Fin->y/tamano_cuadroAnalizar_MatrizCroped);
-
-    //if( INT_mat[C1ii][C1jj] == MAPA_obstaculo || INT_mat[C2ii][C2jj] == MAPA_obstaculo )
-    if( INT_mat[ini_INTmat.y][ini_INTmat.x] == MAPA_obstaculo || INT_mat[fin_INTmat.y][fin_INTmat.x] == MAPA_obstaculo )
-        return false;
-    else
-    {
-        INT_mat[ini_INTmat.y][ini_INTmat.x] = MAPA_inicio;
-        INT_mat[fin_INTmat.y][fin_INTmat.x] = MAPA_fin;
-        return true;
-    }
 
 }
 
@@ -119,8 +89,6 @@ INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_
     this->mat_original_BlackAndWhite  =mat_original_BlackAndWhite;
     this->n = n;
     this->tamano_MatrizCropped = tamano_MatrizCropped;
-
-    contieneError = true;
 
     MAT_libre = imread("./media/libre.png");
     MAT_obstaculo = imread("./media/obstaculo.png");
