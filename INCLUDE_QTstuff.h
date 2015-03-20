@@ -13,5 +13,6 @@
 #include <QTextCodec>
 #include <QPushButton>
 #include <QByteArray>
+#include <QMouseEvent>
 
 #endif // INCLUDE_QTSTUFF_H
