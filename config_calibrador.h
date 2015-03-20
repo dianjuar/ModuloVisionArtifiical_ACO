@@ -33,6 +33,7 @@ public:
     Mat get_m(){ return m; }
     float get_distanciaEntreCuadros();
     void set_distanciaEntreCuadros(int distnaciaEntreCuadros_PX, int n);
+    void set_distanciaEntreCuadros(float dist){ distanciaEntreCuadros = dist; }
 
     Point point2Pixel(Point RealPoint);
     Point pixel2Point(Point Ppx, bool undistorsioned=false);
@@ -73,7 +74,6 @@ private :
     static const int mode_CAPTURING = 1;
     static const int mode_CALIBRATED = 2;
 
-
     Mat m;
     Mat viewGray;
     clock_t prevTimestamp;
@@ -88,7 +88,6 @@ private :
     float aspectRatio;
     std::vector<float> reprojErrs;
     double K1,K2,K3;
-
 
     VideoCapture vc;
 
@@ -106,7 +105,6 @@ private :
     double computeReprojectionErrors( const std::vector<vector<Point3f> >& objectPoints,
                                       const std::vector<Mat>& rvecs, const std::vector<Mat>& tvecs,
                                       std::vector<float>& perViewErrors );
-
 
 
 };
