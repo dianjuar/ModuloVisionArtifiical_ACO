@@ -78,6 +78,8 @@ private slots:
 
     void on_pushButton_setPF_IF_clicked();
 
+    void Mouse_Pressed();
+
 private:
     Ui::VentanaPrincipal *ui;
 

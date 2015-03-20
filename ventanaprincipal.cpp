@@ -68,6 +68,9 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     connect(calib, SIGNAL(CalibracionExitosa(bool)),
             this, SLOT(set_calibracionExitosa(bool)));
 
+    connect(ui->label_display_IF, SIGNAL(clicked()),
+            this, SLOT(Mouse_Pressed()) );
+
     //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
     for(int i=1;i<FASE_NumeroFases;i++)
         ui->tabWidget->setTabEnabled(i,false);
@@ -420,3 +423,9 @@ void VentanaPrincipal::on_pushButton_setPF_IF_clicked()
     ui->label_I_IF->setEnabled(false);
     ui->label_F_IF->setEnabled(true);
 }
+
+void VentanaPrincipal::Mouse_Pressed()
+{
+    qDebug()<<ui->label_display_IF->x<<ui->label_display_IF->y;
+}
+
