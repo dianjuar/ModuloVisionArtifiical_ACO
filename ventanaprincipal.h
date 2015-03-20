@@ -32,8 +32,8 @@ public:
     static const int FASE_calibracion = 1;
     static const int FASE_cortarContenido = 2;
     static const int FASE_seleccionUmbral = 3;
-    static const int FASE_InicioFin = 4;
-    static const int FASE_PartinN = 5;
+    static const int FASE_PartinN = 4;
+    static const int FASE_InicioFin = 5;
     static const int FASE_EnvioEstacionCentral = 6;
     
 private slots:
@@ -48,12 +48,6 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_btn_atras_clicked();
     void on_slider_umbralBlackAndWhite_valueChanged(int value);
-    void on_slider_HOUGH_min_dist_valueChanged(int value);
-    void on_slider_HOUGH_param_1_valueChanged(int value);
-    void on_slider_HOUGH_param_2_valueChanged(int value);
-    void on_slider_HOUGH_min_radius_valueChanged(int value);
-    void on_slider_HOUGH_max_radius_valueChanged(int value);
-
     void on_slider_n_valueChanged(int value);
 
     void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
@@ -79,6 +73,10 @@ private slots:
     void on_doubleSpinBox_F1_1_valueChanged(double arg1);
 
     void on_pushButton_ProbarConexion_EstCentral_clicked();
+
+    void on_pushButton_setPI_IF_clicked();
+
+    void on_pushButton_setPF_IF_clicked();
 
 private:
     Ui::VentanaPrincipal *ui;
