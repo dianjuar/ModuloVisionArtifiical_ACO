@@ -25,8 +25,9 @@ public:
     {
         QImage img;
 
-        if(resize==true)
+        if(resize==true)        
             cv::resize(m,m,Size(x,x),0,0,INTER_LINEAR);
+
 
         switch (m.type())
         {
