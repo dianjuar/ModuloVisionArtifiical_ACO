@@ -3,8 +3,6 @@
 using namespace CONFIG;
 using namespace std;
 
-//int calibrador::mode_STANDBAY;
-
 calibrador::calibrador(float squareSize, Size boardSize, int NFotos, int delay)
 {
     this->squareSize = squareSize;
@@ -20,8 +18,10 @@ calibrador::calibrador(float squareSize, Size boardSize, int NFotos, int delay)
 
     if(STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica)
         m = imread("./media/static.png");
-    else
+    else    
         todoEnOrden=true;
+
+
 }
 
 calibrador::~calibrador()
