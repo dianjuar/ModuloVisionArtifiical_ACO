@@ -24,6 +24,8 @@ public:
     bool isCamaraAbierta();    
     void deviceChanged(int newDevice);
 
+    void write(FileStorage &fs) const; //Write serialization for this class
+    void read(const FileNode& node);
 
 public slots:
         void stop();

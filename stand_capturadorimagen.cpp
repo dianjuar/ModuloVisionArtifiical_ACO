@@ -92,3 +92,13 @@ void capturadorImagen::deviceChanged(int newDevice)
         devise = newDevice;
     }
 }
+
+void capturadorImagen::write(FileStorage &fs) const
+{
+     fs << "{" << "devise" << devise << "}";
+}
+
+void capturadorImagen::read(const FileNode& node)                          //Read serialization for this class
+{
+    devise = (int)node["K1"];
+}

@@ -2040,6 +2040,15 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuArchivo">
+    <property name="title">
+     <string>Archivo</string>
+    </property>
+    <addaction name="actionGuardar_Configuraci_n"/>
+    <addaction name="separator"/>
+    <addaction name="actionCargar_Configuraci_n"/>
+   </widget>
+   <addaction name="menuArchivo"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -2052,6 +2061,19 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionGuardar_Configuraci_n">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Guardar Configuración</string>
+   </property>
+  </action>
+  <action name="actionCargar_Configuraci_n">
+   <property name="text">
+    <string>Cargar Configuración</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

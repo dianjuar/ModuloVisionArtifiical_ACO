@@ -31,6 +31,8 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     calib = new CONFIG::calibrador(ui->doubleSpinBox_F1_1->value(), Size(ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()),
                                    ui->slider_NFotos_F1_1->value(), ui->slider_delay_F1_1->value());
 
+    //GSparam = new CONFIG::guardarYCargarParametros(calib,crop,IntMatB,mSender,PNcuadros,umb);
+
     ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
     ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
 
@@ -294,9 +296,10 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_EnvioEstacionCentral:
         {
-            if( mSender->get_buenaConexion() )
+            if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
             {
                 mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros() );
+                this->hide();
             }
         }
         break;

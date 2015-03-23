@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     config_matintsender.cpp \
     config_calibrador.cpp \
     config_senderBase.cpp \
-    stand_clickablelabel.cpp
+    stand_clickablelabel.cpp \
+    config_guardarycargarparametros.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -36,6 +37,8 @@ HEADERS  += ventanaprincipal.h \
     config_matintsender.h \
     config_calibrador.h \
     config_senderBase.h \
-    stand_clickablelabel.h
+    stand_clickablelabel.h \
+    config_guardarycargarparametros.h
 
-FORMS    += ventanaprincipal.ui
+FORMS    += ventanaprincipal.ui \
+    ventanaEjecutando.ui

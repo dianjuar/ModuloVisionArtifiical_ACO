@@ -11,6 +11,7 @@
 #include "config_INTMatBuilder.h"
 #include "config_matintsender.h"
 #include "config_calibrador.h"
+#include "config_guardarycargarparametros.h"
 
 namespace Ui
 {
@@ -93,6 +94,9 @@ private:
     CONFIG::INTMatBuilder *IntMatB;
     CONFIG::matIntSender *mSender;
     CONFIG::calibrador *calib;
+    CONFIG::guardarYCargarParametros *GSparam;
+
+
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
     void set_EnableSliderF1_1(bool enable, QPushButton *bMother, QPushButton *bOther);
