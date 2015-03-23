@@ -7,7 +7,6 @@
 
 #include "config_cropper.h"
 #include "config_umbralizador.h"
-#include "config_circledetect.h"
 #include "config_partirncuadros.h"
 #include "config_INTMatBuilder.h"
 #include "config_matintsender.h"
@@ -39,6 +38,9 @@ public:
 private slots:
     void set_FotoTomada_calibracion(int);
     void set_calibracionExitosa(bool);
+
+    void setted_PuntoI(bool);
+    void setted_PuntoF(bool);
 
     void listen_matFromVideoCapture();
     void listen_matFromCalibrate();
@@ -78,7 +80,7 @@ private slots:
 
     void on_pushButton_setPF_IF_clicked();
 
-    void Mouse_Pressed();
+    void Mouse_Pressed_DeteccionCirculos();
 
 private:
     Ui::VentanaPrincipal *ui;
@@ -87,7 +89,6 @@ private:
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
     CONFIG::umbralizador *umb;
-    CONFIG::circleDetect *cirD;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
     CONFIG::matIntSender *mSender;

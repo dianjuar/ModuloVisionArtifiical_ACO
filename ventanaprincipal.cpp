@@ -25,9 +25,6 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
-    /*cirD = new CONFIG::circleDetect( ui->slider_HOUGH_min_dist->value(),
-                                     ui->slider_HOUGH_param_1->value(), ui->slider_HOUGH_param_2->value(),
-                                     ui->slider_HOUGH_min_radius->value(), ui->slider_HOUGH_max_radius->value());*/
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
@@ -69,8 +66,13 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
             this, SLOT(set_calibracionExitosa(bool)));
 
     connect(ui->label_display_IF, SIGNAL(clicked()),
-            this, SLOT(Mouse_Pressed()) );
+            this, SLOT(Mouse_Pressed_DeteccionCirculos()) );
 
+    connect(IntMatB, SIGNAL(settedPuntoI(bool)),
+            this, SLOT(setted_PuntoI(bool)) );
+
+    connect(IntMatB, SIGNAL(settedPuntoF(bool)),
+            this, SLOT(setted_PuntoF(bool)) );
     //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
     for(int i=1;i<FASE_NumeroFases;i++)
         ui->tabWidget->setTabEnabled(i,false);
@@ -165,6 +167,22 @@ void VentanaPrincipal::set_calibracionExitosa(bool exito)
         ui->label_TodoEnOrden_F1_1->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/error.png")) );
 }
 
+void VentanaPrincipal::setted_PuntoI(bool b)
+{
+    if(b)
+        ui->label_puntoIState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/Right.png")) );
+    else
+        ui->label_puntoIState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/error.png")) );
+}
+
+void VentanaPrincipal::setted_PuntoF(bool b)
+{
+    if(b)
+        ui->label_puntoFState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/Right.png")) );
+    else
+        ui->label_puntoFState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/error.png")) );
+}
+
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
 {
     cap->deviceChanged( arg1 );
@@ -255,7 +273,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_InicioFin:
         {
-            if(cirD->get_calibracionCorrecta())
+            if(IntMatB->get_todoEnOrden())
             {
                 pasarALaSiguienteEtapa();
             }
@@ -424,8 +442,13 @@ void VentanaPrincipal::on_pushButton_setPF_IF_clicked()
     ui->label_F_IF->setEnabled(true);
 }
 
-void VentanaPrincipal::Mouse_Pressed()
+void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos()
 {
-    qDebug()<<ui->label_display_IF->x<<ui->label_display_IF->y;
+    if(ui->label_I_IF->isEnabled())
+        IntMatB->set_P_Inicio( Point(ui->label_display_IF->x,ui->label_display_IF->y) );
+    else
+        if(ui->label_F_IF->isEnabled())
+            IntMatB->set_P_Fin( Point(ui->label_display_IF->x,ui->label_display_IF->y) );
+
 }
 
