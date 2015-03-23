@@ -84,9 +84,14 @@ void INTMatBuilder::crear_MartCartooned()
             copiar_CuadroMatCartoon_a_MatCartoon(i,j, INT_mat[i][j]);
 }
 
+Point INTMatBuilder::convert_PointScreen2PointMat(Point p)
+{
+    return Point(p.x/tamano_cuadroMatCartooned,p.y/tamano_cuadroMatCartooned);
+}
+
 INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_MatrizCropped)
 {
-    this->mat_original_BlackAndWhite  =mat_original_BlackAndWhite;
+    this->mat_original_BlackAndWhite = mat_original_BlackAndWhite;
     this->n = n;
     this->tamano_MatrizCropped = tamano_MatrizCropped;
 
@@ -98,6 +103,11 @@ INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_
     tamano_imagenCartoonOriginal = MAT_libre.rows;
 
     tamano_MatCartooned = 350;
+
+    P_Inicio = Point(-1,-1);
+    P_Fin = Point(-1,-1);
+
+    bool_settedPuntoF = bool_settedPuntoI = false;
 }
 
 void INTMatBuilder::set_n(int n)
@@ -121,8 +131,65 @@ void INTMatBuilder::set_n(int n)
     construir_INTMat_and_cartoon();
 }
 
-void INTMatBuilder::set_P_InicioYFin(Point *Inicio, Point *Fin)
+void INTMatBuilder::set_P_Inicio(Point Inicio)
 {
-    this->P_Inicio = Inicio;
-    this->P_Fin = Fin;
+    Inicio = convert_PointScreen2PointMat(Inicio);
+
+    if(INT_mat[Inicio.y][Inicio.x]==MAPA_libre || INT_mat[Inicio.y][Inicio.x]==MAPA_fin || INT_mat[Inicio.y][Inicio.x]==MAPA_inicio)
+    {
+
+        if(INT_mat[Inicio.y][Inicio.x]==MAPA_fin)
+        {
+            bool_settedPuntoF = false;
+            emit settedPuntoF(bool_settedPuntoF);
+        }
+
+        if(P_Inicio.x != -1 && P_Inicio.y != -1 )
+        {
+            INT_mat[P_Inicio.y][P_Inicio.x] = MAPA_libre;
+            copiar_CuadroMatCartoon_a_MatCartoon(P_Inicio.y,P_Inicio.x, MAPA_libre);
+        }
+
+
+        P_Inicio = Inicio;
+
+        INT_mat[Inicio.y][Inicio.x] = MAPA_inicio;
+        copiar_CuadroMatCartoon_a_MatCartoon(Inicio.y,Inicio.x, MAPA_inicio);
+
+        bool_settedPuntoI = true;
+        emit settedPuntoI(bool_settedPuntoI);
+
+    }
+
+}
+
+void INTMatBuilder::set_P_Fin(Point Fin)
+{
+    Fin = convert_PointScreen2PointMat(Fin);
+
+    if(INT_mat[Fin.y][Fin.x]==MAPA_libre || INT_mat[Fin.y][Fin.x]==MAPA_fin || INT_mat[Fin.y][Fin.x]==MAPA_inicio)
+    {
+
+        if(INT_mat[Fin.y][Fin.x]==MAPA_inicio)
+        {
+            bool_settedPuntoI = false;
+            emit settedPuntoI(bool_settedPuntoI);
+        }
+
+        if(P_Fin.x != -1 && P_Fin.y != -1 )
+        {
+            INT_mat[P_Fin.y][P_Fin.x] = MAPA_libre;
+            copiar_CuadroMatCartoon_a_MatCartoon(P_Fin.y,P_Fin.x, MAPA_libre);
+        }
+
+
+        P_Fin = Fin;
+
+        INT_mat[Fin.y][Fin.x] = MAPA_fin;
+        copiar_CuadroMatCartoon_a_MatCartoon(Fin.y,Fin.x, MAPA_fin);
+
+        bool_settedPuntoF = true;
+        emit settedPuntoF(bool_settedPuntoF);
+
+    }
 }
