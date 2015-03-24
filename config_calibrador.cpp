@@ -3,6 +3,10 @@
 using namespace CONFIG;
 using namespace std;
 
+#include <iostream>
+using std::count;
+using std::endl;
+
 calibrador::calibrador(float squareSize, Size boardSize, int NFotos, int delay)
 {
     this->squareSize = squareSize;

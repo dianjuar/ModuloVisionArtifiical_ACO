@@ -48,6 +48,7 @@ private:
     void readImage();
     QImage Mat2QImage(Mat m);
     void run();
+    void constructor(int modo, int devise);
 
 };
 

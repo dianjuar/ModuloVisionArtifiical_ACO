@@ -7,6 +7,8 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VentanaPrincipal)
 {
+    calibrando = true;
+
     //para no tener problemas con los acentos
     QTextCodec *linuxCodec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForTr(linuxCodec);
@@ -31,7 +33,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     calib = new CONFIG::calibrador(ui->doubleSpinBox_F1_1->value(), Size(ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()),
                                    ui->slider_NFotos_F1_1->value(), ui->slider_delay_F1_1->value());
 
-    //GSparam = new CONFIG::guardarYCargarParametros(calib,crop,IntMatB,mSender,PNcuadros,umb);
+    GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,mSender);
 
     ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
     ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
@@ -75,9 +77,15 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     connect(IntMatB, SIGNAL(settedPuntoF(bool)),
             this, SLOT(setted_PuntoF(bool)) );
-    //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
-    for(int i=1;i<FASE_NumeroFases;i++)
-        ui->tabWidget->setTabEnabled(i,false);
+
+    inhabilitarTodasLasPestanas();
+
+    FileStorage fs = FileStorage(CONFIG::guardarYCargarParametros::QSnombreArchivo.toUtf8().data(), FileStorage::READ);
+
+    if(!fs.isOpened())
+        ui->actionCargar_Configuraci_n->setEnabled(false);
+
+    fs.release();
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
@@ -87,7 +95,10 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
     {
         case FASE_eleccionDeDispositivoDeGrabacion:
         {
-            ui->label_displayF0->setPixmap( STAND::Tools::Mat2QPixmap(m) );
+            if(!calibrando)
+                crop->cortarImagen(m);
+
+            ui->label_displayF0->setPixmap( STAND::Tools::Mat2QPixmap(m, !calibrando, 500 ) );
             break;
         }
 
@@ -235,6 +246,25 @@ void VentanaPrincipal::pasarALaSiguienteEtapa()
     ui->tabWidget->setCurrentIndex(config_index);
 }
 
+void VentanaPrincipal::crearVentanaAfterCalibracion()
+{
+    ui->btn_siguiente->setEnabled(false);
+    ui->btn_atras->setEnabled( false );
+    ui->tabWidget->setCurrentIndex(0);
+    inhabilitarTodasLasPestanas();
+
+    calibrando = false;
+    /*ventanaAfterCalibracion *vAfterC = new ventanaAfterCalibracion( cap, crop, this );
+    vAfterC->showNormal();*/
+}
+
+void VentanaPrincipal::inhabilitarTodasLasPestanas()
+{
+    //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
+    for(int i=1;i<FASE_NumeroFases;i++)
+        ui->tabWidget->setTabEnabled(i,false);
+}
+
 void VentanaPrincipal::on_btn_siguiente_clicked()
 {
     switch(config_index)
@@ -299,7 +329,10 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
             if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
             {
                 mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros() );
-                this->hide();
+
+                GCparam->guardar();
+
+                crearVentanaAfterCalibracion();
             }
         }
         break;
@@ -452,6 +485,11 @@ void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos()
     else
         if(ui->label_F_IF->isEnabled())
             IntMatB->set_P_Fin( Point(ui->label_display_IF->x,ui->label_display_IF->y) );
-
 }
 
+
+void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
+{
+    crearVentanaAfterCalibracion();
+    GCparam->cargar();
+}

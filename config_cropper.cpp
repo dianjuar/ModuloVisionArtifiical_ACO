@@ -51,6 +51,18 @@ void cropper::reset_contenedor()
     contenedor = Rect();
 }
 
+void cropper::write(FileStorage &fs) const
+{
+    fs << "{" <<"contenedor" << contenedor  << "}";
+}
+
+void cropper::read(const FileNode &node)
+{
+    std::vector<int> contenedorVec;
+    node["contenedor"] >> contenedorVec;
+    contenedor = Rect(contenedorVec[0], contenedorVec[1], contenedorVec[2], contenedorVec[3]);
+}
+
 Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
 {
     if(contours.size()!=0)

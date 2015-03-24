@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>696</height>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -38,7 +38,10 @@
             <property name="font">
              <font>
               <family>Ubuntu</family>
-              <pointsize>36</pointsize>
+              <pointsize>24</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -2040,15 +2043,6 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuArchivo">
-    <property name="title">
-     <string>Archivo</string>
-    </property>
-    <addaction name="actionGuardar_Configuraci_n"/>
-    <addaction name="separator"/>
-    <addaction name="actionCargar_Configuraci_n"/>
-   </widget>
-   <addaction name="menuArchivo"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -2060,15 +2054,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionCargar_Configuraci_n"/>
   </widget>
-  <action name="actionGuardar_Configuraci_n">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Guardar Configuración</string>
-   </property>
-  </action>
   <action name="actionCargar_Configuraci_n">
    <property name="text">
     <string>Cargar Configuración</string>

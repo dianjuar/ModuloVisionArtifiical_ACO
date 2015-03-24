@@ -83,6 +83,8 @@ private slots:
 
     void Mouse_Pressed_DeteccionCirculos();
 
+    void on_actionCargar_Configuraci_n_triggered();
+
 private:
     Ui::VentanaPrincipal *ui;
 
@@ -94,19 +96,21 @@ private:
     CONFIG::INTMatBuilder *IntMatB;
     CONFIG::matIntSender *mSender;
     CONFIG::calibrador *calib;
-    CONFIG::guardarYCargarParametros *GSparam;
-
-
+    CONFIG::guardarYCargarParametros *GCparam;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
     void set_EnableSliderF1_1(bool enable, QPushButton *bMother, QPushButton *bOther);
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);
     void pasarALaSiguienteEtapa();
+    void crearVentanaAfterCalibracion();
+    void inhabilitarTodasLasPestanas();
 
     int config_index;
     int config_Nparametros;
 
     int *numeroParametrosPorFaseCalib;
+
+    bool calibrando;
 };
 
 #endif // VENTANAPRINCIPAL_H

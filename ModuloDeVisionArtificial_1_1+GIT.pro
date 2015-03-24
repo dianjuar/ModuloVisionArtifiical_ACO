@@ -40,5 +40,4 @@ HEADERS  += ventanaprincipal.h \
     stand_clickablelabel.h \
     config_guardarycargarparametros.h
 
-FORMS    += ventanaprincipal.ui \
-    ventanaEjecutando.ui
+FORMS    += ventanaprincipal.ui

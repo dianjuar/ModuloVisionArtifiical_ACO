@@ -37,6 +37,9 @@ public:
     void cortarImagen(Mat &);
     void reset_contenedor();
 
+    void write(FileStorage &fs) const;
+    void read(const FileNode& node);
+
 };
 
 }
