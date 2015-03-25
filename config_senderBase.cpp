@@ -14,6 +14,7 @@ const QString senderBase::MSJEnvio_divisor = QString("-");
 const QString senderBase::MSJEnvio_DefaultTest = QString("test");
 const QString senderBase::MSJEnvio_Prefijo_Mat = QString("Mat");
 const QString senderBase::MSJEnvio_Prefijo_Dist = QString("Dist");
+const QString senderBase::MSJEnvio_conectado = QString("connect");
 
 senderBase::senderBase(QString serverDir, int serverPort)
 {
@@ -41,8 +42,5 @@ void senderBase::testConnection( bool Testserio)
 void senderBase::enviar(QByteArray byte)
 {
     testConnection(true);
-
     client.write( byte );
-
-    client.disconnectFromHost();
 }

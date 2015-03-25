@@ -347,6 +347,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
             if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
             {
                 conSMA->set_serverDir( ui->lineEdit_setverDir_SMA->text() );
+                conSMA->sendConex();
                 GCparam->guardar();
                 crearVentanaAfterCalibracion();
             }

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>694</height>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1062,7 +1062,7 @@
           <item>
            <widget class="QLabel" name="label_displayF2">
             <property name="text">
-             <string>binario</string>
+             <string/>
             </property>
             <property name="pixmap">
              <pixmap>media/CamNOT_FOUND.png</pixmap>

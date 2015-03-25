@@ -10,11 +10,13 @@ namespace CONFIG {
 class connectSistemaMultiAgente: public senderBase
 {
     static const int port = 6667;
+
 public:
     connectSistemaMultiAgente(QString serverDir);
 
     void write(FileStorage &fs) const;
     void read(const FileNode& node);
+    void sendConex();
 };
 
 } // namespace CONFIG
