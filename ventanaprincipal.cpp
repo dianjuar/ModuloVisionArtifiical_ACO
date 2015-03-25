@@ -30,26 +30,29 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
+    conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
     calib = new CONFIG::calibrador(ui->doubleSpinBox_F1_1->value(), Size(ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()),
                                    ui->slider_NFotos_F1_1->value(), ui->slider_delay_F1_1->value());
 
     GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,mSender);
 
-    ui->label_error_F5->setText( mSender->MSJ_sinComprobar );
-    ui->label_connectionTest_F5->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
-
+    ui->label_error_F5->setText( CONFIG::senderBase::MSJ_sinComprobar );
+    ui->label_connectionTest_F5->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
+    ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_sinComprobar );
+    ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
 
 
     //variables utilizadas para manipular la barra de progreso del proceso de calibración
     numeroParametrosPorFaseCalib = new int[FASE_NumeroFases];
 
-    numeroParametrosPorFaseCalib[ FASE_eleccionDeDispositivoDeGrabacion ] = 0;
+    numeroParametrosPorFaseCalib[ FASE_eleccionDeDispositivoDeGrabacion ] = 1;
     numeroParametrosPorFaseCalib[ FASE_calibracion ] = 1;
     numeroParametrosPorFaseCalib[ FASE_cortarContenido ] = 2;
     numeroParametrosPorFaseCalib[ FASE_seleccionUmbral ] = 1;
-    numeroParametrosPorFaseCalib[ FASE_InicioFin ] = 5;
+    numeroParametrosPorFaseCalib[ FASE_InicioFin ] = 2;
     numeroParametrosPorFaseCalib[ FASE_PartinN ] = 1;
     numeroParametrosPorFaseCalib[ FASE_EnvioEstacionCentral ] = 1;
+    numeroParametrosPorFaseCalib[ FASE_EnvioSMA ] = 1;
 
     config_Nparametros = 0;
 
@@ -139,6 +142,10 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_InicioFin:
         {
+            crop->cortarImagen(m);
+            PNcuadros->calibrar(m);
+
+            ui->label_displayRallada_IF->setPixmap( STAND::Tools::Mat2QPixmap( m,true, IntMatB->get_tamano_MatCartooned() ) );
             ui->label_display_IF->setPixmap(  STAND::Tools::Mat2QPixmap( IntMatB->get_MatCartooned() ) );
             break;
         }
@@ -150,7 +157,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             PNcuadros->calibrar(mCropped);
 
             ui->label_displayF4->setPixmap( STAND::Tools::Mat2QPixmap( mCropped,true,
-                                                                     IntMatB->get_tamano_MatCartooned()) );
+                                                                       IntMatB->get_tamano_MatCartooned()) );
             ui->label_displayF4_Cartoon->setPixmap(  STAND::Tools::Mat2QPixmap( IntMatB->get_MatCartooned(),true,
                                                                                 IntMatB->get_tamano_MatCartooned())  );
             break;
@@ -232,10 +239,10 @@ void VentanaPrincipal::set_PorcenAvance_IN_progressBar(int NFaseCalib)
 {
     int por_Progress=0;
 
-    for(int i;i<NFaseCalib;i++)
+    for(int i=0;i<NFaseCalib;i++)
         por_Progress += numeroParametrosPorFaseCalib[i];
 
-     por_Progress = por_Progress*100/FASE_NumeroFases;
+     por_Progress = por_Progress*100/config_Nparametros;
 
      ui->progressBar->setValue( por_Progress );
 }
@@ -252,6 +259,7 @@ void VentanaPrincipal::crearVentanaAfterCalibracion()
     ui->btn_atras->setEnabled( false );
     ui->tabWidget->setCurrentIndex(0);
     inhabilitarTodasLasPestanas();
+    ui->progressBar->setValue(100);
 
     calibrando = false;
     /*ventanaAfterCalibracion *vAfterC = new ventanaAfterCalibracion( cap, crop, this );
@@ -328,10 +336,18 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
         {
             if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
             {
+                mSender->set_serverDir( ui->lineEdit_setverDir_F5->text() );
                 mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros() );
-
+                pasarALaSiguienteEtapa();
+            }
+        }
+        break;
+        case FASE_EnvioSMA:
+        {
+            if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
+            {
+                conSMA->set_serverDir( ui->lineEdit_setverDir_SMA->text() );
                 GCparam->guardar();
-
                 crearVentanaAfterCalibracion();
             }
         }
@@ -452,6 +468,7 @@ void VentanaPrincipal::on_pushButton_ProbarConexion_EstCentral_clicked()
     ui->label_connectionTest_F5->setMovie(movie);
     movie->start();
 
+    mSender->set_serverDir( ui->lineEdit_setverDir_F5->text() );
     mSender->testConnection();
 
     if(mSender->get_buenaConexion())
@@ -492,4 +509,31 @@ void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
 {
     crearVentanaAfterCalibracion();
     GCparam->cargar();
+}
+void VentanaPrincipal::on_lineEdit_setverDir_SMA_textEdited(const QString &arg1)
+{
+    conSMA->set_buenaConexion(false);
+    ui->label_error_SMA->setText( mSender->MSJ_sinComprobar );
+    ui->label_connectionTest_SMA->setPixmap( QPixmap( mSender->RUTAIMG_incorrecto ) );
+}
+
+void VentanaPrincipal::on_pushButton_ProbarConexion_SMA_clicked()
+{
+    ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_comprobando );
+    QMovie *movie = new QMovie( CONFIG::senderBase::RUTAIMG_comprobando );
+    ui->label_connectionTest_SMA->setMovie(movie);
+    movie->start();
+
+    conSMA->testConnection();
+
+    if(conSMA->get_buenaConexion())
+    {
+        ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_correcto );
+        ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_correcto ) );
+    }
+    else
+    {
+        ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_incorrecto );
+        ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
+    }
 }

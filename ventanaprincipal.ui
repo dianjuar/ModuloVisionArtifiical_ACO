@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>709</height>
+    <height>694</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -1062,7 +1062,7 @@
           <item>
            <widget class="QLabel" name="label_displayF2">
             <property name="text">
-             <string/>
+             <string>binario</string>
             </property>
             <property name="pixmap">
              <pixmap>media/CamNOT_FOUND.png</pixmap>
@@ -1505,9 +1505,29 @@
            </spacer>
           </item>
           <item>
+           <widget class="QLabel" name="label_displayRallada_IF">
+            <property name="text">
+             <string>rallada</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_30">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="STAND::ClickableLabel" name="label_display_IF">
             <property name="text">
-             <string/>
+             <string>cartoon</string>
             </property>
             <property name="pixmap">
              <pixmap>media/CamNOT_FOUND.png</pixmap>
@@ -1823,7 +1843,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_setverDir_F5_3">
+           <widget class="QLineEdit" name="lineEdit_setverDir_SMA">
             <property name="font">
              <font>
               <family>Ubuntu</family>
@@ -1882,7 +1902,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_ProbarConexion_sisAgenFisicos">
+           <widget class="QPushButton" name="pushButton_ProbarConexion_SMA">
             <property name="font">
              <font>
               <family>Ubuntu</family>
@@ -1938,7 +1958,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_error_F5_3">
+           <widget class="QLabel" name="label_error_SMA">
             <property name="font">
              <font>
               <family>Ubuntu</family>
@@ -1951,7 +1971,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_connectionTest_F5_3">
+           <widget class="QLabel" name="label_connectionTest_SMA">
             <property name="text">
              <string/>
             </property>

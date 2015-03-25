@@ -12,6 +12,7 @@
 #include "config_matintsender.h"
 #include "config_calibrador.h"
 #include "config_guardarycargarparametros.h"
+#include "config_connectsistemamultiagente.h"
 
 namespace Ui
 {
@@ -35,6 +36,7 @@ public:
     static const int FASE_PartinN = 4;
     static const int FASE_InicioFin = 5;
     static const int FASE_EnvioEstacionCentral = 6;
+    static const int FASE_EnvioSMA = 7;
     
 private slots:
     void set_FotoTomada_calibracion(int);
@@ -85,6 +87,10 @@ private slots:
 
     void on_actionCargar_Configuraci_n_triggered();
 
+    void on_lineEdit_setverDir_SMA_textEdited(const QString &arg1);
+
+    void on_pushButton_ProbarConexion_SMA_clicked();
+
 private:
     Ui::VentanaPrincipal *ui;
 
@@ -97,6 +103,7 @@ private:
     CONFIG::matIntSender *mSender;
     CONFIG::calibrador *calib;
     CONFIG::guardarYCargarParametros *GCparam;
+    CONFIG::connectSistemaMultiAgente *conSMA;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
     void set_EnableSliderF1_1(bool enable, QPushButton *bMother, QPushButton *bOther);

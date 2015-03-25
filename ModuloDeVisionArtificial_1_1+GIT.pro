@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     config_calibrador.cpp \
     config_senderBase.cpp \
     stand_clickablelabel.cpp \
-    config_guardarycargarparametros.cpp
+    config_guardarycargarparametros.cpp \
+    config_connectsistemamultiagente.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -38,6 +39,7 @@ HEADERS  += ventanaprincipal.h \
     config_calibrador.h \
     config_senderBase.h \
     stand_clickablelabel.h \
-    config_guardarycargarparametros.h
+    config_guardarycargarparametros.h \
+    config_connectsistemamultiagente.h
 
 FORMS    += ventanaprincipal.ui
