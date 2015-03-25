@@ -21,11 +21,12 @@ public:
         return aux;
     }
 
+
     static QPixmap Mat2QPixmap(Mat m, bool resize = false, int x=400)
     {
         QImage img;
 
-        if(resize==true)        
+        if(resize==true)
             cv::resize(m,m,Size(x,x),0,0,INTER_LINEAR);
 
 
@@ -65,6 +66,7 @@ public:
 
         return QPixmap::fromImage(img);
     }
+
 
     static QPixmap Mat2QPixmap(Mat m, int scale)
     {

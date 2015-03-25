@@ -20,6 +20,20 @@ void matIntSender::enviarInformacion(int **mat, int n, float dist)
     enviar( sms.toUtf8().data() );
 }
 
+void matIntSender::write(FileStorage &fs) const
+{
+    fs<<"{"<< "serverDir" << serverDir.toUtf8().data()<<"}";
+}
+
+void matIntSender::read(const FileNode &node)
+{
+    std::string server;
+
+    node["serverDir"] >> server;
+
+    serverDir = QString::fromUtf8( server.c_str() );
+}
+
 QString matIntSender::IntMat2QString(int **mat, int n)
 {
     QString matQSt;

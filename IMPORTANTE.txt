@@ -1,0 +1,9 @@
+Puertos:
+	ESTACIÓN CENTRAL
+		Envío de información del entorno 6666
+			Se debe envíar la matriz de enteros del entorno y la distancia en centimetros entre los cuadros debidamente identificados por su prefijo y separados por el separador.
+			Ejemplo:
+			Mat001\n000\n111-Dist20
+	ESTACIÓN MULTIAGENTE:
+		Envío de información de posicionamiento 6667
+			indefinido

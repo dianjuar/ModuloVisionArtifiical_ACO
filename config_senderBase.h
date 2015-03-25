@@ -35,6 +35,7 @@ public:
 
     void testConnection(bool Testserio=false);
     void set_buenaConexion(bool buenaConexion){ this->buenaConexion = buenaConexion; }
+    void set_serverDir( QString serverDir ){ this->serverDir = serverDir; }
     bool get_buenaConexion(){ return buenaConexion; }
 
     void enviar(QByteArray byte);

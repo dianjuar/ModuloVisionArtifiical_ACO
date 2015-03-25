@@ -13,19 +13,16 @@ void capturadorImagen::run()
             if (thread_stop) break;
             ///////////////////////////
             if( modo_elegido == Modo_Video && vc.isOpened() )
-            {
                 vc >> Imagen;
-                tell();
-            }
-            else
-                tell();
+
+            emit tell();
             ///////////////////////////
         }
         msleep( modo_elegido == Modo_Video? 1:150 );
     }
 }
 
-capturadorImagen::capturadorImagen(int modo, int devise)
+void capturadorImagen::constructor(int modo, int devise)
 {
     thread_stop = false;
 
@@ -44,6 +41,11 @@ capturadorImagen::capturadorImagen(int modo, int devise)
     }
 
     start();
+}
+
+capturadorImagen::capturadorImagen(int modo, int devise)
+{
+    constructor(modo, devise);
 }
 
 capturadorImagen::~capturadorImagen()
@@ -91,4 +93,18 @@ void capturadorImagen::deviceChanged(int newDevice)
         vc.open(newDevice);
         devise = newDevice;
     }
+}
+
+void capturadorImagen::write(FileStorage &fs) const
+{
+    fs << "{" << "modo_elegido" << modo_elegido <<
+                 "devise" << devise <<
+          "}";
+}
+
+void capturadorImagen::read(const FileNode& node)                          //Read serialization for this class
+{
+    stop();
+
+    constructor( (int)node["devise"], (int)node["modo_elegido"] );
 }

@@ -3,6 +3,10 @@
 using namespace CONFIG;
 using namespace std;
 
+#include <iostream>
+using std::count;
+using std::endl;
+
 calibrador::calibrador(float squareSize, Size boardSize, int NFotos, int delay)
 {
     this->squareSize = squareSize;
@@ -127,6 +131,33 @@ Point calibrador::pixel2Point(Point Ppx, bool undistorsioned)
 double calibrador::get_distanciaEntrePuntos(Point RealA, Point RealB)
 {
     return qSqrt( qPow(RealA.x - RealB.x, 2) + qPow(RealA.y - RealB.y, 2) );
+}
+
+void calibrador::write(FileStorage &fs) const //Write serialization for this class
+{
+    fs << "{" << "cameraMatrix" << cameraMatrix <<
+                 "distCoeffs" << distCoeffs <<
+                  "rMat" << rMat << "tMat" << tMat <<
+                  "distortionMat" << distortionMat <<
+                  "reprojErr" << reprojErr << "totalAvgErr" << totalAvgErr << "aspectRatio" << aspectRatio << "reprojErrs" << reprojErrs <<
+                  "K1" << K1 << "K2" << K2 << "K3" << K3 <<
+          "}";
+}
+
+void calibrador::read(const FileNode& node)                          //Read serialization for this class
+{
+    node["cameraMatrix"] >> cameraMatrix;
+    node["distCoeffs"] >> distCoeffs;
+    node["rMat"] >> rMat; node["tMat"] >> tMat;
+    node["distortionMat"] >> distortionMat ;
+
+    reprojErr = (float)node["reprojErr"];
+    totalAvgErr = (double)node["totalAvgErr"];
+    aspectRatio = (float)node["aspectRatio"];
+    node["reprojErr"] >> reprojErrs;
+    K1 = (float)node["K1"];
+    K2 = (float)node["K2"];
+    K3 = (float)node["K3"];
 }
 
 void calibrador::stop()

@@ -40,6 +40,9 @@ public:
 
     double get_distanciaEntrePuntos(Point RealA, Point RealB);
 
+    void write(FileStorage &fs) const;
+    void read(const FileNode& node);
+
 public slots:
     void stop();
     void InicicarHilo(int device);

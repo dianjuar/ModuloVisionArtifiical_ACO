@@ -22,6 +22,7 @@ class cropper
 
 public:
     cropper(int canny_umbral_1, int canny_umbral_2);
+    cropper(){}
 
     //setter y getters
     void set_cannyU_1(int);
@@ -35,6 +36,9 @@ public:
     void calibracion(Mat mat);
     void cortarImagen(Mat &);
     void reset_contenedor();
+
+    void write(FileStorage &fs) const;
+    void read(const FileNode& node);
 
 };
 
