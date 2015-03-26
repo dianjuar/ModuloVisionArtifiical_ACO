@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
+    <width>786</width>
     <height>709</height>
    </rect>
   </property>
@@ -1527,7 +1527,7 @@
           <item>
            <widget class="STAND::ClickableLabel" name="label_display_IF">
             <property name="text">
-             <string>cartoon</string>
+             <string/>
             </property>
             <property name="pixmap">
              <pixmap>media/CamNOT_FOUND.png</pixmap>
@@ -2059,7 +2059,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>803</width>
+     <width>786</width>
      <height>23</height>
     </rect>
    </property>

@@ -74,6 +74,23 @@ public:
         return Mat2QPixmap(m);
     }
 
+    static QString IntMat2QString(int **mat, int n)
+    {
+        QString matQSt;
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                matQSt.append(QString::number( mat[i][j] ));
+            }
+
+            matQSt.append( i!=n-1?"\n":"");
+        }
+
+        return matQSt;
+    }
+
 };
 
 class circulo

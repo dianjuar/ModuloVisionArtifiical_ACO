@@ -16,6 +16,7 @@ public:
 
     void write(FileStorage &fs) const;
     void read(const FileNode& node);
+
     void sendConex();
 };
 

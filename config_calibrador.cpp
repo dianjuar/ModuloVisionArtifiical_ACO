@@ -141,6 +141,7 @@ void calibrador::write(FileStorage &fs) const //Write serialization for this cla
                   "distortionMat" << distortionMat <<
                   "reprojErr" << reprojErr << "totalAvgErr" << totalAvgErr << "aspectRatio" << aspectRatio << "reprojErrs" << reprojErrs <<
                   "K1" << K1 << "K2" << K2 << "K3" << K3 <<
+                   "distanciaEntreCuadros" << distanciaEntreCuadros <<
           "}";
 }
 
@@ -155,9 +156,12 @@ void calibrador::read(const FileNode& node)                          //Read seri
     totalAvgErr = (double)node["totalAvgErr"];
     aspectRatio = (float)node["aspectRatio"];
     node["reprojErr"] >> reprojErrs;
+
     K1 = (float)node["K1"];
     K2 = (float)node["K2"];
     K3 = (float)node["K3"];
+
+    distanciaEntreCuadros = (float)node["distanciaEntreCuadros"];
 }
 
 void calibrador::stop()

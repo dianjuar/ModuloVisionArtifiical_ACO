@@ -31,13 +31,13 @@ public:
 
     bool get_todoEnOrden(){ return todoEnOrden; }
     Mat get_m(){ return m; }
-    float get_distanciaEntreCuadros();
     void set_distanciaEntreCuadros(int distnaciaEntreCuadros_PX, int n);
     void set_distanciaEntreCuadros(float dist){ distanciaEntreCuadros = dist; }
 
     Point point2Pixel(Point RealPoint);
     Point pixel2Point(Point Ppx, bool undistorsioned=false);
 
+    float get_distanciaEntreCuadros();
     double get_distanciaEntrePuntos(Point RealA, Point RealB);
 
     void write(FileStorage &fs) const;

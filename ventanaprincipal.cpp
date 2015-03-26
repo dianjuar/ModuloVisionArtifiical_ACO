@@ -34,7 +34,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     calib = new CONFIG::calibrador(ui->doubleSpinBox_F1_1->value(), Size(ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()),
                                    ui->slider_NFotos_F1_1->value(), ui->slider_delay_F1_1->value());
 
-    GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,mSender);
+    GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,IntMatB,mSender,conSMA);
 
     ui->label_error_F5->setText( CONFIG::senderBase::MSJ_sinComprobar );
     ui->label_connectionTest_F5->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
@@ -315,6 +315,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
         {
             if(IntMatB->get_todoEnOrden())
             {
+                IntMatB->buildQSINTmat();
                 pasarALaSiguienteEtapa();
             }
             break;
@@ -510,6 +511,9 @@ void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
 {
     crearVentanaAfterCalibracion();
     GCparam->cargar();
+
+    mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros() );
+    conSMA->sendConex();
 }
 void VentanaPrincipal::on_lineEdit_setverDir_SMA_textEdited(const QString &arg1)
 {

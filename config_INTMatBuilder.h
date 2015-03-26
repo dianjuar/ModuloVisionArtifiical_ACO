@@ -1,8 +1,7 @@
 #ifndef CONFIG_MATCARTOONERED_H
 #define CONFIG_MATCARTOONERED_H
 
-#include "INCLUDE_opencv.h"
-#include "INCLUDE_QTstuff.h"
+#include "stand_Tools.h"
 
 namespace CONFIG
 {
@@ -30,9 +29,16 @@ public:
     int** get_INT_mat(){ return INT_mat; }
     int get_tamano_MatCartooned(){ return tamano_MatCartooned; }
     int get_n(){ return n; }
+
     bool get_settedPuntoF(){ return bool_settedPuntoF; }
     bool get_settedPuntoI(){ return bool_settedPuntoI; }
     bool get_todoEnOrden(){ return bool_settedPuntoF&&bool_settedPuntoI; }
+    QString get_QSINT_mat(){ return QSINT_mat; }
+
+    void write(FileStorage &fs) const;
+    void read(const FileNode& node);
+
+    void buildQSINTmat();
 
 private slots:
 
@@ -49,6 +55,7 @@ private:
         MAT_inicio,
         MAT_fin;
 
+    QString QSINT_mat;
     int **INT_mat;
     int n;
 
@@ -72,6 +79,8 @@ private:
     Point convert_PointScreen2PointMat(Point p);
 
     bool bool_settedPuntoF, bool_settedPuntoI;
+
+
 };
 
 }

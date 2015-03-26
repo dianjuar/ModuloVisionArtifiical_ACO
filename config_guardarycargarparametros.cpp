@@ -7,14 +7,18 @@ const QString guardarYCargarParametros::QScalib = QString("calib");
 const QString guardarYCargarParametros::QScrop = QString("crop");
 const QString guardarYCargarParametros::QSmatSender = QString("matSender");
 const QString guardarYCargarParametros::QSnombreArchivo = QString("parametrosCalibracion.yml");
+const QString guardarYCargarParametros::QScSMA = QString("cSMA");
+const QString guardarYCargarParametros::QSINTmB = QString("INTmB");
 
-guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
-                                                   matIntSender *matSender)
+guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop, INTMatBuilder *INTmB,
+                                                   matIntSender *matSender, connectSistemaMultiAgente *cSMA)
 {
     this->cap = cap;
     this-> calib = calib;
     this-> crop = crop;
+    this->INTmB = INTmB;
     this-> matSender = matSender;
+    this->cSMA = cSMA;
 }
 
 void guardarYCargarParametros::guardar()
@@ -30,8 +34,14 @@ void guardarYCargarParametros::guardar()
     fs<<QScrop.toUtf8().data();
     crop->write(fs);
 
+    fs<<QSINTmB.toUtf8().data();
+    INTmB->write(fs);
+
     fs<<QSmatSender.toUtf8().data();
     matSender->write(fs);
+
+    fs<<QScSMA.toUtf8().data();
+    cSMA->write(fs);
 
     fs.release();
 
@@ -51,9 +61,14 @@ void guardarYCargarParametros::cargar()
     n = fs[QScrop.toUtf8().data()];
     crop->read( n );
 
+    n = fs[QSINTmB.toUtf8().data()];
+    INTmB->read( n );
+
     n = fs[QSmatSender.toUtf8().data()];
     matSender->read( n );
 
+    n = fs[QScSMA.toUtf8().data()];
+    cSMA->read( n );
 
     fs.release();
 
