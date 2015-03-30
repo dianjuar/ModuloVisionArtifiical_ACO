@@ -29,6 +29,7 @@ public:
     static const QString MSJEnvio_Prefijo_Mat;
     static const QString MSJEnvio_Prefijo_Dist;
     static const QString MSJEnvio_conectado;
+    static const QString MSJEnvio_cerrar;
 
     senderBase(QString serverDir, int serverPort);
     senderBase(){}

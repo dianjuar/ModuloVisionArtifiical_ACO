@@ -11,10 +11,10 @@ const QString senderBase::RUTAIMG_incorrecto = QString("./media/TestConnection/B
 const QString senderBase::RUTAIMG_comprobando = QString("./media/TestConnection/connecting.gif");
 
 const QString senderBase::MSJEnvio_divisor = QString("-");
-const QString senderBase::MSJEnvio_DefaultTest = QString("test");
 const QString senderBase::MSJEnvio_Prefijo_Mat = QString("Mat");
 const QString senderBase::MSJEnvio_Prefijo_Dist = QString("Dist");
 const QString senderBase::MSJEnvio_conectado = QString("connect");
+const QString senderBase::MSJEnvio_cerrar = QString("close");
 
 senderBase::senderBase(QString serverDir, int serverPort)
 {
@@ -34,7 +34,7 @@ void senderBase::testConnection( bool Testserio)
 
     if(!Testserio)
     {
-        client.write(MSJEnvio_DefaultTest.toUtf8().data());
+        client.write(MSJEnvio_cerrar.toUtf8().data());
         client.disconnectFromHost();
     }
 }
