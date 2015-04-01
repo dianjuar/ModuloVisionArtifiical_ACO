@@ -9,7 +9,7 @@ namespace CONFIG {
 
 class connectSistemaMultiAgente: public senderBase
 {
-    static const int port = 6667;
+    static const int port = 5003;
 
 public:
     connectSistemaMultiAgente(QString serverDir);

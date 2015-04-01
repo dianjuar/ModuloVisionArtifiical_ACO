@@ -10,7 +10,7 @@ namespace CONFIG
 class matIntSender : public senderBase
 {
 public:
-    static const int port = 6666;
+    static const int port = 5000;
     matIntSender(QString serverDir);
 
     void enviarInformacion(int **mat, int n, float dist);
