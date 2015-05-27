@@ -14,5 +14,7 @@
 #include <QPushButton>
 #include <QByteArray>
 #include <QMouseEvent>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #endif // INCLUDE_QTSTUFF_H

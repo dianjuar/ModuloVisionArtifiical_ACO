@@ -39,21 +39,16 @@ public:
     static const int FASE_EnvioSMA = 7;
     
 private slots:
-    void set_FotoTomada_calibracion(int);
-    void set_calibracionExitosa(bool);
-
     void setted_PuntoI(bool);
     void setted_PuntoF(bool);
 
     void listen_matFromVideoCapture();
-    void listen_matFromCalibrate();
 
     void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
     void on_btn_siguiente_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_btn_atras_clicked();
     void on_slider_umbralBlackAndWhite_valueChanged(int value);
-    void on_slider_n_valueChanged(int value);
 
     void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
 
@@ -62,20 +57,6 @@ private slots:
     void on_slider_CannyU_2_valueChanged(int value);
 
     void on_pushButton_2_clicked();
-
-    void on_pushButton_startF1_1_clicked();
-
-    void on_pushButton_restartF1_1_clicked();
-
-    void on_slider_BoardSizeW_F1_1_valueChanged(int value);
-
-    void on_slider_BoardSizeH_F1_1_valueChanged(int value);
-
-    void on_slider_NFotos_F1_1_valueChanged(int value);
-
-    void on_slider_delay_F1_1_valueChanged(int value);
-
-    void on_doubleSpinBox_F1_1_valueChanged(double arg1);
 
     void on_pushButton_ProbarConexion_EstCentral_clicked();
 
@@ -90,6 +71,10 @@ private slots:
     void on_lineEdit_setverDir_SMA_textEdited(const QString &arg1);
 
     void on_pushButton_ProbarConexion_SMA_clicked();
+
+    void on_pushButton_F1_1_buscarArchivo_clicked();
+
+    void on_slider_n_valueChanged(int value);
 
 private:
     Ui::VentanaPrincipal *ui;
@@ -106,7 +91,6 @@ private:
     CONFIG::connectSistemaMultiAgente *conSMA;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
-    void set_EnableSliderF1_1(bool enable, QPushButton *bMother, QPushButton *bOther);
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);
     void pasarALaSiguienteEtapa();
     void crearVentanaAfterCalibracion();

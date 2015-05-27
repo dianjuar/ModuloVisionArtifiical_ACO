@@ -51,7 +51,6 @@ void guardarYCargarParametros::cargar()
 {
     fs = FileStorage(QSnombreArchivo.toUtf8().data(), FileStorage::READ);
 
-
     FileNode n = fs[QScap.toUtf8().data()];
     cap->read( n );
 

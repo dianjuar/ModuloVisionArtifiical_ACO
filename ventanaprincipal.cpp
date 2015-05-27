@@ -21,7 +21,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -31,8 +31,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
     conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
-    calib = new CONFIG::calibrador(ui->doubleSpinBox_F1_1->value(), Size(ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()),
-                                   ui->slider_NFotos_F1_1->value(), ui->slider_delay_F1_1->value());
+    calib = new CONFIG::calibrador();
 
     GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,IntMatB,mSender,conSMA);
 
@@ -62,15 +61,6 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //el hilo hará una llamada cada vez que capture una imagen por la cámara y la ventana principal atenderá esa llamada
     connect(cap, SIGNAL(tell()),
             this, SLOT(listen_matFromVideoCapture()));
-
-    connect(calib, SIGNAL(tell()),
-            this, SLOT(listen_matFromCalibrate()));
-
-    connect(calib, SIGNAL(fotoTomada(int)),
-            this, SLOT(set_FotoTomada_calibracion(int)));
-
-    connect(calib, SIGNAL(CalibracionExitosa(bool)),
-            this, SLOT(set_calibracionExitosa(bool)));
 
     connect(ui->label_display_IF, SIGNAL(clicked()),
             this, SLOT(Mouse_Pressed_DeteccionCirculos()) );
@@ -107,7 +97,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_calibracion:
         {
-            ui->label_displayF1_1->setPixmap(STAND::Tools::Mat2QPixmap( m,2 ));
+            //ui->label_displayF1_1->setPixmap(STAND::Tools::Mat2QPixmap( m,2 ));
 
             break;
         }
@@ -171,21 +161,6 @@ VentanaPrincipal::~VentanaPrincipal()
     delete ui;
 }
 
-void VentanaPrincipal::set_FotoTomada_calibracion(int num)
-{
-    QString t = QString::number( num );
-    t.append("/");
-    t.append( QString::number(ui->slider_NFotos_F1_1->value()) );
-    ui->label_FotoTomada_F1_1->setText( t );
-}
-
-void VentanaPrincipal::set_calibracionExitosa(bool exito)
-{
-    if(exito)
-        ui->label_TodoEnOrden_F1_1->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/Right.png")) );
-    else
-        ui->label_TodoEnOrden_F1_1->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/error.png")) );
-}
 
 void VentanaPrincipal::setted_PuntoI(bool b)
 {
@@ -214,26 +189,6 @@ void VentanaPrincipal::listen_matFromVideoCapture()
     set_labelDisplay( cap->getImagen() );
 }
 
-void VentanaPrincipal::listen_matFromCalibrate()
-{
-    set_labelDisplay( calib->get_m()  );
-}
-
-void VentanaPrincipal::set_EnableSliderF1_1(bool enable, QPushButton *bMother,  QPushButton *bOther)
-{
-    ui->pushButton_startF1_1->setEnabled(enable);
-    ui->pushButton_restartF1_1->setEnabled(enable);
-    ui->doubleSpinBox_F1_1->setEnabled(enable);
-
-    ui->slider_BoardSizeH_F1_1->setEnabled(enable);
-    ui->slider_BoardSizeW_F1_1->setEnabled(enable);
-
-    ui->slider_NFotos_F1_1->setEnabled(enable);
-    ui->slider_delay_F1_1->setEnabled(enable);
-
-    bMother->setEnabled(false);
-    bOther->setEnabled(true);
-}
 
 void VentanaPrincipal::set_PorcenAvance_IN_progressBar(int NFaseCalib)
 {
@@ -338,7 +293,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
             if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
             {
                 mSender->set_serverDir( ui->lineEdit_setverDir_F5->text() );
-                mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros() );
+                mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros_REAL() );
                 pasarALaSiguienteEtapa();
             }
         }
@@ -361,22 +316,7 @@ void VentanaPrincipal::on_tabWidget_currentChanged(int index)
 {
     config_index=index;
 
-    if(index!=FASE_calibracion && (!cap->isCamaraAbierta() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica) )
-    {
-        calib->stop();
-        cap->InicicarHilo();
-    }
-
     set_PorcenAvance_IN_progressBar( index );
-
-    //casos especiales
-    switch(config_index)
-    {
-        case FASE_calibracion:
-            cap->stop();
-            calib->InicicarHilo( cap->get_device() );
-        break;
-    }
 }
 
 void VentanaPrincipal::on_btn_atras_clicked()
@@ -392,13 +332,6 @@ void VentanaPrincipal::on_btn_atras_clicked()
 void VentanaPrincipal::on_slider_umbralBlackAndWhite_valueChanged(int value)
 {
     umb->setUmbral( value );
-}
-
-void VentanaPrincipal::on_slider_n_valueChanged(int value)
-{
-    PNcuadros->set_n( ui->slider_n->value() );
-    IntMatB->set_n( PNcuadros->get_n() );
-    ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
 }
 
 void VentanaPrincipal::on_lineEdit_setverDir_F5_textEdited(const QString &arg1)
@@ -421,46 +354,6 @@ void VentanaPrincipal::on_slider_CannyU_2_valueChanged(int value)
 void VentanaPrincipal::on_pushButton_2_clicked()
 {
     crop->reset_contenedor();
-}
-
-void VentanaPrincipal::on_pushButton_startF1_1_clicked()
-{
-    set_EnableSliderF1_1(false, ui->pushButton_startF1_1, ui->pushButton_restartF1_1);
-    calib->set_calibrar();
-}
-
-void VentanaPrincipal::on_pushButton_restartF1_1_clicked()
-{
-    set_EnableSliderF1_1(true, ui->pushButton_restartF1_1, ui->pushButton_startF1_1);
-    ui->label_TodoEnOrden_F1_1->setPixmap( QPixmap("./media/TestConnection/Bad.png") );
-    calib->set_standbay();
-}
-
-void VentanaPrincipal::on_slider_BoardSizeW_F1_1_valueChanged(int value)
-{
-    calib->set_boardSize( Size( ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()) );
-}
-
-void VentanaPrincipal::on_slider_BoardSizeH_F1_1_valueChanged(int value)
-{
-    calib->set_boardSize( Size( ui->slider_BoardSizeW_F1_1->value(), ui->slider_BoardSizeH_F1_1->value()) );
-}
-
-void VentanaPrincipal::on_slider_NFotos_F1_1_valueChanged(int value)
-{
-    set_FotoTomada_calibracion(0);
-
-    calib->set_NFotos( ui->slider_NFotos_F1_1->value() );
-}
-
-void VentanaPrincipal::on_slider_delay_F1_1_valueChanged(int value)
-{
-    calib->set_delay( ui->slider_delay_F1_1->value() );
-}
-
-void VentanaPrincipal::on_doubleSpinBox_F1_1_valueChanged(double arg1)
-{
-    calib->set_squareSize( ui->doubleSpinBox_F1_1->value() );
 }
 
 void VentanaPrincipal::on_pushButton_ProbarConexion_EstCentral_clicked()
@@ -512,9 +405,10 @@ void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
     crearVentanaAfterCalibracion();
     GCparam->cargar();
 
-    mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros() );
+    mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
     conSMA->sendConex();
 }
+
 void VentanaPrincipal::on_lineEdit_setverDir_SMA_textEdited(const QString &arg1)
 {
     conSMA->set_buenaConexion(false);
@@ -541,4 +435,25 @@ void VentanaPrincipal::on_pushButton_ProbarConexion_SMA_clicked()
         ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_incorrecto );
         ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
     }
+}
+
+
+void VentanaPrincipal::on_pushButton_F1_1_buscarArchivo_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(
+                this,
+                tr("open file"),
+                QDir::currentPath(),
+                "yml (*.yml);;xml (*.xml);;yaml (*.yaml);;yml.gz (*.yml.gz);;xml.gz (*.xml.gz);;yaml.gz (*.yaml.gz)" );
+
+    calib->set_rutaDelArchivo( filename );
+
+    ui->lineEdit_F1_1_path->setText( filename );
+}
+
+void VentanaPrincipal::on_slider_n_valueChanged(int value)
+{
+    PNcuadros->set_n( ui->slider_n->value() );
+    IntMatB->set_n( PNcuadros->get_n() );
+    ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
 }
