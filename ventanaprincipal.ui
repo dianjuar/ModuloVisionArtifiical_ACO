@@ -24,7 +24,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -297,7 +297,7 @@
                  <number>500</number>
                 </property>
                 <property name="value">
-                 <number>197</number>
+                 <number>39</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -313,7 +313,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>197</string>
+                 <string>39</string>
                 </property>
                </widget>
               </item>
@@ -369,7 +369,7 @@
                  <number>500</number>
                 </property>
                 <property name="value">
-                 <number>192</number>
+                 <number>30</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -394,7 +394,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>192</string>
+                 <string>30</string>
                 </property>
                </widget>
               </item>
@@ -1143,7 +1143,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_displayRallada_IF">
+           <widget class="STAND::ClickableLabel" name="label_displayRallada_IF">
             <property name="text">
              <string>rallada</string>
             </property>
@@ -1165,10 +1165,7 @@
           <item>
            <widget class="STAND::ClickableLabel" name="label_display_IF">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>media/CamNOT_FOUND.png</pixmap>
+             <string>cartoon</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -1698,7 +1695,7 @@
      <x>0</x>
      <y>0</y>
      <width>786</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
@@ -1725,7 +1722,7 @@
   <customwidget>
    <class>STAND::ClickableLabel</class>
    <extends>QLabel</extends>
-   <header>stand_clickablelabel.h</header>
+   <header location="global">stand_clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

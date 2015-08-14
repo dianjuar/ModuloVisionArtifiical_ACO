@@ -64,7 +64,7 @@ private slots:
 
     void on_pushButton_setPF_IF_clicked();
 
-    void Mouse_Pressed_DeteccionCirculos();
+    void Mouse_Pressed_DeteccionCirculos(int x, int y);
 
     void on_actionCargar_Configuraci_n_triggered();
 

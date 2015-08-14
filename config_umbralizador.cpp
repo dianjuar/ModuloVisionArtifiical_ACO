@@ -5,10 +5,15 @@ using namespace CONFIG;
 umbralizador::umbralizador(int umbral)
 {
     this->umbral = umbral;
+    kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
 }
 
 void umbralizador::calibrar(Mat m)
 {
     Mat grises = STAND::Tools::tratamientoDeImagenStantdar(m,false);
     threshold(grises,blackAndWhite,umbral,255,THRESH_BINARY);
+
+    morphologyEx(blackAndWhite, blackAndWhite, MORPH_CLOSE, kernel);
+    morphologyEx(blackAndWhite, blackAndWhite, MORPH_OPEN, kernel);
+
 }

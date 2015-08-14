@@ -189,6 +189,7 @@ void INTMatBuilder::set_P_Fin(Point Fin)
 {
     Fin = convert_PointScreen2PointMat(Fin);
 
+    //validar que sea un espacio válido
     if(INT_mat[Fin.y][Fin.x]==MAPA_libre || INT_mat[Fin.y][Fin.x]==MAPA_fin || INT_mat[Fin.y][Fin.x]==MAPA_inicio)
     {
 

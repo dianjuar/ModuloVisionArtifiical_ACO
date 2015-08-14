@@ -37,6 +37,8 @@ void capturadorImagen::constructor(int modo, int devise)
 
         case Modo_Video:
             vc.open(devise);
+            vc.set(CV_CAP_PROP_FRAME_WIDTH , 640);
+            vc.set(CV_CAP_PROP_FRAME_HEIGHT , 480);
         break;
     }
 

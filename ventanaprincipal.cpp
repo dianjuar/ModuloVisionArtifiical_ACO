@@ -10,10 +10,10 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     calibrando = true;
 
     //para no tener problemas con los acentos
-    QTextCodec *linuxCodec = QTextCodec::codecForName("UTF-8");
+    /*QTextCodec *linuxCodec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForTr(linuxCodec);
     QTextCodec::setCodecForCStrings(linuxCodec);
-    QTextCodec::setCodecForLocale(linuxCodec);
+    QTextCodec::setCodecForLocale(linuxCodec);*/
 
     ui->setupUi(this);
 
@@ -62,9 +62,13 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     connect(cap, SIGNAL(tell()),
             this, SLOT(listen_matFromVideoCapture()));
 
-    connect(ui->label_display_IF, SIGNAL(clicked()),
-            this, SLOT(Mouse_Pressed_DeteccionCirculos()) );
+    // selección de inicio y fin.
+    connect(ui->label_display_IF, SIGNAL(clicked(int,int)),
+            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
 
+    connect(ui->label_displayRallada_IF, SIGNAL(clicked(int,int)),
+            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
+    //-------------------------------------
     connect(IntMatB, SIGNAL(settedPuntoI(bool)),
             this, SLOT(setted_PuntoI(bool)) );
 
@@ -390,13 +394,13 @@ void VentanaPrincipal::on_pushButton_setPF_IF_clicked()
     ui->label_F_IF->setEnabled(true);
 }
 
-void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos()
+void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos(int x, int y)
 {
     if(ui->label_I_IF->isEnabled())
-        IntMatB->set_P_Inicio( Point(ui->label_display_IF->x,ui->label_display_IF->y) );
+        IntMatB->set_P_Inicio( Point(x,y) );
     else
         if(ui->label_F_IF->isEnabled())
-            IntMatB->set_P_Fin( Point(ui->label_display_IF->x,ui->label_display_IF->y) );
+            IntMatB->set_P_Fin( Point(x,y) );
 }
 
 
