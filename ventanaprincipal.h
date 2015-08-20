@@ -13,6 +13,7 @@
 #include "config_calibrador.h"
 #include "config_guardarycargarparametros.h"
 #include "config_connectsistemamultiagente.h"
+#include "config_colordetector.h"
 
 namespace Ui
 {
@@ -44,6 +45,7 @@ public:
 private slots:
     void setted_PuntoI(bool);
     void setted_PuntoF(bool);
+    void Color_selected_click(int, int);
 
     void listen_matFromVideoCapture();
 
@@ -87,6 +89,7 @@ private:
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
+    CONFIG::colorDetector *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;

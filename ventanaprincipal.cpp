@@ -27,6 +27,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
+    colorDetect = new CONFIG::colorDetector();
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
@@ -92,6 +93,15 @@ void VentanaPrincipal::set_connects()
     connect(IntMatB, SIGNAL(settedPuntoF(bool)),
             this, SLOT(setted_PuntoF(bool)) );
     //-------------------------------------
+    //Connect the clicks events for the color detectiong section
+   /* connect(ui->label_display_SesgoNormal1, SIGNAL(clicked(int,int)),this,
+            SLOT(Color_selected_click(int,int)) );
+    connect(ui->label_display_SesgoNormal2, SIGNAL(clicked(int,int)),this,
+            SLOT(Color_selected_click(int,int)) );
+    connect(ui->label_display_SesgoNormal3, SIGNAL(clicked(int,int)),this,
+            SLOT(Color_selected_click(int,int)) );*/
+    //-------------------------------------
+
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
@@ -140,23 +150,29 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
         case FASE_seleccinColores:
         {
 
+        //colorDetect->get_m_sesgo();
+        colorDetect->calibrar(m,config_indexSESGO);
+        //Mat binary = colorDetect->get_m_sesgo();
+/*
             switch (config_indexSESGO)
             {
                 case 0:
 
                     ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m,2 ) );
-
+                    //ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
 
                 case 1:
                     ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
+                   // ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
 
                 case 2:
                     ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
+                   // ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
             }
-
+*/
             break;
         }
 
@@ -210,6 +226,11 @@ void VentanaPrincipal::setted_PuntoF(bool b)
         ui->label_puntoFState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/Right.png")) );
     else
         ui->label_puntoFState_IF->setPixmap( QPixmap::fromImage(QImage("./media/TestConnection/error.png")) );
+}
+
+void VentanaPrincipal::Color_selected_click(int x, int y)
+{
+    colorDetect->set_seedPoint( config_indexSESGO ,Point(x,y));
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
@@ -277,8 +298,6 @@ void VentanaPrincipal::inhabilitarTodasLasPestanas()
 
 void VentanaPrincipal::on_btn_siguiente_clicked()
 {
-    qDebug()<<config_indexSESGO;
-
     switch(config_index)
     {
         case FASE_eleccionDeDispositivoDeGrabacion:

@@ -58,7 +58,7 @@ public:
     void set_seedPoint(int Nsesgo, Point p);
 
     //getters
-    Mat get_m_sesgo(){ return frame; }
+    Mat get_m_sesgo(){ return frame_thresholded; }
 
 };
 

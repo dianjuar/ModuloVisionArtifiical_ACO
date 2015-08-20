@@ -11,7 +11,7 @@ colorDetector::colorDetector()
 Mat colorDetector::calibrar(Mat m,int Nsesgo)
 {
     //codigo sacado de la página 101 del libre Practical Opencv
-    frame = m;
+   /* frame = m;
 
     if(!selected)
         mask.create(frame.rows+2, frame.cols+2, CV_8UC1);
@@ -38,7 +38,7 @@ Mat colorDetector::calibrar(Mat m,int Nsesgo)
     morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
 
     str_el = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+    morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);*/
 
 }
 
