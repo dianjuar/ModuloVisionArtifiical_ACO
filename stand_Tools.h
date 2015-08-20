@@ -91,6 +91,8 @@ public:
         return matQSt;
     }
 
+    static Mat Equalizer() {}
+
 };
 
 class circulo

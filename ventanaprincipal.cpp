@@ -18,6 +18,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     ui->setupUi(this);
 
     config_index = 0;
+    config_indexSESGO = 0;
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
@@ -35,10 +36,10 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,IntMatB,mSender,conSMA);
 
-    ui->label_error_F5->setText( CONFIG::senderBase::MSJ_sinComprobar );
-    ui->label_connectionTest_F5->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
-    ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_sinComprobar );
-    ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
+    ui->label_error_F5->setText( STAND::senderBase::MSJ_sinComprobar );
+    ui->label_connectionTest_F5->setPixmap( QPixmap( STAND::senderBase::RUTAIMG_incorrecto ) );
+    ui->label_error_SMA->setText( STAND::senderBase::MSJ_sinComprobar );
+    ui->label_connectionTest_SMA->setPixmap( QPixmap( STAND::senderBase::RUTAIMG_incorrecto ) );
 
 
     //variables utilizadas para manipular la barra de progreso del proceso de calibración
@@ -47,6 +48,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     numeroParametrosPorFaseCalib[ FASE_eleccionDeDispositivoDeGrabacion ] = 1;
     numeroParametrosPorFaseCalib[ FASE_calibracion ] = 1;
     numeroParametrosPorFaseCalib[ FASE_cortarContenido ] = 2;
+    numeroParametrosPorFaseCalib[ FASE_seleccinColores ] = 3;
     numeroParametrosPorFaseCalib[ FASE_seleccionUmbral ] = 1;
     numeroParametrosPorFaseCalib[ FASE_InicioFin ] = 2;
     numeroParametrosPorFaseCalib[ FASE_PartinN ] = 1;
@@ -58,22 +60,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     for (int var = 0; var < FASE_NumeroFases; var++)
         config_Nparametros += numeroParametrosPorFaseCalib[var];
 
-    //el hilo hará una llamada cada vez que capture una imagen por la cámara y la ventana principal atenderá esa llamada
-    connect(cap, SIGNAL(tell()),
-            this, SLOT(listen_matFromVideoCapture()));
-
-    // selección de inicio y fin.
-    connect(ui->label_display_IF, SIGNAL(clicked(int,int)),
-            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
-
-    connect(ui->label_displayRallada_IF, SIGNAL(clicked(int,int)),
-            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
-    //-------------------------------------
-    connect(IntMatB, SIGNAL(settedPuntoI(bool)),
-            this, SLOT(setted_PuntoI(bool)) );
-
-    connect(IntMatB, SIGNAL(settedPuntoF(bool)),
-            this, SLOT(setted_PuntoF(bool)) );
+    set_connects();
 
     inhabilitarTodasLasPestanas();
 
@@ -85,8 +72,33 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     fs.release();
 }
 
+void VentanaPrincipal::set_connects()
+{
+    //el hilo hará una llamada cada vez que capture una imagen por la cámara y la ventana principal atenderá esa llamada
+    //OpenCv -> Qlabel
+    connect(cap, SIGNAL(tell()),
+            this, SLOT(listen_matFromVideoCapture()));
+    //---------------------------------------------------
+    // selección de inicio y fin. Cuando se haga click sobre el Qlabel llamará a esas funciones.
+    connect(ui->label_display_IF, SIGNAL(clicked(int,int)),
+            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
+
+    connect(ui->label_displayRallada_IF, SIGNAL(clicked(int,int)),
+            this, SLOT(Mouse_Pressed_DeteccionCirculos(int,int)) );
+    //-------------------------------------
+    connect(IntMatB, SIGNAL(settedPuntoI(bool)),
+            this, SLOT(setted_PuntoI(bool)) );
+
+    connect(IntMatB, SIGNAL(settedPuntoF(bool)),
+            this, SLOT(setted_PuntoF(bool)) );
+    //-------------------------------------
+}
+
 void VentanaPrincipal::set_labelDisplay(Mat m)
 {
+    if(config_index > FASE_cortarContenido)
+        crop->cortarImagen(m);
+
 
     switch(config_index)
     {
@@ -125,18 +137,38 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             break;
         }
 
+        case FASE_seleccinColores:
+        {
+
+            switch (config_indexSESGO)
+            {
+                case 0:
+
+                    ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m,2 ) );
+
+                    break;
+
+                case 1:
+                    ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
+                    break;
+
+                case 2:
+                    ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
+                    break;
+            }
+
+            break;
+        }
+
         case FASE_seleccionUmbral:
         {
-            Mat mCropped = m.clone();
-            crop->cortarImagen(mCropped);
-            umb->calibrar( mCropped );
+            umb->calibrar( m );
             ui->label_displayF2->setPixmap( STAND::Tools::Mat2QPixmap( umb->get_BlackAndWhite(),true,420 ) );
             break;
         }
 
         case FASE_InicioFin:
         {
-            crop->cortarImagen(m);
             PNcuadros->calibrar(m);
 
             ui->label_displayRallada_IF->setPixmap( STAND::Tools::Mat2QPixmap( m,true, IntMatB->get_tamano_MatCartooned() ) );
@@ -146,11 +178,9 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_PartinN:
         {
-            Mat mCropped = m.clone();
-            crop->cortarImagen(mCropped);
-            PNcuadros->calibrar(mCropped);
+            PNcuadros->calibrar(m);
 
-            ui->label_displayF4->setPixmap( STAND::Tools::Mat2QPixmap( mCropped,true,
+            ui->label_displayF4->setPixmap( STAND::Tools::Mat2QPixmap( m,true,
                                                                        IntMatB->get_tamano_MatCartooned()) );
             ui->label_displayF4_Cartoon->setPixmap(  STAND::Tools::Mat2QPixmap( IntMatB->get_MatCartooned(),true,
                                                                                 IntMatB->get_tamano_MatCartooned())  );
@@ -212,6 +242,15 @@ void VentanaPrincipal::pasarALaSiguienteEtapa()
     ui->tabWidget->setCurrentIndex(config_index);
 }
 
+void VentanaPrincipal::pasarALaSiguienteEtapa_SESGO()
+{
+    ui->tabWidget_Sesgo->setTabEnabled(++config_indexSESGO,true);
+    ui->tabWidget_Sesgo->setCurrentIndex(config_indexSESGO);
+
+    if( config_indexSESGO == ui->tabWidget_Sesgo->count() )
+        pasarALaSiguienteEtapa();
+}
+
 void VentanaPrincipal::crearVentanaAfterCalibracion()
 {
     ui->btn_siguiente->setEnabled(false);
@@ -230,10 +269,16 @@ void VentanaPrincipal::inhabilitarTodasLasPestanas()
     //coloca todas las otras opciones desavilitadas para que el usuario no se salte los pasos
     for(int i=1;i<FASE_NumeroFases;i++)
         ui->tabWidget->setTabEnabled(i,false);
+
+    for(int i=1;i<ui->tabWidget_Sesgo->count();i++)
+        ui->tabWidget_Sesgo->setTabEnabled(i,false);
+
 }
 
 void VentanaPrincipal::on_btn_siguiente_clicked()
 {
+    qDebug()<<config_indexSESGO;
+
     switch(config_index)
     {
         case FASE_eleccionDeDispositivoDeGrabacion:
@@ -248,17 +293,25 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_calibracion:
         {
+            calib->set_rutaDelArchivo( ui->lineEdit_F1_1_path->text() );
+
             if(calib->get_todoEnOrden() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica)
                 pasarALaSiguienteEtapa();
 
             break;
         }
 
-        case FASE_cortarContenido:
+       case FASE_cortarContenido:
        {
             if(crop->hayContenedor())            
                pasarALaSiguienteEtapa();
 
+            break;
+        }
+
+        case FASE_seleccinColores:
+        {
+            pasarALaSiguienteEtapa_SESGO();
             break;
         }
 
@@ -422,8 +475,8 @@ void VentanaPrincipal::on_lineEdit_setverDir_SMA_textEdited(const QString &arg1)
 
 void VentanaPrincipal::on_pushButton_ProbarConexion_SMA_clicked()
 {
-    ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_comprobando );
-    QMovie *movie = new QMovie( CONFIG::senderBase::RUTAIMG_comprobando );
+    ui->label_error_SMA->setText( STAND::senderBase::MSJ_comprobando );
+    QMovie *movie = new QMovie( STAND::senderBase::RUTAIMG_comprobando );
     ui->label_connectionTest_SMA->setMovie(movie);
     movie->start();
 
@@ -431,28 +484,26 @@ void VentanaPrincipal::on_pushButton_ProbarConexion_SMA_clicked()
 
     if(conSMA->get_buenaConexion())
     {
-        ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_correcto );
-        ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_correcto ) );
+        ui->label_error_SMA->setText( STAND::senderBase::MSJ_correcto );
+        ui->label_connectionTest_SMA->setPixmap( QPixmap( STAND::senderBase::RUTAIMG_correcto ) );
     }
     else
     {
-        ui->label_error_SMA->setText( CONFIG::senderBase::MSJ_incorrecto );
-        ui->label_connectionTest_SMA->setPixmap( QPixmap( CONFIG::senderBase::RUTAIMG_incorrecto ) );
+        ui->label_error_SMA->setText( STAND::senderBase::MSJ_incorrecto );
+        ui->label_connectionTest_SMA->setPixmap( QPixmap( STAND::senderBase::RUTAIMG_incorrecto ) );
     }
 }
 
 
 void VentanaPrincipal::on_pushButton_F1_1_buscarArchivo_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(
+    QString path = QFileDialog::getOpenFileName(
                 this,
                 tr("open file"),
                 QDir::currentPath(),
                 "yml (*.yml);;xml (*.xml);;yaml (*.yaml);;yml.gz (*.yml.gz);;xml.gz (*.xml.gz);;yaml.gz (*.yaml.gz)" );
 
-    calib->set_rutaDelArchivo( filename );
-
-    ui->lineEdit_F1_1_path->setText( filename );
+    ui->lineEdit_F1_1_path->setText( path );
 }
 
 void VentanaPrincipal::on_slider_n_valueChanged(int value)
@@ -460,4 +511,9 @@ void VentanaPrincipal::on_slider_n_valueChanged(int value)
     PNcuadros->set_n( ui->slider_n->value() );
     IntMatB->set_n( PNcuadros->get_n() );
     ui->label_CuadrosRedondeo->setText( QString::number(PNcuadros->get_cuantosCuadrosSonNecesarios()) );
+}
+
+void VentanaPrincipal::on_tabWidget_Sesgo_currentChanged(int index)
+{
+    config_indexSESGO = index;
 }

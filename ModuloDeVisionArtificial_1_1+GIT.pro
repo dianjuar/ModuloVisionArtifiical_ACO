@@ -41,10 +41,10 @@ HEADERS  += ventanaprincipal.h \
     config_INTMatBuilder.h \
     config_matintsender.h \
     config_calibrador.h \
-    config_senderBase.h \
     stand_clickablelabel.h \
     config_guardarycargarparametros.h \
     config_connectsistemamultiagente.h \
-    config_colordetector.h
+    config_colordetector.h \
+    stand_senderBase.h
 
 FORMS    += ventanaprincipal.ui

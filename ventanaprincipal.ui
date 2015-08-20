@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>786</width>
-    <height>690</height>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -221,6 +221,9 @@
            <widget class="QLineEdit" name="lineEdit_F1_1_path">
             <property name="enabled">
              <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>/home/diego_juliao/ProgramerProyects/TESIS/Modulo Vision Artificial/build-ModuloDeVisionArtificial_1_1+GIT-Desktop_Qt_5_5_0_GCC_64bit-Release/Calibracion/camera.yml</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
@@ -671,10 +674,16 @@
         </item>
         <item>
          <widget class="QTabWidget" name="tabWidget_Sesgo">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
           <widget class="QWidget" name="tab_sesgo1">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <attribute name="title">
             <string>Color 1</string>
            </attribute>
@@ -695,7 +704,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_display_SesgoNormal1">
+               <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal1">
                 <property name="text">
                  <string>Imagen Normal</string>
                 </property>
@@ -771,7 +780,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_display_SesgoNormal2">
+               <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal2">
                 <property name="text">
                  <string>Imagen Normal</string>
                 </property>
@@ -827,6 +836,9 @@
            </layout>
           </widget>
           <widget class="QWidget" name="tab_sesgo3">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <attribute name="title">
             <string>Color 3</string>
            </attribute>
@@ -847,7 +859,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_display_SesgoNormal3">
+               <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal3">
                 <property name="text">
                  <string>Imagen Normal</string>
                 </property>
@@ -1001,10 +1013,7 @@
           <item>
            <widget class="QLabel" name="label_displayF2">
             <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>media/CamNOT_FOUND.png</pixmap>
+             <string>binarizada</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>

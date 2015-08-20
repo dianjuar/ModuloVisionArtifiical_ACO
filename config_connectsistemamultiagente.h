@@ -1,13 +1,13 @@
 #ifndef CONFIG_CONNECTSISTEMAMULTIAGENTE_H
 #define CONFIG_CONNECTSISTEMAMULTIAGENTE_H
 
-#include "config_senderBase.h"
+#include "stand_senderBase.h"
 #include "INCLUDE_QTstuff.h"
 #include "INCLUDE_opencv.h"
 
 namespace CONFIG {
 
-class connectSistemaMultiAgente: public senderBase
+class connectSistemaMultiAgente: public STAND::senderBase
 {
     static const int port = 5003;
 

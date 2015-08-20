@@ -31,7 +31,6 @@ class guardarYCargarParametros
     static const QString QScSMA;
 
 
-
 public:
     static const QString QSnombreArchivo;
 
