@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_Video;
+    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -94,12 +94,12 @@ void VentanaPrincipal::set_connects()
             this, SLOT(setted_PuntoF(bool)) );
     //-------------------------------------
     //Connect the clicks events for the color detectiong section
-   /* connect(ui->label_display_SesgoNormal1, SIGNAL(clicked(int,int)),this,
+    connect(ui->label_display_SesgoNormal1, SIGNAL(clicked(int,int)),this,
             SLOT(Color_selected_click(int,int)) );
     connect(ui->label_display_SesgoNormal2, SIGNAL(clicked(int,int)),this,
             SLOT(Color_selected_click(int,int)) );
     connect(ui->label_display_SesgoNormal3, SIGNAL(clicked(int,int)),this,
-            SLOT(Color_selected_click(int,int)) );*/
+            SLOT(Color_selected_click(int,int)) );
     //-------------------------------------
 
 }
@@ -149,30 +149,27 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_seleccinColores:
         {
-
-        //colorDetect->get_m_sesgo();
         colorDetect->calibrar(m,config_indexSESGO);
-        //Mat binary = colorDetect->get_m_sesgo();
-/*
+        Mat binary = colorDetect->get_m_sesgo();
+
             switch (config_indexSESGO)
             {
                 case 0:
-
                     ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m,2 ) );
-                    //ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
+                    ui->label_display_SesgoBinario1->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
 
                 case 1:
                     ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
-                   // ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
+                    ui->label_display_SesgoBinario2->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
 
                 case 2:
                     ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
-                   // ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
+                    ui->label_display_SesgoBinario3->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
                     break;
             }
-*/
+
             break;
         }
 

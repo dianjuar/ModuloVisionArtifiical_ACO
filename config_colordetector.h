@@ -10,10 +10,11 @@ namespace CONFIG
 
 class sesgo
 {
-    double h_h, l_h, h_s, l_s;
 
 public:
     sesgo();
+
+    double h_h, l_h, h_s, l_s;
 
     double get_h_h(){ return h_h; }
     double get_l_h(){ return l_h; }
@@ -32,11 +33,11 @@ public:
 class colorDetector
 {
     //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
-    int low_diff = 20;
-    int high_diff = 10;
-    int conn = 4;
-    int val = 255;
-    int flags = conn + (val << 8) + CV_FLOODFILL_MASK_ONLY;
+    int low_diff;
+    int high_diff;
+    int conn;
+    int val;
+    int flags;
 
     bool selected;
 
@@ -51,10 +52,10 @@ public:
     void write(FileStorage &fs) const;
     void read(const FileNode& node);
 
-    Mat calibrar(Mat m, int Nsesgo); //retorna la matriz binaria
+    void calibrar(Mat m, int Nsesgo);
 
     //setters
-    void setSesgos(int numero,double h_h, double l_h, double h_s, double l_s);
+    void setSesgos(int Nsesgo,double h_h, double l_h, double h_s, double l_s);
     void set_seedPoint(int Nsesgo, Point p);
 
     //getters
