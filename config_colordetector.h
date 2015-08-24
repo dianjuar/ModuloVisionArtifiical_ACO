@@ -44,7 +44,8 @@ class colorDetector
     sesgo *sesX;
     Point seedPoint;
 
-    Mat frame, frame_hsv, frame_thresholded, mask;
+    Mat frame_hsv, frame, mask;
+    Mat frame_thresholded;
 
 public:
     colorDetector();
@@ -62,8 +63,6 @@ public:
     Mat get_m_sesgo(){ return frame_thresholded; }
 
 };
-
-
 
 }
 #endif // CONFIG_COLORDETECTOR_H

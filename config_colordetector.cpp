@@ -19,44 +19,41 @@ colorDetector::colorDetector()
 void colorDetector::calibrar(Mat m,int Nsesgo)
 {
     //codigo sacado de la página 101 del libre Practical Opencv
-    frame = m;
+    frame=m;
 
-    if(!selected)
-        mask.create(frame.rows+2, frame.cols+2, CV_8UC1);
+   if(!selected)
+       mask.create(frame.rows+2, frame.cols+2, CV_8UC1);
 
-    Mat frame_hsv;
-    cvtColor(frame, frame_hsv, CV_BGR2HSV);
+   cvtColor(frame, frame_hsv, CV_BGR2HSV);
 
-    // extract the hue and saturation channels
-    int from_to[] = {0,0, 1,1};
-    Mat hs(frame.size(), CV_8UC2);
-    mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
+   // extract the hue and saturation channels
+   int from_to[] = {0,0, 1,1};
+   Mat hs(frame.size(), CV_8UC2);
+   mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
 
-    // check for the range of H and S obtained from floodFill
-    inRange(hs, Scalar(sesX[Nsesgo].get_l_h(), sesX[Nsesgo].get_l_s()),
-            Scalar(sesX[Nsesgo].get_h_h(), sesX[Nsesgo].get_h_s()),
-            frame_thresholded);
+   // check for the range of H and S obtained from floodFill
+   inRange(hs,
+           Scalar( sesX[Nsesgo].get_l_h(), sesX[Nsesgo].get_l_s() ),
+           Scalar( sesX[Nsesgo].get_h_h(), sesX[Nsesgo].get_h_s() ),
+           frame_thresholded);
 
-    // open and close to remove noise
-    Mat str_el = getStructuringElement(MORPH_RECT, Size(5, 5));
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
+   // open and close to remove noise
+   Mat str_el = getStructuringElement(MORPH_RECT, Size(5, 5));
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
 
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
 
-    str_el = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
-    morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+  // str_el = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
+  // morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
 
 }
 
 void colorDetector::set_seedPoint(int Nsesgo, Point p)
 {
-/*    selected = true;
+    selected = true;
 
-    this->seedPoint = p;
-
-    //todo este código salió del libro Practical OPENCV p101
     // make mask using floodFill
     mask = Scalar::all(0);
     floodFill(frame, mask, p, Scalar(255, 255, 255), 0, Scalar(low_diff, low_diff, low_diff),
@@ -66,28 +63,10 @@ void colorDetector::set_seedPoint(int Nsesgo, Point p)
     Mat channels[3];
     split(frame_hsv, channels);
 
-    minMaxLoc(channels[0], sesX[Nsesgo].get_l_h_DIRMEM(), sesX[Nsesgo].get_h_h_DIRMEM(), NULL, NULL, mask.rowRange(1, mask.rows-1).colRange(1, mask.cols-1));
-    minMaxLoc(channels[1], sesX[Nsesgo].get_l_s_DIRMEM(), sesX[Nsesgo].get_h_s_DIRMEM(), NULL, NULL, mask.rowRange(1, mask.rows-1).colRange(1, mask.cols-1));
-*/
-    //***************************************
-    selected = true;
+    Mat InputMask = mask.rowRange(1, mask.rows-1).colRange(1, mask.cols-1);
 
-    //seed point
-    //cv::Point p(x, y);
-
-    // make mask using floodFill
-    mask = Scalar::all(0);
-    floodFill(frame, mask, p, Scalar(255, 255, 255), 0, Scalar(low_diff, low_diff, low_diff),
-    Scalar(high_diff, high_diff, high_diff), flags);
-
-    // find the H and S range of piexels selected by floodFill
-    Mat channels[3];
-    split(frame_hsv, channels);
-    int l_h = 0, h_h = 0, l_s = 0, h_s = 0;
-    minMaxLoc(channels[0], &l_h, &h_h, NULL, NULL, mask.rowRange(1, mask.rows-1).colRange(1, mask.cols-1) );
-    minMaxLoc(channels[1], &l_s, &h_s, NULL, NULL, mask.rowRange(1, mask.rows-1).colRange(1, mask.cols-1) );
-
-
+    minMaxLoc(channels[0], sesX[Nsesgo].get_l_h_DIRMEM(), sesX[Nsesgo].get_h_h_DIRMEM(), NULL, NULL, InputMask );
+    minMaxLoc(channels[1], sesX[Nsesgo].get_l_s_DIRMEM(), sesX[Nsesgo].get_h_s_DIRMEM(), NULL, NULL, InputMask );
 }
 
 void colorDetector::setSesgos(int Nsesgo, double h_h, double l_h, double h_s, double l_s)

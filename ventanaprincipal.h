@@ -41,6 +41,8 @@ public:
     static const int FASE_InicioFin = 6;
     static const int FASE_EnvioEstacionCentral = 7;
     static const int FASE_EnvioSMA = 8;
+
+    static const int EscalaVisualizacion_FaseSegmentacion = 2;
     
 private slots:
     void setted_PuntoI(bool);

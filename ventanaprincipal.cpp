@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -227,6 +227,9 @@ void VentanaPrincipal::setted_PuntoF(bool b)
 
 void VentanaPrincipal::Color_selected_click(int x, int y)
 {
+    x = x*EscalaVisualizacion_FaseSegmentacion;
+    y = y*EscalaVisualizacion_FaseSegmentacion;
+
     colorDetect->set_seedPoint( config_indexSESGO ,Point(x,y));
 }
 
