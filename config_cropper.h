@@ -17,7 +17,6 @@ class cropper
     int canny_umbral_1, canny_umbral_2;
     int tamano_XxX_MatrizCroped;
 
-    Rect contenedorMasGrande( vector< vector<Point> > contours );
     void set_MayorContenedor(Rect r);
 
 public:

@@ -22,11 +22,13 @@ void cropper::calibracion(Mat mat)
     Canny(matTratada, canny_edges, canny_umbral_1, canny_umbral_2);
 
     vector< vector<Point> > contours;
-    findContours(canny_edges, contours,CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    findContours(canny_edges, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0,0) );
 
-    set_MayorContenedor( contenedorMasGrande(contours) );
+    set_MayorContenedor( STAND::Tools::contenedorMasGrande(contours) );
 
     rectangle(imagen_Rayada,contenedor,Scalar(0,0,255), 2);
+
+
 }
 
 void cropper::cortarImagen(Mat &m)
@@ -61,32 +63,6 @@ void cropper::read(const FileNode &node)
     std::vector<int> contenedorVec;
     node["contenedor"] >> contenedorVec;
     contenedor = Rect(contenedorVec[0], contenedorVec[1], contenedorVec[2], contenedorVec[3]);
-}
-
-Rect cropper::contenedorMasGrande(vector<vector<Point> > contours)
-{
-    if(contours.size()!=0)
-    {
-        int larguestArea = -1;
-        int largest_contour_index;
-
-        for( int i = 0; i< contours.size(); i++ )
-        {
-             double a = contourArea( contours[i]);
-
-             if(a>larguestArea)
-             {
-                 larguestArea = a;
-                 largest_contour_index=i;
-             }
-        }
-
-        return boundingRect(contours[ largest_contour_index ] );
-    }
-    else    
-        return Rect();
-
-
 }
 
 void cropper::set_MayorContenedor(Rect r)
