@@ -91,8 +91,36 @@ public:
         return matQSt;
     }
 
-    static Mat Equalizer() {}
+    static Rect contenedorMasGrande( vector< vector<Point> > contours)
+    {
+        if(contours.size()>0)
+        {
+            int larguestArea = -1;
+            int largest_contour_index = 0;
 
+            qDebug()<<"---------------------------";
+
+            if (contours.size() > 1)
+                for( int i = 0; i< contours.size(); i++ )
+                {
+                     double area = boundingRect(contours[ i ] ).area();
+
+                     qDebug()<<"Area "<<area<<" INDEX"<<i;
+
+                     if(area > larguestArea )
+                     {
+                         larguestArea = area;
+                         largest_contour_index=i;
+                     }
+                }
+
+            return boundingRect(contours[ largest_contour_index ] );
+        }
+        else
+            return Rect();
+
+
+    }
 };
 
 class circulo
