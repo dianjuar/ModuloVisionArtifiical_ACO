@@ -150,32 +150,26 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
         case FASE_seleccinColores:
         {
         colorDetect->calibrar(m,config_indexSESGO);
-        Mat binary = colorDetect->get_m_thresholded();
-        Mat sesgado = colorDetect->get_m_sesgado();
+        Mat binary = colorDetect->sesgador3Colores[ config_indexSESGO ].get_frame_thresholded();
+        Mat sesgado = colorDetect->sesgador3Colores[ config_indexSESGO ].get_frame_sesgado();
 
             switch (config_indexSESGO)
             {
                 case 0:
                     ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion  ) );
-
-
-    //considero hoy que la mejor solución es con un emit
-                    if(colorDetect->get_cortado())
-                    {
-                        ui->label_display_SesgoBinario1->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
-                        ui->label_display_SesgoSesgado1->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
-                    }
+                    ui->label_display_SesgoBinario1->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoSesgado1->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
                 break;
 
                 case 1:
-                    ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
-                    ui->label_display_SesgoBinario2->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
-                    break;
+                    ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoBinario2->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                break;
 
                 case 2:
-                    ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
-                    ui->label_display_SesgoBinario3->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
-                    break;
+                    ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoBinario3->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                break;
             }
 
             break;
@@ -238,7 +232,7 @@ void VentanaPrincipal::Color_selected_click(int x, int y)
     x = x*EscalaVisualizacion_FaseSegmentacion;
     y = y*EscalaVisualizacion_FaseSegmentacion;
 
-    colorDetect->set_seedPoint( config_indexSESGO ,Point(x,y));
+    colorDetect->sesgador3Colores[config_index].set_seedPoint( Point(x,y) );
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
