@@ -2,10 +2,23 @@
 
 using namespace CONFIG;
 
+void colorDetector::recortar()
+{
+    vector<vector<Point> > contornos;
+    vector<Vec4i> hierarchy;
+
+    findContours(frame_thresholded.clone(),contornos, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+    Rect roi = STAND::Tools::contenedorMasGrande( contornos );
+    frame_sesgado = frame(roi);
+}
+
 colorDetector::colorDetector()
 {
     sesX = new sesgo[3];
     selected = false;
+
+    frame_sesgado = Mat::zeros( 20, 20, CV_8UC3 );
 
     //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
     low_diff = 20;
@@ -14,10 +27,16 @@ colorDetector::colorDetector()
     val = 255;
     flags = conn + (val << 8) + CV_FLOODFILL_MASK_ONLY;
 
+    kernel_rectangular = getStructuringElement(MORPH_RECT, Size(5, 5));
+    kernel_ovalado = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
+
+    cortado = false;
 }
 
 void colorDetector::calibrar(Mat m,int Nsesgo)
 {
+    cortado = false;
+
     //codigo sacado de la página 101 del libre Practical Opencv
     frame=m;
 
@@ -38,16 +57,14 @@ void colorDetector::calibrar(Mat m,int Nsesgo)
            frame_thresholded);
 
    // open and close to remove noise
-   Mat str_el = getStructuringElement(MORPH_RECT, Size(5, 5));
-   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
-   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, kernel_rectangular);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, kernel_rectangular);
 
-   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
-   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, kernel_rectangular);
+   morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, kernel_rectangular);
 
-  // str_el = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
-  // morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
 
+   start();
 }
 
 void colorDetector::set_seedPoint(int Nsesgo, Point p)
@@ -69,13 +86,18 @@ void colorDetector::set_seedPoint(int Nsesgo, Point p)
     minMaxLoc(channels[1], sesX[Nsesgo].get_l_s_DIRMEM(), sesX[Nsesgo].get_h_s_DIRMEM(), NULL, NULL, InputMask );
 }
 
+void colorDetector::run()
+{
+    morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, kernel_ovalado);
+    recortar();
+
+    cortado = true;
+}
+
 void colorDetector::setSesgos(int Nsesgo, double h_h, double l_h, double h_s, double l_s)
 {
     sesX[Nsesgo].setValues(h_h, l_h, h_s, l_s);
 }
-
-
-
 //------------------------------------------------
 sesgo::sesgo()
 {

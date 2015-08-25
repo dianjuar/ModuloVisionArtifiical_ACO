@@ -3,6 +3,7 @@
 
 #include "INCLUDE_opencv.h"
 #include "INCLUDE_QTstuff.h"
+#include "stand_Tools.h"
 
 
 namespace CONFIG
@@ -30,7 +31,7 @@ public:
 
 };
 
-class colorDetector
+class colorDetector : public QThread
 {
     //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
     int low_diff;
@@ -46,6 +47,14 @@ class colorDetector
 
     Mat frame_hsv, frame, mask;
     Mat frame_thresholded;
+    Mat frame_sesgado;
+
+    Mat kernel_rectangular;
+    Mat kernel_ovalado;
+
+    bool cortado;
+
+    void recortar();
 
 public:
     colorDetector();
@@ -60,7 +69,11 @@ public:
     void set_seedPoint(int Nsesgo, Point p);
 
     //getters
-    Mat get_m_sesgo(){ return frame_thresholded; }
+    Mat get_m_sesgado(){ return frame_sesgado; }
+    Mat get_m_thresholded(){ return frame_thresholded; }
+    bool get_cortado(){ return cortado; }
+
+    void run();
 
 };
 

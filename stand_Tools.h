@@ -98,14 +98,10 @@ public:
             int larguestArea = -1;
             int largest_contour_index = 0;
 
-            qDebug()<<"---------------------------";
-
             if (contours.size() > 1)
                 for( int i = 0; i< contours.size(); i++ )
                 {
                      double area = boundingRect(contours[ i ] ).area();
-
-                     qDebug()<<"Area "<<area<<" INDEX"<<i;
 
                      if(area > larguestArea )
                      {

@@ -150,14 +150,22 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
         case FASE_seleccinColores:
         {
         colorDetect->calibrar(m,config_indexSESGO);
-        Mat binary = colorDetect->get_m_sesgo();
+        Mat binary = colorDetect->get_m_thresholded();
+        Mat sesgado = colorDetect->get_m_sesgado();
 
             switch (config_indexSESGO)
             {
                 case 0:
-                    ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m,2 ) );
-                    ui->label_display_SesgoBinario1->setPixmap( STAND::Tools::Mat2QPixmap(binary,2 ) );
-                    break;
+                    ui->label_display_SesgoNormal1->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion  ) );
+
+
+    //considero hoy que la mejor solución es con un emit
+                    if(colorDetect->get_cortado())
+                    {
+                        ui->label_display_SesgoBinario1->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                        ui->label_display_SesgoSesgado1->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
+                    }
+                break;
 
                 case 1:
                     ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, 2 ) );
