@@ -15,7 +15,7 @@ class cropper
     bool hay_Contenedor;
 
     int canny_umbral_1, canny_umbral_2;
-    int tamano_XxX_MatrizCroped;
+    int tamano_MatrizCortada;
 
     void set_MayorContenedor(Rect r);
 
@@ -28,8 +28,8 @@ public:
     void set_cannyU_2(int);
     Mat get_ImagenRayada(){ return imagen_Rayada; }
     Mat get_ImagenCanny(){ return canny_edges; }
-    int get_tamano_MatrizCroped(){ return tamano_XxX_MatrizCroped; }
-    int* get_tamano_MatrizCroped_SEGUIMIENTO(){ return &tamano_XxX_MatrizCroped; }
+    int get_tamano_MatrizCroped(){ return tamano_MatrizCortada; }
+    int* get_tamano_MatrizCroped_SEGUIMIENTO(){ return &tamano_MatrizCortada; }
     bool hayContenedor(){  return hay_Contenedor; }
 
     void calibracion(Mat mat);

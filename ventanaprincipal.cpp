@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_Video;
+    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -149,9 +149,9 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_seleccinColores:
         {
-        colorDetect->calibrar(m,config_indexSESGO);
-        Mat binary = colorDetect->sesgador3Colores[ config_indexSESGO ].get_frame_thresholded();
-        Mat sesgado = colorDetect->sesgador3Colores[ config_indexSESGO ].get_frame_sesgado();
+            //colorDetect->calibrar(m,config_indexSESGO);
+            Mat binary = colorDetect->sesgador3colores[ config_indexSESGO ]->get_frame_thresholded();
+            Mat sesgado = colorDetect->sesgador3colores[ config_indexSESGO ]->get_frame_sesgado();
 
             switch (config_indexSESGO)
             {
@@ -232,7 +232,7 @@ void VentanaPrincipal::Color_selected_click(int x, int y)
     x = x*EscalaVisualizacion_FaseSegmentacion;
     y = y*EscalaVisualizacion_FaseSegmentacion;
 
-    colorDetect->sesgador3Colores[config_index].set_seedPoint( Point(x,y) );
+    colorDetect->sesgador3colores[config_index]->set_seedPoint( Point(x,y) );
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
@@ -271,7 +271,10 @@ void VentanaPrincipal::pasarALaSiguienteEtapa_SESGO()
     ui->tabWidget_Sesgo->setCurrentIndex(config_indexSESGO);
 
     if( config_indexSESGO == ui->tabWidget_Sesgo->count() )
+    {
+        config_indexSESGO = ui->tabWidget_Sesgo->count() - 1;
         pasarALaSiguienteEtapa();
+    }
 }
 
 void VentanaPrincipal::crearVentanaAfterCalibracion()
@@ -401,10 +404,19 @@ void VentanaPrincipal::on_btn_atras_clicked()
 {
     if(config_index != FASE_eleccionDeDispositivoDeGrabacion)
     {
+        if(config_index == FASE_seleccinColores)
+            if(config_indexSESGO!=0)
+            {
+                ui->tabWidget_Sesgo->setCurrentIndex(--config_indexSESGO);
+                return;
+            }
+
         ui->tabWidget->setCurrentIndex(--config_index);
+
         if(config_index == FASE_eleccionDeDispositivoDeGrabacion)
             ui->btn_atras->setEnabled(false);
     }
+
 }
 
 void VentanaPrincipal::on_slider_umbralBlackAndWhite_valueChanged(int value)
