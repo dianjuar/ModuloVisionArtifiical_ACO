@@ -20,23 +20,30 @@ colorDetector::colorDetector()
 
 void colorDetector::write(FileStorage &fs) const
 {
-    fs << "numeroDeColores" << NumeroDeColores;
+    fs << "{";
 
-    for (int i = 0; i < NumeroDeColores; i++)
-    {
-        double h_h = sesgador3colores[i].get_h_h();
-        double l_h = sesgador3colores[i].get_l_h();
-        double h_s = sesgador3colores[i].get_h_s();
-        double l_s = sesgador3colores[i].get_l_s();
+        fs<<"numeroDeColores" << NumeroDeColores;
 
-        fs << i <<
-              "{" <<
-                  "h_h" << h_h <<
-                  "l_h" << l_h <<
-                  "h_s" << h_s <<
-                  "l_s" << l_s <<
-              "}";
-    }
+        for (int i = 0; i < NumeroDeColores; i++)
+        {
+            double h_h = sesgador3colores[i].get_h_h();
+            double l_h = sesgador3colores[i].get_l_h();
+            double h_s = sesgador3colores[i].get_h_s();
+            double l_s = sesgador3colores[i].get_l_s();
+
+            QString sms = "Color";
+            sms.append( QString::number(i) );
+
+            fs << sms.toUtf8().data();
+                fs << "{:";
+                    fs << "h_h" << h_h;
+                    fs << "l_h" << l_h;
+                    fs << "h_s" << h_s;
+                    fs << "l_s" << l_s;
+                fs <<"}";
+        }
+
+    fs<< "}";
 }
 
 void colorDetector::read(const FileNode &node, FileStorage &fs)
