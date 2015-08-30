@@ -11,6 +11,7 @@ class umbralizador
 {
     int umbral;
     Mat blackAndWhite;
+    Mat kernel;
 
 public:
     umbralizador(int);

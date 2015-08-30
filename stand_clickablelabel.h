@@ -16,7 +16,7 @@ public:
     void mousePressEvent ( QMouseEvent * event ) ;
 
 signals:
-    void clicked();
+    void clicked(int x, int y);
 protected:
 
 };

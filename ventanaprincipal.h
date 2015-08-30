@@ -13,6 +13,7 @@
 #include "config_calibrador.h"
 #include "config_guardarycargarparametros.h"
 #include "config_connectsistemamultiagente.h"
+#include "config_colordetector.h"
 
 namespace Ui
 {
@@ -29,31 +30,32 @@ public:
     ~VentanaPrincipal();
 
     static int FASE_NumeroFases;
+    static const int FASE_Color_NumeroFases = 3;
+
     static const int FASE_eleccionDeDispositivoDeGrabacion = 0;
     static const int FASE_calibracion = 1;
     static const int FASE_cortarContenido = 2;
-    static const int FASE_seleccionUmbral = 3;
-    static const int FASE_PartinN = 4;
-    static const int FASE_InicioFin = 5;
-    static const int FASE_EnvioEstacionCentral = 6;
-    static const int FASE_EnvioSMA = 7;
+    static const int FASE_seleccinColores=3;
+    static const int FASE_seleccionUmbral = 4;
+    static const int FASE_PartinN = 5;
+    static const int FASE_InicioFin = 6;
+    static const int FASE_EnvioEstacionCentral = 7;
+    static const int FASE_EnvioSMA = 8;
+
+    static const int EscalaVisualizacion_FaseSegmentacion = 2;
     
 private slots:
-    void set_FotoTomada_calibracion(int);
-    void set_calibracionExitosa(bool);
-
     void setted_PuntoI(bool);
     void setted_PuntoF(bool);
+    void Color_selected_click(int, int);
 
     void listen_matFromVideoCapture();
-    void listen_matFromCalibrate();
 
     void on_Q_Ndispositivo_SpinBox_valueChanged(int arg1);
     void on_btn_siguiente_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_btn_atras_clicked();
     void on_slider_umbralBlackAndWhite_valueChanged(int value);
-    void on_slider_n_valueChanged(int value);
 
     void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
 
@@ -63,27 +65,13 @@ private slots:
 
     void on_pushButton_2_clicked();
 
-    void on_pushButton_startF1_1_clicked();
-
-    void on_pushButton_restartF1_1_clicked();
-
-    void on_slider_BoardSizeW_F1_1_valueChanged(int value);
-
-    void on_slider_BoardSizeH_F1_1_valueChanged(int value);
-
-    void on_slider_NFotos_F1_1_valueChanged(int value);
-
-    void on_slider_delay_F1_1_valueChanged(int value);
-
-    void on_doubleSpinBox_F1_1_valueChanged(double arg1);
-
     void on_pushButton_ProbarConexion_EstCentral_clicked();
 
     void on_pushButton_setPI_IF_clicked();
 
     void on_pushButton_setPF_IF_clicked();
 
-    void Mouse_Pressed_DeteccionCirculos();
+    void Mouse_Pressed_DeteccionCirculos(int x, int y);
 
     void on_actionCargar_Configuraci_n_triggered();
 
@@ -91,12 +79,19 @@ private slots:
 
     void on_pushButton_ProbarConexion_SMA_clicked();
 
+    void on_pushButton_F1_1_buscarArchivo_clicked();
+
+    void on_slider_n_valueChanged(int value);
+
+    void on_tabWidget_Sesgo_currentChanged(int index);
+
 private:
     Ui::VentanaPrincipal *ui;
 
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
+    CONFIG::colorDetector *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
@@ -106,13 +101,15 @@ private:
     CONFIG::connectSistemaMultiAgente *conSMA;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
-    void set_EnableSliderF1_1(bool enable, QPushButton *bMother, QPushButton *bOther);
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);
     void pasarALaSiguienteEtapa();
+    void pasarALaSiguienteEtapa_SESGO();
     void crearVentanaAfterCalibracion();
     void inhabilitarTodasLasPestanas();
+    void set_connects();
 
     int config_index;
+    int config_indexSESGO;
     int config_Nparametros;
 
     int *numeroParametrosPorFaseCalib;

@@ -14,5 +14,10 @@
 #include <QPushButton>
 #include <QByteArray>
 #include <QMouseEvent>
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include <iostream>
+using namespace std;
 
 #endif // INCLUDE_QTSTUFF_H

@@ -17,5 +17,5 @@ void ClickableLabel::mousePressEvent ( QMouseEvent * event )
 {
     this->x = event->x();
     this->y = event->y();
-    emit clicked();
+    emit clicked(x,y);
 }

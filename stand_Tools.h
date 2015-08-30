@@ -74,6 +74,49 @@ public:
         return Mat2QPixmap(m);
     }
 
+    static QString IntMat2QString(int **mat, int n)
+    {
+        QString matQSt;
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                matQSt.append(QString::number( mat[i][j] ));
+            }
+
+            matQSt.append( i!=n-1?"\n":"");
+        }
+
+        return matQSt;
+    }
+
+    static Rect contenedorMasGrande( vector< vector<Point> > contours)
+    {
+        if(contours.size()>0)
+        {
+            int larguestArea = -1;
+            int largest_contour_index = 0;
+
+            if (contours.size() > 1)
+                for( int i = 0; i< contours.size(); i++ )
+                {
+                     double area = boundingRect(contours[ i ] ).area();
+
+                     if(area > larguestArea )
+                     {
+                         larguestArea = area;
+                         largest_contour_index=i;
+                     }
+                }
+
+            return boundingRect(contours[ largest_contour_index ] );
+        }
+        else
+            return Rect();
+
+
+    }
 };
 
 class circulo

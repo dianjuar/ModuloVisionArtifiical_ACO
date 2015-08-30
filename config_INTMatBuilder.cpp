@@ -7,11 +7,21 @@ void INTMatBuilder::construir_INTMat_and_cartoon()
     for(int i=0;i<n;i++)
         for(int j=0;j<n;j++)
         {
-           Mat miniMat = mat_original_BlackAndWhite->rowRange(i*tamano_cuadroAnalizar_MatrizCroped,
-                                                             i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
+           Mat miniMat;
+
+           if(i==10 && j==0)
+           {
+               qDebug()<<"x1:"<<j*tamano_cuadroAnalizar_MatrizCroped<<" x2:"<<j*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped;
+               qDebug()<<"y1:"<<i*tamano_cuadroAnalizar_MatrizCroped<<" y2:"<<i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped;
+               qDebug()<<"mat_original_BlackAndWhite: x:"<<mat_original_BlackAndWhite->cols<<" y:"<<mat_original_BlackAndWhite->rows;
+               qDebug()<<"asdkjaiosdja";
+           }
+
+           miniMat = mat_original_BlackAndWhite->rowRange(i*tamano_cuadroAnalizar_MatrizCroped,
+                                                          i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
 
            miniMat = miniMat.colRange(j*tamano_cuadroAnalizar_MatrizCroped,
-                                                         j*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
+                                      j*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
 
            //****ANALIZAR SI TIENE PIXELES NEGROS
            if( contieneNegro(miniMat) == false)
@@ -89,6 +99,29 @@ Point INTMatBuilder::convert_PointScreen2PointMat(Point p)
     return Point(p.x/tamano_cuadroMatCartooned,p.y/tamano_cuadroMatCartooned);
 }
 
+void INTMatBuilder::write(FileStorage &fs) const
+{
+    fs << "{" <<"QSINT_mat" << QSINT_mat.toUtf8().data()  <<
+                "n" << n <<
+          "}";
+
+}
+
+void INTMatBuilder::read(const FileNode &node)
+{
+    std::string stdSINT_mat;
+
+    node["QSINT_mat"] >> stdSINT_mat;
+    QSINT_mat = QString( stdSINT_mat.c_str() );
+
+    n = (int)node["n"];
+}
+
+void INTMatBuilder::buildQSINTmat()
+{
+    QSINT_mat = STAND::Tools::IntMat2QString( INT_mat, n );
+}
+
 INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_MatrizCropped)
 {
     this->mat_original_BlackAndWhite = mat_original_BlackAndWhite;
@@ -158,7 +191,6 @@ void INTMatBuilder::set_P_Inicio(Point Inicio)
 
         bool_settedPuntoI = true;
         emit settedPuntoI(bool_settedPuntoI);
-
     }
 
 }
@@ -167,6 +199,7 @@ void INTMatBuilder::set_P_Fin(Point Fin)
 {
     Fin = convert_PointScreen2PointMat(Fin);
 
+    //validar que sea un espacio válido
     if(INT_mat[Fin.y][Fin.x]==MAPA_libre || INT_mat[Fin.y][Fin.x]==MAPA_fin || INT_mat[Fin.y][Fin.x]==MAPA_inicio)
     {
 
@@ -181,7 +214,6 @@ void INTMatBuilder::set_P_Fin(Point Fin)
             INT_mat[P_Fin.y][P_Fin.x] = MAPA_libre;
             copiar_CuadroMatCartoon_a_MatCartoon(P_Fin.y,P_Fin.x, MAPA_libre);
         }
-
 
         P_Fin = Fin;
 

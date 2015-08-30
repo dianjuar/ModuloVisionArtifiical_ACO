@@ -1,6 +1,6 @@
-#include "config_senderBase.h"
+#include "stand_senderBase.h"
 
-using namespace CONFIG;
+using namespace STAND;
 
 const QString senderBase::MSJ_sinComprobar = QString("No se ha comprobado el estado de la conexión.");
 const QString senderBase::MSJ_comprobando = QString("Comprobando el estado de la conexión.");
@@ -10,10 +10,11 @@ const QString senderBase::RUTAIMG_correcto = QString("./media/TestConnection/Rig
 const QString senderBase::RUTAIMG_incorrecto = QString("./media/TestConnection/Bad.png");
 const QString senderBase::RUTAIMG_comprobando = QString("./media/TestConnection/connecting.gif");
 
-const QString senderBase::MSJEnvio_divisor = QString("-");
-const QString senderBase::MSJEnvio_DefaultTest = QString("test");
+const QString senderBase::MSJEnvio_divisor = QString("->");
 const QString senderBase::MSJEnvio_Prefijo_Mat = QString("Mat");
 const QString senderBase::MSJEnvio_Prefijo_Dist = QString("Dist");
+const QString senderBase::MSJEnvio_conectado = QString("connect");
+const QString senderBase::MSJEnvio_cerrar = QString("close");
 
 senderBase::senderBase(QString serverDir, int serverPort)
 {
@@ -33,7 +34,7 @@ void senderBase::testConnection( bool Testserio)
 
     if(!Testserio)
     {
-        client.write(MSJEnvio_DefaultTest.toUtf8().data());
+        client.write(MSJEnvio_cerrar.toUtf8().data());
         client.disconnectFromHost();
     }
 }
@@ -41,8 +42,5 @@ void senderBase::testConnection( bool Testserio)
 void senderBase::enviar(QByteArray byte)
 {
     testConnection(true);
-
     client.write( byte );
-
-    client.disconnectFromHost();
 }

@@ -21,3 +21,8 @@ void connectSistemaMultiAgente::read(const FileNode &node)
     serverDir = QString::fromUtf8( server.c_str() );
 }
 
+void connectSistemaMultiAgente::sendConex()
+{
+    enviar( senderBase::MSJEnvio_conectado.toUtf8().data() );
+}
+

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>694</height>
+    <width>827</width>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -141,412 +141,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_11">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_24">
-          <item>
-           <widget class="QLabel" name="label_25">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>26</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Tamaño del Cuadro (cm)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_F1_1">
-            <property name="value">
-             <double>2.500000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_startF1_1">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../ModuloDeVisionArtificial_1_1+GIT-build-desktop-Qt_4_8_1_in_PATH__System__Release/media/TestConnection/start.png</normaloff>../ModuloDeVisionArtificial_1_1+GIT-build-desktop-Qt_4_8_1_in_PATH__System__Release/media/TestConnection/start.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_restartF1_1">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>../ModuloDeVisionArtificial_1_1+GIT-build-desktop-Qt_4_8_1_in_PATH__System__Release/media/TestConnection/restart.png</normaloff>../ModuloDeVisionArtificial_1_1+GIT-build-desktop-Qt_4_8_1_in_PATH__System__Release/media/TestConnection/restart.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_29">
-          <item>
-           <spacer name="verticalSpacer_36">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_32">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Número de Fotos</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="slider_NFotos_F1_1">
-            <property name="minimum">
-             <number>8</number>
-            </property>
-            <property name="maximum">
-             <number>20</number>
-            </property>
-            <property name="value">
-             <number>10</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_33">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>10</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_38">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_30">
-          <item>
-           <spacer name="verticalSpacer_37">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_34">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Retardo entre las capturas (seg)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="slider_delay_F1_1">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_35">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>1</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_39">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_32">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_25">
-          <item>
-           <spacer name="verticalSpacer_21">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_26">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Tamaño del Tablero (ancho)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="slider_BoardSizeW_F1_1">
-            <property name="minimum">
-             <number>3</number>
-            </property>
-            <property name="maximum">
-             <number>20</number>
-            </property>
-            <property name="value">
-             <number>5</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_27">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>5</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_31">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_27">
-          <item>
-           <spacer name="verticalSpacer_34">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_30">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Tamaño del Tablero (alto)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="slider_BoardSizeH_F1_1">
-            <property name="minimum">
-             <number>3</number>
-            </property>
-            <property name="maximum">
-             <number>20</number>
-            </property>
-            <property name="value">
-             <number>8</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_31">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>16</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>8</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_35">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_28">
-          <item>
-           <spacer name="horizontalSpacer_27">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_displayF1_1">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="scaledContents">
-             <bool>false</bool>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_28">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_23">
+         <layout class="QHBoxLayout" name="horizontalLayout_14">
           <item>
            <spacer name="horizontalSpacer_25">
             <property name="orientation">
@@ -561,38 +156,18 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="labe1">
+           <widget class="QLabel" name="label_8">
             <property name="font">
              <font>
               <family>Ubuntu</family>
-              <pointsize>18</pointsize>
+              <pointsize>24</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
-             <string>Foto Nº</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_FotoTomada_F1_1">
-            <property name="font">
-             <font>
-              <family>Ubuntu</family>
-              <pointsize>18</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>0/10</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_TodoEnOrden_F1_1">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap>../ModuloDeVisionArtificial_1_1+GIT-build-desktop-Qt_4_8_1_in_PATH__System__Release/media/TestConnection/Bad.png</pixmap>
+             <string>Archivo de calibración</string>
             </property>
            </widget>
           </item>
@@ -610,6 +185,72 @@
            </spacer>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <item>
+           <widget class="QLabel" name="label_9">
+            <property name="font">
+             <font>
+              <family>Ubuntu</family>
+              <pointsize>24</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Ruta</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_F1_1_path">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>/home/diego_juliao/ProgramerProyects/TESIS/Modulo Vision Artificial/build-ModuloDeVisionArtificial_1_1+GIT-Desktop_Qt_5_5_0_GCC_64bit-Release/Calibracion/camera.yml</string>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_F1_1_buscarArchivo">
+            <property name="text">
+             <string>Examinar</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -659,7 +300,7 @@
                  <number>500</number>
                 </property>
                 <property name="value">
-                 <number>197</number>
+                 <number>39</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -675,7 +316,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>197</string>
+                 <string>39</string>
                 </property>
                </widget>
               </item>
@@ -731,7 +372,7 @@
                  <number>500</number>
                 </property>
                 <property name="value">
-                 <number>192</number>
+                 <number>30</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -756,7 +397,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>192</string>
+                 <string>30</string>
                 </property>
                </widget>
               </item>
@@ -980,6 +621,595 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_8">
+       <attribute name="title">
+        <string>Selección de Colores</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_12">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_22">
+          <item>
+           <spacer name="horizontalSpacer_27">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_10">
+            <property name="font">
+             <font>
+              <family>Ubuntu</family>
+              <pointsize>24</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Haga click en el color hasta que en la imagen binaria se aprecie un rectangulo completo&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_28">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTabWidget" name="tabWidget_Sesgo">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_sesgo1">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <attribute name="title">
+            <string>Color 1</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_31">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_15">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_23">
+                <item>
+                 <spacer name="horizontalSpacer_31">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>68</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_11">
+                  <property name="font">
+                   <font>
+                    <family>Ubuntu</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Imagen Nomral</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_32">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>67</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_24">
+                <item>
+                 <spacer name="horizontalSpacer_40">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal1">
+                  <property name="text">
+                   <string>Imagen Normal</string>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_41">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_16">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_16">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_27">
+                <item>
+                 <spacer name="horizontalSpacer_42">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_12">
+                  <property name="font">
+                   <font>
+                    <family>Ubuntu</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Imagen Binarizada</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_33">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>68</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_28">
+                <item>
+                 <spacer name="horizontalSpacer_43">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_display_SesgoBinario1">
+                  <property name="text">
+                   <string>Imagen Binarizada</string>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_44">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_17">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_17">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_30">
+                <item>
+                 <spacer name="horizontalSpacer_47">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_13">
+                  <property name="font">
+                   <font>
+                    <family>Ubuntu</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Imagen Sesgada</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_48">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_15">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_29">
+                <item>
+                 <spacer name="horizontalSpacer_45">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_display_SesgoSesgado1">
+                  <property name="text">
+                   <string>Imagen Sesgada</string>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_46">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_18">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_sesgo2">
+           <attribute name="title">
+            <string>Color 2</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_25">
+              <item>
+               <spacer name="horizontalSpacer_34">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal2">
+                <property name="text">
+                 <string>Imagen Normal</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_35">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_display_SesgoBinario2">
+                <property name="text">
+                 <string>Imagen Binarizada</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_36">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_sesgo3">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <attribute name="title">
+            <string>Color 3</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_26">
+              <item>
+               <spacer name="horizontalSpacer_37">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="STAND::ClickableLabel" name="label_display_SesgoNormal3">
+                <property name="text">
+                 <string>Imagen Normal</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_38">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_display_SesgoBinario3">
+                <property name="text">
+                 <string>Imagen Binarizada</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_39">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>252</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
         <string>Seleccion del Umbral BLACKandWHITE</string>
@@ -1062,10 +1292,7 @@
           <item>
            <widget class="QLabel" name="label_displayF2">
             <property name="text">
-             <string>binario</string>
-            </property>
-            <property name="pixmap">
-             <pixmap>media/CamNOT_FOUND.png</pixmap>
+             <string>binarizada</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -1505,7 +1732,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_displayRallada_IF">
+           <widget class="STAND::ClickableLabel" name="label_displayRallada_IF">
             <property name="text">
              <string>rallada</string>
             </property>
@@ -1528,9 +1755,6 @@
            <widget class="STAND::ClickableLabel" name="label_display_IF">
             <property name="text">
              <string>cartoon</string>
-            </property>
-            <property name="pixmap">
-             <pixmap>media/CamNOT_FOUND.png</pixmap>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -2059,8 +2283,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>803</width>
-     <height>23</height>
+     <width>827</width>
+     <height>20</height>
     </rect>
    </property>
   </widget>
@@ -2087,40 +2311,24 @@
   <customwidget>
    <class>STAND::ClickableLabel</class>
    <extends>QLabel</extends>
-   <header>stand_clickablelabel.h</header>
+   <header location="global">stand_clickablelabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
  <connections>
   <connection>
-   <sender>slider_delay_F1_1</sender>
+   <sender>slider_n</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>label_35</receiver>
+   <receiver>label_19</receiver>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>513</x>
-     <y>254</y>
+     <x>301</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
-     <x>749</x>
-     <y>253</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_CannyU_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>label_3</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>519</x>
-     <y>200</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>700</x>
-     <y>222</y>
+     <x>781</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
@@ -2141,18 +2349,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>slider_n</sender>
+   <sender>slider_CannyU_2</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>label_19</receiver>
+   <receiver>label_3</receiver>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
-     <y>113</y>
+     <x>519</x>
+     <y>200</y>
     </hint>
     <hint type="destinationlabel">
-     <x>781</x>
-     <y>123</y>
+     <x>700</x>
+     <y>222</y>
     </hint>
    </hints>
   </connection>
@@ -2169,54 +2377,6 @@
     <hint type="destinationlabel">
      <x>700</x>
      <y>150</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_BoardSizeW_F1_1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>label_27</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>652</x>
-     <y>434</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>755</x>
-     <y>463</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_BoardSizeH_F1_1</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>label_31</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>652</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>755</x>
-     <y>532</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_NFotos_F1_1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>label_33</receiver>
-   <slot>setNum(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>604</x>
-     <y>179</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>755</x>
-     <y>181</y>
     </hint>
    </hints>
   </connection>
