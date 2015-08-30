@@ -11,19 +11,47 @@ int colorDetector::flags = conn + (val << 8) + CV_FLOODFILL_MASK_ONLY;
 Mat colorDetector::kernel_rectangular = getStructuringElement(MORPH_RECT, Size(5, 5));
 Mat colorDetector::kernel_ovalado = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
 
+
 colorDetector::colorDetector()
 {
-    sesgador3colores = new sesgador[3];
+    NumeroDeColores = 3;
+    sesgador3colores = new sesgador[NumeroDeColores];
 }
 
 void colorDetector::write(FileStorage &fs) const
 {
+    fs << "numeroDeColores" << NumeroDeColores;
 
+    for (int i = 0; i < NumeroDeColores; i++)
+    {
+        double h_h = sesgador3colores[i].get_h_h();
+        double l_h = sesgador3colores[i].get_l_h();
+        double h_s = sesgador3colores[i].get_h_s();
+        double l_s = sesgador3colores[i].get_l_s();
+
+        fs << i <<
+              "{" <<
+                  "h_h" << h_h <<
+                  "l_h" << l_h <<
+                  "h_s" << h_s <<
+                  "l_s" << l_s <<
+              "}";
+    }
 }
 
-void colorDetector::read(const FileNode &node)
+void colorDetector::read(const FileNode &node, FileStorage &fs)
 {
+    NumeroDeColores = (int)node["numeroDeColores"];
 
+    for (int i = 0; i < NumeroDeColores; i++)
+    {
+        FileNode nn = fs[QString(i).toUtf8().data()];
+        double h_h = (double)nn["h_h"];
+        double l_h = (double)nn["l_h"];
+        double h_s = (double)nn["h_s"];
+        double l_s = (double)nn["l_s"];
+        sesgador3colores[i].setValues(h_h,l_h,h_s,l_s);
+    }
 }
 
 void colorDetector::calibrar(Mat m, int Nsesgo)

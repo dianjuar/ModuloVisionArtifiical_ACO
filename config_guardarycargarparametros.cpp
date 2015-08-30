@@ -5,17 +5,20 @@ using namespace CONFIG;
 const QString guardarYCargarParametros::QScap = QString("cap");
 const QString guardarYCargarParametros::QScalib = QString("calib");
 const QString guardarYCargarParametros::QScrop = QString("crop");
+const QString guardarYCargarParametros::QScolor = QString("ColorSesgo");
 const QString guardarYCargarParametros::QSmatSender = QString("matSender");
 const QString guardarYCargarParametros::QSnombreArchivo = QString("parametrosCalibracion.yml");
 const QString guardarYCargarParametros::QScSMA = QString("cSMA");
 const QString guardarYCargarParametros::QSINTmB = QString("INTmB");
 
-guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop, INTMatBuilder *INTmB,
+guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
+                                                   colorDetector *color, INTMatBuilder *INTmB,
                                                    matIntSender *matSender, connectSistemaMultiAgente *cSMA)
 {
     this->cap = cap;
     this-> calib = calib;
     this-> crop = crop;
+    this->color = color;
     this->INTmB = INTmB;
     this-> matSender = matSender;
     this->cSMA = cSMA;
@@ -33,6 +36,9 @@ void guardarYCargarParametros::guardar()
 
     fs<<QScrop.toUtf8().data();
     crop->write(fs);
+
+    fs<<QScolor.toUtf8().data();
+    color->write(fs);
 
     fs<<QSINTmB.toUtf8().data();
     INTmB->write(fs);
@@ -59,6 +65,9 @@ void guardarYCargarParametros::cargar()
 
     n = fs[QScrop.toUtf8().data()];
     crop->read( n );
+
+    n = fs[QScolor.toUtf8().data()];
+    color->read( n, fs );
 
     n = fs[QSINTmB.toUtf8().data()];
     INTmB->read( n );

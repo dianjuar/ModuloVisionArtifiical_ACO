@@ -21,6 +21,8 @@ class colorDetector
     static Mat kernel_rectangular;
     static Mat kernel_ovalado;
 
+    int NumeroDeColores;
+
     void recortar();
 
     class sesgador : public QThread
@@ -32,10 +34,9 @@ class colorDetector
         Mat mask;
         Mat frame_thresholded;
         Mat frame_sesgado;
+        bool selected;
 
         QMutex sync;
-
-        bool selected;
 
         double h_h, l_h, h_s, l_s;
 
@@ -46,11 +47,6 @@ class colorDetector
         double get_l_h(){ return l_h; }
         double get_h_s(){ return h_s; }
         double get_l_s(){ return l_s; }
-
-        double *get_h_h_DIRMEM(){ return &h_h; }
-        double *get_l_h_DIRMEM(){ return &l_h; }
-        double *get_h_s_DIRMEM(){ return &h_s; }
-        double *get_l_s_DIRMEM(){ return &l_s; }
 
         void setValues(double h_h, double l_h, double h_s, double l_s);
 
@@ -71,7 +67,7 @@ public:
     colorDetector();
 
     void write(FileStorage &fs) const;
-    void read(const FileNode& node);
+    void read(const FileNode& node, FileStorage &fs);
 
     void calibrar(Mat m, int Nsesgo);
 
