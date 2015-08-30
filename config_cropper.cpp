@@ -35,8 +35,6 @@ void cropper::cortarImagen(Mat &m)
 {
     m = m( contenedor );
 
-    qDebug()<<"x:"<<m.cols<<" y:"<<m.rows;
-
     bool altoMayorAncho = m.rows > m.cols;
     tamano_MatrizCortada = altoMayorAncho ? m.rows : m.cols;
     int centrado = altoMayorAncho ? (tamano_MatrizCortada-m.cols)/2:(tamano_MatrizCortada-m.rows)/2;
@@ -49,10 +47,6 @@ void cropper::cortarImagen(Mat &m)
                    altoMayorAncho ?  centrado:0,
                    altoMayorAncho ?  ( centrado + (esPar ? 0:1) ):0  ,
                    BORDER_CONSTANT);
-
-    qDebug()<<"x:"<<m.cols<<" y:"<<m.rows;
-    qDebug()<<"----------------------------------------";
-
 }
 
 void cropper::reset_contenedor()

@@ -149,9 +149,9 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_seleccinColores:
         {
-            //colorDetect->calibrar(m,config_indexSESGO);
-            Mat binary = colorDetect->sesgador3colores[ config_indexSESGO ]->get_frame_thresholded();
-            Mat sesgado = colorDetect->sesgador3colores[ config_indexSESGO ]->get_frame_sesgado();
+            colorDetect->calibrar(m,config_indexSESGO);
+            Mat binary = colorDetect->sesgador3colores[ config_indexSESGO ].get_frame_thresholded();
+            Mat sesgado = colorDetect->sesgador3colores[ config_indexSESGO ].get_frame_sesgado();
 
             switch (config_indexSESGO)
             {
@@ -232,7 +232,7 @@ void VentanaPrincipal::Color_selected_click(int x, int y)
     x = x*EscalaVisualizacion_FaseSegmentacion;
     y = y*EscalaVisualizacion_FaseSegmentacion;
 
-    colorDetect->sesgador3colores[config_index]->set_seedPoint( Point(x,y) );
+    colorDetect->sesgador3colores[config_indexSESGO].set_seedPoint( Point(x,y) );
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)

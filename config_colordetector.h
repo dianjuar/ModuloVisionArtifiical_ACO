@@ -18,9 +18,6 @@ class colorDetector
     static int val;
     static int flags;
 
-    Mat frame;
-    Mat frame_hsv;
-
     static Mat kernel_rectangular;
     static Mat kernel_ovalado;
 
@@ -30,18 +27,20 @@ class colorDetector
     {
     private:
 
-        Mat *frame;
-        Mat *frame_hsv;
+        Mat frame;
+        Mat frame_hsv;
         Mat mask;
         Mat frame_thresholded;
         Mat frame_sesgado;
+
+        QMutex sync;
 
         bool selected;
 
         double h_h, l_h, h_s, l_s;
 
     public:
-        sesgador(Mat frame, Mat frame_hsv);
+        sesgador();
 
         double get_h_h(){ return h_h; }
         double get_l_h(){ return l_h; }
@@ -55,7 +54,7 @@ class colorDetector
 
         void setValues(double h_h, double l_h, double h_s, double l_s);
 
-        void calibrar();
+        void calibrar(Mat m);
         void recortar();
 
         //setters
@@ -76,7 +75,7 @@ public:
 
     void calibrar(Mat m, int Nsesgo);
 
-    sesgador **sesgador3colores;
+    sesgador *sesgador3colores;
 };
 
 }
