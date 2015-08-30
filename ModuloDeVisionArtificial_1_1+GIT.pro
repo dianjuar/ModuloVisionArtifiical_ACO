@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     config_senderBase.cpp \
     stand_clickablelabel.cpp \
     config_guardarycargarparametros.cpp \
-    config_connectsistemamultiagente.cpp
+    config_connectsistemamultiagente.cpp \
+    config_colordetector.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -40,9 +41,10 @@ HEADERS  += ventanaprincipal.h \
     config_INTMatBuilder.h \
     config_matintsender.h \
     config_calibrador.h \
-    config_senderBase.h \
     stand_clickablelabel.h \
     config_guardarycargarparametros.h \
-    config_connectsistemamultiagente.h
+    config_connectsistemamultiagente.h \
+    config_colordetector.h \
+    stand_senderBase.h
 
 FORMS    += ventanaprincipal.ui

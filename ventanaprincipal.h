@@ -13,6 +13,7 @@
 #include "config_calibrador.h"
 #include "config_guardarycargarparametros.h"
 #include "config_connectsistemamultiagente.h"
+#include "config_colordetector.h"
 
 namespace Ui
 {
@@ -29,18 +30,24 @@ public:
     ~VentanaPrincipal();
 
     static int FASE_NumeroFases;
+    static const int FASE_Color_NumeroFases = 3;
+
     static const int FASE_eleccionDeDispositivoDeGrabacion = 0;
     static const int FASE_calibracion = 1;
     static const int FASE_cortarContenido = 2;
-    static const int FASE_seleccionUmbral = 3;
-    static const int FASE_PartinN = 4;
-    static const int FASE_InicioFin = 5;
-    static const int FASE_EnvioEstacionCentral = 6;
-    static const int FASE_EnvioSMA = 7;
+    static const int FASE_seleccinColores=3;
+    static const int FASE_seleccionUmbral = 4;
+    static const int FASE_PartinN = 5;
+    static const int FASE_InicioFin = 6;
+    static const int FASE_EnvioEstacionCentral = 7;
+    static const int FASE_EnvioSMA = 8;
+
+    static const int EscalaVisualizacion_FaseSegmentacion = 2;
     
 private slots:
     void setted_PuntoI(bool);
     void setted_PuntoF(bool);
+    void Color_selected_click(int, int);
 
     void listen_matFromVideoCapture();
 
@@ -76,27 +83,34 @@ private slots:
 
     void on_slider_n_valueChanged(int value);
 
+    void on_tabWidget_Sesgo_currentChanged(int index);
+
 private:
     Ui::VentanaPrincipal *ui;
 
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
+    CONFIG::colorDetector *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
     CONFIG::matIntSender *mSender;
     CONFIG::calibrador *calib;
-    CONFIG::guardarYCargarParametros *GCparam;
     CONFIG::connectSistemaMultiAgente *conSMA;
+
+    CONFIG::guardarYCargarParametros *GCparam;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);
     void pasarALaSiguienteEtapa();
+    void pasarALaSiguienteEtapa_SESGO();
     void crearVentanaAfterCalibracion();
     void inhabilitarTodasLasPestanas();
+    void set_connects();
 
     int config_index;
+    int config_indexSESGO;
     int config_Nparametros;
 
     int *numeroParametrosPorFaseCalib;

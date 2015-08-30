@@ -20,7 +20,7 @@ public:
 
     void set_distanciaEntreCuadros(int distanciaEntreCuadros_PX, int n);
     void set_distanciaEntreCuadros(float distancia){ this->distanciaEntreCuadros_REAL = distancia; }
-    void set_rutaDelArchivo( QString path );
+    bool set_rutaDelArchivo( QString path );
 
     bool get_todoEnOrden(){ return todoEnOrden; }
 

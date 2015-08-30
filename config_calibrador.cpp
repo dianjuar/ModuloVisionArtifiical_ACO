@@ -62,7 +62,7 @@ void calibrador::read(const FileNode& node)                          //Read seri
     distanciaEntreCuadros_REAL = (float)node["distanciaEntreCuadros_REAL"];
 }
 
-void calibrador::set_rutaDelArchivo(QString path)
+bool calibrador::set_rutaDelArchivo(QString path)
 {
     this->rutaDelArchivo = path;
 
@@ -70,6 +70,8 @@ void calibrador::set_rutaDelArchivo(QString path)
 
     FileStorage fs;
     todoEnOrden = fs.open(rutaDelArchivo.toUtf8().data() ,FileStorage::READ);
+
+        if ( !todoEnOrden ) return false;
 
     fs["camera_matrix"] >> intrinsic;
     fs["distortion_coefficients"] >> distortion_coefficients;
@@ -106,6 +108,8 @@ void calibrador::set_rutaDelArchivo(QString path)
     C21 = matConst.at<double>( 2-1 , 1-1 );
 
     fs.release();
+
+    return todoEnOrden;
 }
 
 Point calibrador::pixelPoint2realPoint(Point Ppx)

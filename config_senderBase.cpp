@@ -1,6 +1,6 @@
-#include "config_senderBase.h"
+#include "stand_senderBase.h"
 
-using namespace CONFIG;
+using namespace STAND;
 
 const QString senderBase::MSJ_sinComprobar = QString("No se ha comprobado el estado de la conexión.");
 const QString senderBase::MSJ_comprobando = QString("Comprobando el estado de la conexión.");
