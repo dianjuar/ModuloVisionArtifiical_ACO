@@ -97,8 +97,9 @@ private:
     CONFIG::INTMatBuilder *IntMatB;
     CONFIG::matIntSender *mSender;
     CONFIG::calibrador *calib;
-    CONFIG::guardarYCargarParametros *GCparam;
     CONFIG::connectSistemaMultiAgente *conSMA;
+
+    CONFIG::guardarYCargarParametros *GCparam;
 
     void contectar_HiloCapturadorWITHVentanaPrincipal();
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);

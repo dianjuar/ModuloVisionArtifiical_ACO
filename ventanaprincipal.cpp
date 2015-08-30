@@ -35,7 +35,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
     calib = new CONFIG::calibrador();
 
-    GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,IntMatB,mSender,conSMA);
+    GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,colorDetect,IntMatB,mSender,conSMA);
 
     ui->label_error_F5->setText( STAND::senderBase::MSJ_sinComprobar );
     ui->label_connectionTest_F5->setPixmap( QPixmap( STAND::senderBase::RUTAIMG_incorrecto ) );
