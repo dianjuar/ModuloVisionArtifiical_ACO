@@ -166,11 +166,13 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
                 case 1:
                     ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
                     ui->label_display_SesgoBinario2->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoSesgado2->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
                 break;
 
                 case 2:
                     ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
                     ui->label_display_SesgoBinario3->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoSesgado3->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
                 break;
             }
 
