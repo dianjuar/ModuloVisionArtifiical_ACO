@@ -67,7 +67,7 @@ public:
     colorDetector();
 
     void write(FileStorage &fs) const;
-    void read(const FileNode& node, FileStorage &fs);
+    void read(const FileNode& node);
 
     void calibrar(Mat m, int Nsesgo);
 

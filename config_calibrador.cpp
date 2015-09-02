@@ -37,7 +37,6 @@ void calibrador::write(FileStorage &fs) const //Write serialization for this cla
                   "C13" << C13 <<
                   "C32" << C32 <<
                   "C12" << C12 <<
-                  "C33" << C33 <<
                   "C23" << C23 <<
                   "C11" << C11 <<
                   "C31" << C31 <<
@@ -53,7 +52,6 @@ void calibrador::read(const FileNode& node)                          //Read seri
     C13 = (float)node["C13"];
     C32 = (float)node["C32"];
     C12 = (float)node["C12"];
-    C33 = (float)node["C33"];
     C23 = (float)node["C23"];
     C11 = (float)node["C11"];
     C31 = (float)node["C31"];

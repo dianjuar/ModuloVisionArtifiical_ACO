@@ -9,14 +9,6 @@ void INTMatBuilder::construir_INTMat_and_cartoon()
         {
            Mat miniMat;
 
-           if(i==10 && j==0)
-           {
-               qDebug()<<"x1:"<<j*tamano_cuadroAnalizar_MatrizCroped<<" x2:"<<j*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped;
-               qDebug()<<"y1:"<<i*tamano_cuadroAnalizar_MatrizCroped<<" y2:"<<i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped;
-               qDebug()<<"mat_original_BlackAndWhite: x:"<<mat_original_BlackAndWhite->cols<<" y:"<<mat_original_BlackAndWhite->rows;
-               qDebug()<<"asdkjaiosdja";
-           }
-
            miniMat = mat_original_BlackAndWhite->rowRange(i*tamano_cuadroAnalizar_MatrizCroped,
                                                           i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
 

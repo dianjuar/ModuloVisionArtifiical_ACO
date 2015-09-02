@@ -20,38 +20,51 @@ colorDetector::colorDetector()
 
 void colorDetector::write(FileStorage &fs) const
 {
-    fs << "numeroDeColores" << NumeroDeColores;
+    fs << "{";
 
-    for (int i = 0; i < NumeroDeColores; i++)
-    {
-        double h_h = sesgador3colores[i].get_h_h();
-        double l_h = sesgador3colores[i].get_l_h();
-        double h_s = sesgador3colores[i].get_h_s();
-        double l_s = sesgador3colores[i].get_l_s();
+        fs<<"numeroDeColores" << NumeroDeColores;
 
-        fs << i <<
-              "{" <<
-                  "h_h" << h_h <<
-                  "l_h" << l_h <<
-                  "h_s" << h_s <<
-                  "l_s" << l_s <<
-              "}";
-    }
+        fs << "Colores"<<"[";
+        for (int i = 0; i < NumeroDeColores; i++)
+        {
+            double h_h = sesgador3colores[i].get_h_h();
+            double l_h = sesgador3colores[i].get_l_h();
+            double h_s = sesgador3colores[i].get_h_s();
+            double l_s = sesgador3colores[i].get_l_s();
+
+            fs << "{:";
+                fs << "h_h" << h_h;
+                fs << "l_h" << l_h;
+                fs << "h_s" << h_s;
+                fs << "l_s" << l_s;
+            fs <<"}";
+        }
+        fs<<"]";
+    fs<<"}";
 }
 
-void colorDetector::read(const FileNode &node, FileStorage &fs)
+void colorDetector::read(const FileNode &node)
 {
     NumeroDeColores = (int)node["numeroDeColores"];
+    sesgador3colores = new sesgador[NumeroDeColores];
 
-    for (int i = 0; i < NumeroDeColores; i++)
+
+    FileNode features = node["Colores"];
+
+    FileNodeIterator it = features.begin();
+    FileNodeIterator it_end = features.end();
+
+    // iterate through a sequence using FileNodeIterator
+    for( int i = 0; it != it_end; it++, i++ )
     {
-        FileNode nn = fs[QString(i).toUtf8().data()];
-        double h_h = (double)nn["h_h"];
-        double l_h = (double)nn["l_h"];
-        double h_s = (double)nn["h_s"];
-        double l_s = (double)nn["l_s"];
+        double h_h = (double)(*it)["h_h"];
+        double l_h = (double)(*it)["l_h"];
+        double h_s = (double)(*it)["h_s"];
+        double l_s = (double)(*it)["l_s"];
+
         sesgador3colores[i].setValues(h_h,l_h,h_s,l_s);
     }
+
 }
 
 void colorDetector::calibrar(Mat m, int Nsesgo)
