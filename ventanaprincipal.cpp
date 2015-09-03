@@ -375,23 +375,27 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_EnvioEstacionCentral:
         {
-            if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
-            {
+            //if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
+            //{
                 mSender->set_serverDir( ui->lineEdit_setverDir_F5->text() );
-                mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros_REAL() );
+                //mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros_REAL() );
                 pasarALaSiguienteEtapa();
-            }
+            //}
         }
         break;
         case FASE_EnvioSMA:
         {
-            if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
-            {
+           // if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
+           //{
                 conSMA->set_serverDir( ui->lineEdit_setverDir_SMA->text() );
-                conSMA->sendConex();
+
                 GCparam->guardar();
                 crearVentanaAfterCalibracion();
-            }
+
+                mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
+                conSMA->sendConex();
+            //    conSMA->sendConex();
+            //}
         }
         break;
     }
