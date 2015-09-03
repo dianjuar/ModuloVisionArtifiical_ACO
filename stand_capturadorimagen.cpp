@@ -10,7 +10,8 @@ void capturadorImagen::run()
     {
         {
             QMutexLocker locker(&m_mutex);
-            if (thread_stop) break;
+            if (thread_stop)
+                break;
             ///////////////////////////
             if( modo_elegido == Modo_Video && vc.isOpened() )
                 vc >> Imagen;
@@ -63,10 +64,11 @@ Mat capturadorImagen::getImagen()
 
 void capturadorImagen::stop()
 {
-    QMutexLocker locker(&m_mutex);
+    //QMutexLocker locker(&m_mutex);
     thread_stop = true;
 
-    if(vc.isOpened())
+    while( this->isRunning() ){ }
+    //if( vc.isOpened() )
         vc.release();
 }
 
