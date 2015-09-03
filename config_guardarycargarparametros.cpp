@@ -67,7 +67,7 @@ void guardarYCargarParametros::cargar()
     crop->read( n );
 
     n = fs[QScolor.toUtf8().data()];
-    color->read( n, fs );
+    color->read( n );
 
     n = fs[QSINTmB.toUtf8().data()];
     INTmB->read( n );

@@ -65,7 +65,9 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 
     inhabilitarTodasLasPestanas();
 
+    qDebug()<<"Verificando si existe un archivo con el nombre: '"<<CONFIG::guardarYCargarParametros::QSnombreArchivo.toUtf8().data()<<"'";
     FileStorage fs = FileStorage(CONFIG::guardarYCargarParametros::QSnombreArchivo.toUtf8().data(), FileStorage::READ);
+    qDebug()<<fs.isOpened();
 
     if(!fs.isOpened())
         ui->actionCargar_Configuraci_n->setEnabled(false);

@@ -7,7 +7,7 @@ void INTMatBuilder::construir_INTMat_and_cartoon()
     for(int i=0;i<n;i++)
         for(int j=0;j<n;j++)
         {
-           Mat miniMat;           
+           Mat miniMat;
 
            miniMat = mat_original_BlackAndWhite->rowRange(i*tamano_cuadroAnalizar_MatrizCroped,
                                                           i*tamano_cuadroAnalizar_MatrizCroped + tamano_cuadroAnalizar_MatrizCroped);
