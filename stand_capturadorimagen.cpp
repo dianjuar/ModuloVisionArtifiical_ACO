@@ -108,5 +108,8 @@ void capturadorImagen::read(const FileNode& node)                          //Rea
 {
     stop();
 
-    constructor( (int)node["devise"], (int)node["modo_elegido"] );
+    int devise = (int)node["devise"];
+    int modo_elegido = (int)node["modo_elegido"];
+
+    constructor(modo_elegido, devise  );
 }
