@@ -149,21 +149,21 @@ void colorDetector::sesgador::run()
    mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
 
    // check for the range of H and S obtained from floodFill
+   Mat aux; //esto se hace para que al usuario se muestre la umbralización con todas las operaciones morfoligicas aplicadas
    inRange(hs,
            Scalar( l_h, l_s ),
            Scalar( h_h, h_s ),
-           frame_thresholded);
+           aux);
 
    // open and close to remove noise
-   Mat aux = frame_thresholded.clone();//esto se hace para que al usuario se muestre la umbralización con todas las operaciones morfoligicas aplicadas
+   morphologyEx(aux, aux, MORPH_OPEN, kernel_rectangular);
+   morphologyEx(aux, aux, MORPH_CLOSE, kernel_rectangular);
+
+   morphologyEx(aux, aux, MORPH_CLOSE, kernel_ovalado);
 
    morphologyEx(aux, aux, MORPH_CLOSE, kernel_rectangular);
    morphologyEx(aux, aux, MORPH_OPEN, kernel_rectangular);
 
-   morphologyEx(aux, aux, MORPH_OPEN, kernel_rectangular);
-   morphologyEx(aux, aux, MORPH_CLOSE, kernel_rectangular);
-
-   morphologyEx(aux, aux, MORPH_OPEN, kernel_ovalado);
 
    frame_thresholded = aux;
 
