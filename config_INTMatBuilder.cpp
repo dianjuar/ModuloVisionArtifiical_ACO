@@ -94,9 +94,17 @@ Point INTMatBuilder::convert_PointScreen2PointMat(Point p)
 void INTMatBuilder::write(FileStorage &fs) const
 {
     fs << "{" <<"QSINT_mat" << QSINT_mat.toUtf8().data()  <<
-                "n" << n <<
-          "}";
-
+                "n" << n;
+        fs << "INT_mat"<<"[";
+            for( int i = 0; i < n; i++ )
+            {
+                fs <<"[:";
+                for( int j = 0; j < n; j++ )
+                    fs << INT_mat[i][j];
+                fs << "]";
+            }
+        fs << "]";
+    fs << "}";
 }
 
 void INTMatBuilder::read(const FileNode &node)
@@ -107,6 +115,22 @@ void INTMatBuilder::read(const FileNode &node)
     QSINT_mat = QString( stdSINT_mat.c_str() );
 
     n = (int)node["n"];
+
+    FileNode features = node["INT_mat"];
+    FileNodeIterator it = features.begin(), it_end = features.end();
+
+    INT_mat = new int* [n];
+    for( int i=0; it != it_end; it++, i++ )
+    {
+        INT_mat[i] = new int[n];
+
+        std::vector<int> vec;
+        (*it) >> vec;
+
+        for (int j = 0; j < n; j++)
+            INT_mat[i][j] = vec.at(j);
+    }
+
 }
 
 void INTMatBuilder::buildQSINTmat()
