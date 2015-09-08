@@ -22,15 +22,15 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_Video;
+    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     colorDetect = new CONFIG::colorDetector();
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
-    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
-    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
+    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
+    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
     conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
     calib = new CONFIG::calibrador();
@@ -103,7 +103,6 @@ void VentanaPrincipal::set_connects()
     connect(ui->label_display_SesgoNormal3, SIGNAL(clicked(int,int)),this,
             SLOT(Color_selected_click(int,int)) );
     //-------------------------------------
-
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
@@ -119,14 +118,16 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             if(!calibrando)
                 crop->cortarImagen(m);
 
+            if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
+                IntMatB->Cartoon_dibujarEnsima(m);
+
+
             ui->label_displayF0->setPixmap( STAND::Tools::Mat2QPixmap(m, !calibrando, 500 ) );
             break;
         }
 
         case FASE_calibracion:
-        {
-            //ui->label_displayF1_1->setPixmap(STAND::Tools::Mat2QPixmap( m,2 ));
-
+        {        
             break;
         }
 
@@ -288,6 +289,9 @@ void VentanaPrincipal::crearVentanaAfterCalibracion()
     ui->tabWidget->setCurrentIndex(0);
     inhabilitarTodasLasPestanas();
     ui->progressBar->setValue(100);
+
+    ui->checkBox_aftercalibracion->setEnabled(true);
+    ui->checkBox_aftercalibracion->setChecked(true);
 
     calibrando = false;
     /*ventanaAfterCalibracion *vAfterC = new ventanaAfterCalibracion( cap, crop, this );
@@ -500,8 +504,8 @@ void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos(int x, int y)
 
 void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
 {
-    crearVentanaAfterCalibracion();
     GCparam->cargar();
+    crearVentanaAfterCalibracion();
 
     mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
     conSMA->sendConex();

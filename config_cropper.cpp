@@ -2,6 +2,8 @@
 
 using namespace CONFIG;
 
+int cropper::tamano_MatrizCortada = -255;
+
 void cropper::set_cannyU_1(int c)
 {
     canny_umbral_1 =c;
@@ -57,13 +59,16 @@ void cropper::reset_contenedor()
 
 void cropper::write(FileStorage &fs) const
 {
-    fs << "{" <<"contenedor" << contenedor  << "}";
+    fs << "{" <<"contenedor" << contenedor
+              <<"tamano_MatrizCortada" << tamano_MatrizCortada
+       << "}";
 }
 
 void cropper::read(const FileNode &node)
 {
     std::vector<int> contenedorVec;
     node["contenedor"] >> contenedorVec;
+    node["tamano_MatrizCortada"] >> tamano_MatrizCortada;
     contenedor = Rect(contenedorVec[0], contenedorVec[1], contenedorVec[2], contenedorVec[3]);
 }
 

@@ -1,6 +1,7 @@
 #ifndef CONFIG_PARTIRNCUADROS_H
 #define CONFIG_PARTIRNCUADROS_H
 
+#include "config_cropper.h"
 #include "INCLUDE_opencv.h"
 #include "INCLUDE_QTstuff.h"
 
@@ -11,13 +12,12 @@ class partirNcuadros
 {
     int n;
     int tamano_CuadroPartido_N;
-    int *tamano_XxX_MatrizCroped;
 
     bool esNecesarioOtroCuadro;
     bool primeraVez;
     int cuantosCuadrosSonNecesarios;
 public:
-    partirNcuadros(int n, int *tamano_XxX_MatrizCroped);
+    partirNcuadros(int n);
     void calibrar(Mat &mat_original);
 
     //setter
