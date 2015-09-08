@@ -29,8 +29,8 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     colorDetect = new CONFIG::colorDetector();
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
-    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
-    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
+    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
+    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
     conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
     calib = new CONFIG::calibrador();

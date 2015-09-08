@@ -40,43 +40,47 @@ bool INTMatBuilder::contieneNegro(Mat m)
 void INTMatBuilder::set_TamanosYEscalas()
 {
     tamano_cuadroMatCartooned = tamano_MatCartooned / n;
-    tamano_cuadroAnalizar_MatrizCroped = *tamano_MatrizCropped/ n;
+
+    tamano_cuadroAnalizar_MatrizCroped = cropper::tamano_MatrizCortada/ n;
 }
 
 void INTMatBuilder::copiar_CuadroMatCartoon_a_Mat(Mat &mat, int i, int j, int valor)
 {
-    Mat m;
+    Mat m_cartoon;
+
+    int size= mat.cols/n;
 
     switch (valor)
     {
         case MAPA_libre:
-            m = MAT_libre;
+            m_cartoon = MAT_libre;
         break;
 
         case MAPA_obstaculo:
-            m = MAT_obstaculo;
+            m_cartoon = MAT_obstaculo;
         break;
 
         case MAPA_inicio:
-            m = MAT_inicio;
+            m_cartoon = MAT_inicio;
         break;
 
         case MAPA_fin:
-            m = MAT_fin;
+            m_cartoon = MAT_fin;
         break;
     }
 
-    Rect roi = Rect(j*tamano_cuadroMatCartooned,i*tamano_cuadroMatCartooned,
-                    tamano_cuadroMatCartooned, tamano_cuadroMatCartooned);
+    Rect roi = Rect(j*size,i*size,
+                    size, size);
+
 
     //Mat subView = big(roi)
     Mat subView = mat(roi);
 
     Mat aux;
-    resize(m.clone(), aux,Size( tamano_cuadroMatCartooned, tamano_cuadroMatCartooned ));
+    resize(m_cartoon.clone(), aux,Size( size, size ));
     aux.copyTo(subView);
 
-    m.~Mat();
+    m_cartoon.~Mat();
 }
 
 void INTMatBuilder::crear_MartCartooned()
@@ -116,6 +120,8 @@ void INTMatBuilder::read(const FileNode &node)
 
     n = (int)node["n"];
 
+    set_TamanosYEscalas();
+
     FileNode features = node["INT_mat"];
     FileNodeIterator it = features.begin(), it_end = features.end();
 
@@ -146,11 +152,10 @@ void INTMatBuilder::Cartoon_dibujarEnsima(Mat &m)
                 copiar_CuadroMatCartoon_a_Mat(m,i,j,INT_mat[i][j]);
 }
 
-INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n,int *tamano_MatrizCropped)
+INTMatBuilder::INTMatBuilder(Mat *mat_original_BlackAndWhite, int n)
 {
     this->mat_original_BlackAndWhite = mat_original_BlackAndWhite;
     this->n = n;
-    this->tamano_MatrizCropped = tamano_MatrizCropped;
 
     MAT_libre = imread("./media/libre.png");
     MAT_obstaculo = imread("./media/obstaculo.png");

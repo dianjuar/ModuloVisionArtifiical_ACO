@@ -1,6 +1,7 @@
 #ifndef CONFIG_MATCARTOONERED_H
 #define CONFIG_MATCARTOONERED_H
 
+#include "config_cropper.h"
 #include "stand_Tools.h"
 
 namespace CONFIG
@@ -10,7 +11,7 @@ class INTMatBuilder:public QObject
 {
     Q_OBJECT
 public:
-    INTMatBuilder(Mat *mat_original_BlackAndWhite,int n, int *tamano_MatrizCropped);
+    INTMatBuilder(Mat *mat_original_BlackAndWhite,int n);
     INTMatBuilder(){}
     ~INTMatBuilder(){}
 
@@ -65,7 +66,6 @@ private:
     int tamano_MatCartooned;
     int tamano_imagenCartoonOriginal;
     int tamano_cuadroMatCartooned;
-    int *tamano_MatrizCropped;
 
     void construir_INTMat_and_cartoon();
 
