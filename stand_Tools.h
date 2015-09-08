@@ -70,6 +70,9 @@ public:
 
     static QPixmap Mat2QPixmap(Mat m, int scale)
     {
+        if(m.cols <= 0 && m.rows <= 0)
+            return Mat2QPixmap( Mat(20, 20, CV_8UC3, Scalar(0,0,0)) );
+
         cv::resize(m,m,Size(m.cols/scale,m.rows/scale),0,0,INTER_LINEAR);
         return Mat2QPixmap(m);
     }

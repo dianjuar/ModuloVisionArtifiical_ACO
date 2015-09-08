@@ -29,8 +29,8 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
     colorDetect = new CONFIG::colorDetector();
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
-    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
-    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n(), crop->get_tamano_MatrizCroped_SEGUIMIENTO() );
+    PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
+    IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n() );
     mSender = new CONFIG::matIntSender(ui->lineEdit_setverDir_F5->text());
     conSMA = new CONFIG::connectSistemaMultiAgente( ui->lineEdit_setverDir_SMA->text() );
     calib = new CONFIG::calibrador();
@@ -103,7 +103,6 @@ void VentanaPrincipal::set_connects()
     connect(ui->label_display_SesgoNormal3, SIGNAL(clicked(int,int)),this,
             SLOT(Color_selected_click(int,int)) );
     //-------------------------------------
-
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
@@ -119,14 +118,16 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             if(!calibrando)
                 crop->cortarImagen(m);
 
+            if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
+                IntMatB->Cartoon_dibujarEnsima(m);
+
+
             ui->label_displayF0->setPixmap( STAND::Tools::Mat2QPixmap(m, !calibrando, 500 ) );
             break;
         }
 
         case FASE_calibracion:
-        {
-            //ui->label_displayF1_1->setPixmap(STAND::Tools::Mat2QPixmap( m,2 ));
-
+        {        
             break;
         }
 
@@ -166,11 +167,13 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
                 case 1:
                     ui->label_display_SesgoNormal2->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
                     ui->label_display_SesgoBinario2->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoSesgado2->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
                 break;
 
                 case 2:
                     ui->label_display_SesgoNormal3->setPixmap( STAND::Tools::Mat2QPixmap(m, EscalaVisualizacion_FaseSegmentacion ) );
                     ui->label_display_SesgoBinario3->setPixmap( STAND::Tools::Mat2QPixmap(binary, EscalaVisualizacion_FaseSegmentacion ) );
+                    ui->label_display_SesgoSesgado3->setPixmap( STAND::Tools::Mat2QPixmap(sesgado, EscalaVisualizacion_FaseSegmentacion ) );
                 break;
             }
 
@@ -287,6 +290,9 @@ void VentanaPrincipal::crearVentanaAfterCalibracion()
     inhabilitarTodasLasPestanas();
     ui->progressBar->setValue(100);
 
+    ui->checkBox_aftercalibracion->setEnabled(true);
+    ui->checkBox_aftercalibracion->setChecked(true);
+
     calibrando = false;
     /*ventanaAfterCalibracion *vAfterC = new ventanaAfterCalibracion( cap, crop, this );
     vAfterC->showNormal();*/
@@ -373,23 +379,27 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_EnvioEstacionCentral:
         {
-            if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
-            {
+            //if( mSender->get_buenaConexion() || STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
+            //{
                 mSender->set_serverDir( ui->lineEdit_setverDir_F5->text() );
-                mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros_REAL() );
+                //mSender->enviarInformacion(IntMatB->get_INT_mat(), IntMatB->get_n(), calib->get_distanciaEntreCuadros_REAL() );
                 pasarALaSiguienteEtapa();
-            }
+            //}
         }
         break;
         case FASE_EnvioSMA:
         {
-            if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
-            {
+           // if(conSMA->get_buenaConexion()|| STAND::capturadorImagen::modo_elegido == STAND::capturadorImagen::Modo_ImagenStatica )
+           //{
                 conSMA->set_serverDir( ui->lineEdit_setverDir_SMA->text() );
-                conSMA->sendConex();
+
                 GCparam->guardar();
                 crearVentanaAfterCalibracion();
-            }
+
+                mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
+                conSMA->sendConex();
+            //    conSMA->sendConex();
+            //}
         }
         break;
     }
@@ -494,8 +504,8 @@ void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos(int x, int y)
 
 void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
 {
-    crearVentanaAfterCalibracion();
     GCparam->cargar();
+    crearVentanaAfterCalibracion();
 
     mSender->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
     conSMA->sendConex();
