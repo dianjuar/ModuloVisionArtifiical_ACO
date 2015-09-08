@@ -40,6 +40,8 @@ public:
 
     void buildQSINTmat();
 
+    void Cartoon_dibujarEnsima(Mat &m);
+
 private slots:
 
 signals:
@@ -73,7 +75,7 @@ private:
 
     void set_TamanosYEscalas();
 
-    void copiar_CuadroMatCartoon_a_MatCartoon(int i, int j, int valor);
+    void copiar_CuadroMatCartoon_a_Mat(Mat &mat, int i, int j, int valor);
     void crear_MartCartooned();
 
     Point convert_PointScreen2PointMat(Point p);
