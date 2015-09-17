@@ -20,6 +20,8 @@ public:
     static int const MAPA_inicio=2;
     static int const MAPA_fin=3;
 
+    static Point P_Inicio, P_Fin;
+
     //setter
     void set_n(int n);
     void set_P_Fin(Point Fin);
@@ -70,8 +72,6 @@ private:
     void construir_INTMat_and_cartoon();
 
     bool contieneNegro(Mat m);
-
-    Point P_Inicio, P_Fin;
 
     void set_TamanosYEscalas();
 

@@ -12,8 +12,8 @@ const QString guardarYCargarParametros::QScSMA = QString("cSMA");
 const QString guardarYCargarParametros::QSINTmB = QString("INTmB");
 
 guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
-                                                   colorDetector *color, INTMatBuilder *INTmB,
-                                                   matIntSender *matSender, connectSistemaMultiAgente *cSMA)
+                                                   coTra::colorDetector *color, INTMatBuilder *INTmB,
+                                                   Network::conexion_ACO *matSender, Network::conexion_SMA *cSMA)
 {
     this->cap = cap;
     this-> calib = calib;

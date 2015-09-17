@@ -2,6 +2,9 @@
 
 using namespace CONFIG;
 
+Point INTMatBuilder::P_Fin;
+Point INTMatBuilder::P_Inicio;
+
 void INTMatBuilder::construir_INTMat_and_cartoon()
 {
     for(int i=0;i<n;i++)
@@ -134,14 +137,22 @@ void INTMatBuilder::read(const FileNode &node)
         (*it) >> vec;
 
         for (int j = 0; j < n; j++)
+        {
             INT_mat[i][j] = vec.at(j);
+
+            if( INT_mat[i][j] == MAPA_fin )
+                P_Fin = Point( j,i );
+
+            if( INT_mat[i][j] == MAPA_inicio )
+                P_Inicio = Point( j,i );
+        }
     }
 
 }
 
 void INTMatBuilder::buildQSINTmat()
 {
-    QSINT_mat = STAND::Tools::IntMat2QString( INT_mat, n );
+    QSINT_mat = Tools::Cfunctions::IntMat2QString( INT_mat, n );
 }
 
 void INTMatBuilder::Cartoon_dibujarEnsima(Mat &m)

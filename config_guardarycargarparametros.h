@@ -6,8 +6,8 @@
 #include "config_cropper.h"
 #include "config_colordetector.h"
 #include "config_INTMatBuilder.h"
-#include "config_matintsender.h"
-#include "config_connectsistemamultiagente.h"
+#include "config_conexion_ACO.h"
+#include "config_conexion_SMA.h"
 #include "config_INTMatBuilder.h"
 
 namespace CONFIG
@@ -20,10 +20,10 @@ class guardarYCargarParametros
     STAND::capturadorImagen *cap;
     calibrador *calib;
     cropper *crop;
-    colorDetector *color;
+    coTra::colorDetector *color;
     INTMatBuilder *INTmB;
-    matIntSender *matSender;
-    connectSistemaMultiAgente *cSMA;
+    Network::conexion_ACO *matSender;
+    Network::conexion_SMA *cSMA;
 
     static const QString QScap;
     static const QString QScalib;
@@ -38,8 +38,8 @@ public:
     static const QString QSnombreArchivo;
 
     guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
-                             colorDetector *color, INTMatBuilder *INTmB,
-                             matIntSender *matSender, connectSistemaMultiAgente *cSMA);
+                             coTra::colorDetector *color, INTMatBuilder *INTmB,
+                             Network::conexion_ACO *matSender, Network::conexion_SMA *cSMA);
 
     void guardar();
     void cargar();

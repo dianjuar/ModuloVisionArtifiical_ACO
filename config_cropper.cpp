@@ -19,14 +19,14 @@ void cropper::calibracion(Mat mat)
 
     Mat matTratada;
 
-    matTratada = STAND::Tools::tratamientoDeImagenStantdar(imagen_Rayada);
+    matTratada = Tools::OpenCV::tratamientoDeImagenStantdar(imagen_Rayada);
 
     Canny(matTratada, canny_edges, canny_umbral_1, canny_umbral_2);
 
     vector< vector<Point> > contours;
     findContours(canny_edges, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE );
 
-    set_MayorContenedor( STAND::Tools::contenedorMasGrande(contours) );
+    set_MayorContenedor( Tools::OpenCV::contenedorMasGrande(contours) );
 
     rectangle(imagen_Rayada,contenedor,Scalar(0,0,255), 2);
 
@@ -49,6 +49,8 @@ void cropper::cortarImagen(Mat &m)
                    altoMayorAncho ?  centrado:0,
                    altoMayorAncho ?  ( centrado + (esPar ? 0:1) ):0  ,
                    BORDER_CONSTANT);
+
+    STAND::capturadorImagen::setImagen_procesada( m );
 }
 
 void cropper::reset_contenedor()
