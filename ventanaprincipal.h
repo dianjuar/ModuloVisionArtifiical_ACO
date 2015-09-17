@@ -9,10 +9,10 @@
 #include "config_umbralizador.h"
 #include "config_partirncuadros.h"
 #include "config_INTMatBuilder.h"
-#include "config_matintsender.h"
+#include "config_conexion_ACO.h"
 #include "config_calibrador.h"
 #include "config_guardarycargarparametros.h"
-#include "config_connectsistemamultiagente.h"
+#include "config_conexion_SMA.h"
 #include "config_colordetector.h"
 
 namespace Ui
@@ -57,15 +57,11 @@ private slots:
     void on_btn_atras_clicked();
     void on_slider_umbralBlackAndWhite_valueChanged(int value);
 
-    void on_lineEdit_setverDir_F5_textEdited(const QString &arg1);
-
     void on_slider_CannyU_1_valueChanged(int value);
 
     void on_slider_CannyU_2_valueChanged(int value);
 
-    void on_pushButton_2_clicked();
-
-    void on_pushButton_ProbarConexion_EstCentral_clicked();
+    void on_pushButton_2_clicked();   
 
     void on_pushButton_setPI_IF_clicked();
 
@@ -74,10 +70,6 @@ private slots:
     void Mouse_Pressed_DeteccionCirculos(int x, int y);
 
     void on_actionCargar_Configuraci_n_triggered();
-
-    void on_lineEdit_setverDir_SMA_textEdited(const QString &arg1);
-
-    void on_pushButton_ProbarConexion_SMA_clicked();
 
     void on_pushButton_F1_1_buscarArchivo_clicked();
 
@@ -91,13 +83,13 @@ private:
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
-    CONFIG::colorDetector *colorDetect;
+    CONFIG::coTra::colorDetector *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
-    CONFIG::matIntSender *mSender;
+    CONFIG::Network::conexion_ACO *c_ACO;
+    CONFIG::Network::conexion_SMA *c_SMA;
     CONFIG::calibrador *calib;
-    CONFIG::connectSistemaMultiAgente *conSMA;
 
     CONFIG::guardarYCargarParametros *GCparam;
 
@@ -105,7 +97,7 @@ private:
     void set_PorcenAvance_IN_progressBar(int NFaseCalib);
     void pasarALaSiguienteEtapa();
     void pasarALaSiguienteEtapa_SESGO();
-    void crearVentanaAfterCalibracion();
+    void AfterCalibracion();
     void inhabilitarTodasLasPestanas();
     void set_connects();
 

@@ -10,7 +10,7 @@ umbralizador::umbralizador(int umbral)
 
 void umbralizador::calibrar(Mat m)
 {
-    Mat grises = STAND::Tools::tratamientoDeImagenStantdar(m,false);
+    Mat grises = Tools::OpenCV::tratamientoDeImagenStantdar(m,false);
     threshold(grises,blackAndWhite,umbral,255,THRESH_BINARY);
 
     morphologyEx(blackAndWhite, blackAndWhite, MORPH_CLOSE, kernel);

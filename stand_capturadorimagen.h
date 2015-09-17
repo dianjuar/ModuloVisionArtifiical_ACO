@@ -18,7 +18,12 @@ public:
     capturadorImagen(int modo=0, int devise=-1);
     ~capturadorImagen();
 
-    Mat getImagen();
+    //getter
+    Mat getImagen(){ return Imagen; }
+    static Mat getImagen_procesada(){ return Imagen_P; }
+    static Mat* getImagen_pointer_procesada(){ return &Imagen_P; }
+    //setter
+    static void setImagen_procesada(Mat mat){ Imagen_P = mat; }
 
     int get_device(){ return devise; }
     bool isCamaraAbierta();    
@@ -41,6 +46,7 @@ private:
 
     VideoCapture vc;
     Mat Imagen;
+    static Mat Imagen_P;
 
     //funcionamiento interno
     int devise;
