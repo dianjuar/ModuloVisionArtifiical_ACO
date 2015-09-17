@@ -3,6 +3,7 @@
 
 #include "INCLUDE_opencv.h"
 #include "stand_Tools.h"
+#include "stand_capturadorimagen.h"
 
 namespace CONFIG
 {

@@ -22,13 +22,14 @@ SOURCES += main.cpp\
     config_umbralizador.cpp \
     config_partirncuadros.cpp \
     config_INTMatBuilder.cpp \
-    config_matintsender.cpp \
     config_calibrador.cpp \
-    config_senderBase.cpp \
     stand_clickablelabel.cpp \
     config_guardarycargarparametros.cpp \
-    config_connectsistemamultiagente.cpp \
-    config_colordetector.cpp
+    config_colordetector.cpp \
+    stand_networking.cpp \
+    stand_Tools.cpp \
+    config_conexion_ACO.cpp \
+    config_conexion_SMA.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -39,12 +40,12 @@ HEADERS  += ventanaprincipal.h \
     config_umbralizador.h \
     config_partirncuadros.h \
     config_INTMatBuilder.h \
-    config_matintsender.h \
     config_calibrador.h \
     stand_clickablelabel.h \
     config_guardarycargarparametros.h \
-    config_connectsistemamultiagente.h \
     config_colordetector.h \
-    stand_senderBase.h
+    stand_networking.h \
+    config_conexion_ACO.h \
+    config_conexion_SMA.h
 
 FORMS    += ventanaprincipal.ui

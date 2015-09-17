@@ -3,6 +3,7 @@
 using namespace STAND;
 
 int capturadorImagen::modo_elegido;
+Mat capturadorImagen::Imagen_P = Mat::zeros(20,20, CV_8UC3 );
 
 void capturadorImagen::run()
 {
@@ -55,11 +56,6 @@ capturadorImagen::~capturadorImagen()
 {
     stop();
     vc.release();
-}
-
-Mat capturadorImagen::getImagen()
-{
-    return Imagen;
 }
 
 void capturadorImagen::stop()
