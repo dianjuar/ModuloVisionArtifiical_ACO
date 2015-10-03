@@ -20,7 +20,7 @@ class guardarYCargarParametros
     STAND::capturadorImagen *cap;
     calibrador *calib;
     cropper *crop;
-    coTra::colorDetector *color;
+    coTra::colorDetector_MANAGER *color;
     INTMatBuilder *INTmB;
     Network::conexion_ACO *matSender;
     Network::conexion_SMA *cSMA;
@@ -38,7 +38,7 @@ public:
     static const QString QSnombreArchivo;
 
     guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
-                             coTra::colorDetector *color, INTMatBuilder *INTmB,
+                             coTra::colorDetector_MANAGER *color, INTMatBuilder *INTmB,
                              Network::conexion_ACO *matSender, Network::conexion_SMA *cSMA);
 
     void guardar();

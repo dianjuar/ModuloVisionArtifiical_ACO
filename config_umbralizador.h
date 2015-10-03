@@ -1,13 +1,13 @@
 #ifndef CONFIG_UMBRALIZADOR_H
 #define CONFIG_UMBRALIZADOR_H
 
-#include "INCLUDE_opencv.h"
+#include "config_configbase.h"
 #include "stand_Tools.h"
 
 namespace CONFIG
 {
 
-class umbralizador
+class umbralizador: public configBase
 {
     int umbral;
     Mat blackAndWhite;

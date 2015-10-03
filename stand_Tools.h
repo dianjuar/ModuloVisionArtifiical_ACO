@@ -7,6 +7,18 @@
 namespace Tools
 {
 
+//class prototyping *************************
+class OpenCV;
+class Cfunctions;
+
+namespace math
+{
+    class circulo;
+    class lineaRecta;
+}
+//class prototyping *************************
+
+
 class OpenCV
 {
 public:
@@ -17,7 +29,19 @@ public:
     static QPixmap Mat2QPixmap(Mat m, int scale);
 
     static Rect contenedorMasGrande( vector< vector<Point> > contours);
+
+    static vector<Vec3f> DetectarCirculos(Mat mat, bool dibujar=true);
+
+    static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
+    static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);
+    //R1 siempre será la recta del robot
+    static void dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial);
+
+private:
+    static void dibujarCirculos(Mat mat, vector<Vec3f> circles);
 };
+
+////////////////////////////////////////////
 
 class Cfunctions
 {
@@ -28,21 +52,44 @@ public:
     static std::vector<QString> split(QString s, const QString delim);
 };
 
-/*class circulo
-{
-public:
-    Point centro;
-    int radio;
-
-    circulo(Point centro, int radio)
+///////////////////////////////////////////
+    namespace math
     {
-        this->centro = centro;
-        this->radio = radio;
+        class circulo
+        {
+        public:
+            Point centro;
+            int radio;
+
+            circulo(Point centro, int radio);
+
+            circulo();
+        };
+        /////////////////////
+        class lineaRecta
+        {
+            void calcularDistancia();
+
+            //para el calculo del angulo entre las 2 rectas es necesario ordenar primero las rectas.
+        public:
+            lineaRecta(float m, float b, Point A, Point B);
+            lineaRecta(Point A, Point B);
+            lineaRecta(){}
+
+            float m;
+            float b;
+            float distanciaDelaRecta;
+            Point puntoMedio;
+            Point A,B;
+
+            float puntoEnY(float puntoX);
+            float puntoEnX(float puntoY);
+
+            static void OrganizarRectas(lineaRecta &R1, lineaRecta &R2);
+            static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB);
+        };
     }
-
-    circulo(){ radio = -1; }
-};*/
-
+//////////////////////////////////////////
 }
 
 

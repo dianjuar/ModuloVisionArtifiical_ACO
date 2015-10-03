@@ -4,6 +4,7 @@ using namespace CONFIG;
 
 Point INTMatBuilder::P_Fin;
 Point INTMatBuilder::P_Inicio;
+int INTMatBuilder::n;
 
 void INTMatBuilder::construir_INTMat_and_cartoon()
 {
@@ -234,6 +235,13 @@ void INTMatBuilder::set_P_Inicio(Point Inicio)
     }
 
 }
+
+bool INTMatBuilder::isTodoEnOrden()
+{
+    todoEnOrden = bool_settedPuntoF&&bool_settedPuntoI;
+    return todoEnOrden;
+}
+
 
 void INTMatBuilder::set_P_Fin(Point Fin)
 {

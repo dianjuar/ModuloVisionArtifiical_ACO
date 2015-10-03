@@ -1,10 +1,12 @@
 #ifndef CONFIG_COLORDETECTOR_H
 #define CONFIG_COLORDETECTOR_H
 
-#include "INCLUDE_opencv.h"
+#include "config_configbase.h"
+#include "config_conexion_SMA.h"
 #include "INCLUDE_QTstuff.h"
 #include "stand_Tools.h"
 #include "stand_capturadorimagen.h"
+#include "config_INTMatBuilder.h"
 
 
 namespace CONFIG
@@ -12,13 +14,12 @@ namespace CONFIG
     namespace coTra //correccion de trayectoria
     {
         //Class prototyping
-        class colorDetector;
-        class sesgador;
-        class correctorTrayectoria;
+        class colorDetector_MANAGER;
+        class colorDetector_WORKER;
 
-        class colorDetector
+        class colorDetector_MANAGER:public QObject, public configBase
         {
-
+            Q_OBJECT
         private:
             //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
             int low_diff;
@@ -32,10 +33,13 @@ namespace CONFIG
 
             int NumeroDeColores;
 
+            Network::conexion_SMA *co_SMA;
+
             void recortar();
+            void inicializar_sesgadores(int NumeroDeColores);
 
         public:
-            colorDetector();
+            colorDetector_MANAGER();
 
             void write(FileStorage &fs) const;
             void read(const FileNode& node);
@@ -45,10 +49,21 @@ namespace CONFIG
             //getter
             int get_numeroDecolores(){ return NumeroDeColores; }
 
-            sesgador *sesgador3colores;
+            colorDetector_WORKER **colorDetectorWORKERS;
+
+        public slots:
+            void RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
+                                                         int RobotPoint_Nominal_X, int RobotPoint_Nominal_Y);
+        private slots:
+            void RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta);
+
+        signals:
+            void DESPACHARsolicitud_CorreccionTrayectoria(int robotID, float teta);
+
+
         };
         //////////////////////////////////////////////////////////////////
-        class sesgador : public QThread
+        class colorDetector_WORKER : public QThread
         {
            Q_OBJECT
         private:
@@ -67,16 +82,30 @@ namespace CONFIG
             Mat mask;
             Mat frame_thresholded;
             Mat frame_sesgado;
+            Rect rectanguloSesgador;
+
+
             bool selected;
+            bool isPeticion;
             int ID;
+
+            int direccionRobot_Nominal;
+            Point RobotPoint_Nominal;
+
 
             QMutex sync;
 
             double h_h, l_h, h_s, l_s;
+            bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
 
         public:
 
-            sesgador();
+            colorDetector_WORKER(int ID,
+                                 const int *low_diff, const int *high_diff,
+                                 const int *conn,
+                                 const int *val,
+                                 const int *flags,
+                                 const Mat *kernel_rectangular, const Mat *kernel_ovalado);
 
             double get_h_h(){ return h_h; }
             double get_l_h(){ return l_h; }
@@ -84,12 +113,6 @@ namespace CONFIG
             double get_l_s(){ return l_s; }
 
             void set_values4sesgo(double h_h, double l_h, double h_s, double l_s);
-            void set_parameters4sesgo(int ID,
-                                      const int *low_diff, const int *high_diff,
-                                      const int *conn,
-                                      const int *val,
-                                      const int *flags,
-                                      const Mat *kernel_rectangular, const Mat *kernel_ovalado);
 
             void calibrar();
             void recortar();
@@ -100,7 +123,6 @@ namespace CONFIG
             //getters
             Mat get_frame_thresholded(){ return frame_thresholded; }
             Mat get_frame_sesgado(){ return frame_sesgado; }
-
             void corregirTrayectoria(const int direccionRobot_Nominal, const Point RobotPoint_Nominal);
 
             void run();
@@ -108,7 +130,7 @@ namespace CONFIG
         public slots:
 
         signals:
-           void correccionDeTrayectoriaProcesada(int ID, float correc_grados, float correc_dist);
+            void DESPACHAR_SolicitudDeTratectoria(int ID, float teta);
 
         };
         //////////////////////////////////////////////////////////////////

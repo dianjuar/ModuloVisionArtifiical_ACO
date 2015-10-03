@@ -1,7 +1,7 @@
 #ifndef CONFIG_CALIBRAR_H
 #define CONFIG_CALIBRAR_H
 
-#include "INCLUDE_opencv.h"
+#include "config_configbase.h"
 #include "INCLUDE_QTstuff.h"
 #include "time.h"
 #include "stand_capturadorimagen.h"
@@ -11,7 +11,7 @@
 namespace CONFIG
 {
 
-class calibrador
+class calibrador: public configBase
 {
 
 public:

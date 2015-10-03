@@ -14,6 +14,7 @@
 #include "config_guardarycargarparametros.h"
 #include "config_conexion_SMA.h"
 #include "config_colordetector.h"
+#include "config_configbase.h"
 
 namespace Ui
 {
@@ -83,7 +84,7 @@ private:
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
-    CONFIG::coTra::colorDetector *colorDetect;
+    CONFIG::coTra::colorDetector_MANAGER *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;

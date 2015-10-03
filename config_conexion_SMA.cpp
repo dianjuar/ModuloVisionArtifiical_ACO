@@ -25,18 +25,14 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
         if(RobotPoint_Nominal.x == -1 && RobotPoint_Nominal.y == -1) //primera vez
             RobotPoint_Nominal = INTMatBuilder::P_Inicio;
 
-        colorD->sesgador3colores[RobotID].corregirTrayectoria(direccionRobot_Nominal,RobotPoint_Nominal);
+        //después de procesada la información, pide que se haga la corrección de trayectoria.        
+        emit EMITIRsolicitud_CorreccionTrayectoria(RobotID,direccionRobot_Nominal,
+                                                   RobotPoint_Nominal.x,RobotPoint_Nominal.y);
     }
 }
 
-conexion_SMA::conexion_SMA(QString serverDir, coTra::colorDetector *colorD):DataClient(serverDir,port)
+conexion_SMA::conexion_SMA(QString serverDir):Client(serverDir,port)
 {
-    this->colorD = colorD;
-
-   /* for (int i = 0; i < colorD->get_numeroDecolores(); i++)
-        connect( colorD->sesgador3colores, SIGNAL(correccionDeTrayectoriaProcesada(int,float,float)),
-                 this, SLOT(recibirResultado_SolicitudCorreccionDeTrayectoria(int,float,float)) )*/
-
 }
 
 void conexion_SMA::write(FileStorage &fs) const
@@ -53,7 +49,8 @@ void conexion_SMA::read(const FileNode &node)
     host = QString::fromUtf8( server.c_str() );
 }
 
-void conexion_SMA::recibirResultado_SolicitudCorreccionDeTrayectoria(int RobotID, float correc_grados, float correc_dist)
+void conexion_SMA::RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta)
 {
-
+    enviar( Tools::Network::GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(robotID,teta) );
 }
+

@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     stand_networking.cpp \
     stand_Tools.cpp \
     config_conexion_ACO.cpp \
-    config_conexion_SMA.cpp
+    config_conexion_SMA.cpp \
+    config_configbase.cpp
 
 HEADERS  += ventanaprincipal.h \
     stand_capturadorimagen.h \
@@ -46,6 +47,7 @@ HEADERS  += ventanaprincipal.h \
     config_colordetector.h \
     stand_networking.h \
     config_conexion_ACO.h \
-    config_conexion_SMA.h
+    config_conexion_SMA.h \
+    config_configbase.h
 
 FORMS    += ventanaprincipal.ui

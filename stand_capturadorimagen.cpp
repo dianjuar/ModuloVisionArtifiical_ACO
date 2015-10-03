@@ -3,7 +3,8 @@
 using namespace STAND;
 
 int capturadorImagen::modo_elegido;
-Mat capturadorImagen::Imagen_P = Mat::zeros(20,20, CV_8UC3 );
+Mat capturadorImagen::Imagen_Procesada = Mat::zeros(20,20, CV_8UC3 );
+Mat capturadorImagen::Imagen;
 
 void capturadorImagen::run()
 {
@@ -109,5 +110,5 @@ void capturadorImagen::read(const FileNode& node)                          //Rea
     int devise = (int)node["devise"];
     int modo_elegido = (int)node["modo_elegido"];
 
-    constructor(modo_elegido, devise  );
+    constructor(modo_elegido, devise  );    
 }

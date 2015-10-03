@@ -2,12 +2,13 @@
 #define CONFIG_MATCARTOONERED_H
 
 #include "config_cropper.h"
+#include "config_configbase.h"
 #include "stand_Tools.h"
 
 namespace CONFIG
 {
 
-class INTMatBuilder:public QObject
+class INTMatBuilder:public QObject, public configBase
 {
     Q_OBJECT
 public:
@@ -21,6 +22,7 @@ public:
     static int const MAPA_fin=3;
 
     static Point P_Inicio, P_Fin;
+    static int n;
 
     //setter
     void set_n(int n);
@@ -35,7 +37,7 @@ public:
 
     bool get_settedPuntoF(){ return bool_settedPuntoF; }
     bool get_settedPuntoI(){ return bool_settedPuntoI; }
-    bool get_todoEnOrden(){ return bool_settedPuntoF&&bool_settedPuntoI; }
+    bool isTodoEnOrden();
     QString get_QSINT_mat(){ return QSINT_mat; }
 
     void write(FileStorage &fs) const;
@@ -62,7 +64,6 @@ private:
 
     QString QSINT_mat;
     int **INT_mat;
-    int n;
 
     int tamano_cuadroAnalizar_MatrizCroped;
     int tamano_MatCartooned;

@@ -19,49 +19,33 @@ void DataSend::enviar(QString s)
 {
     socket->write( s.toUtf8() );
 }
-/////////////////////////////////////////////////////////s
-void DataRecibe::stop()
-{
-    pararHilo = true;
-}
-
+/////////////////////////////////////////////////////////
 DataRecibe::DataRecibe(QTcpSocket *socket)
 {
     this->socket = socket;
-    pararHilo = false;
 }
 
-void DataRecibe::run()
+void DataRecibe::readyRead()
 {
-    QString msj;
+    qDebug()<<("*********Leyendo**********");
+    QString s( socket->readAll() );
+    qDebug()<<s;
+    qDebug()<<("********Analizando***********");
 
-    while( !pararHilo)
-    {
-        socket->waitForBytesWritten();
-        socket->waitForReadyRead();
-
-        QByteArray buff;
-        buff = socket->readAll();
-        msj = QString( buff );
-
-        qDebug()<<("*******************");
-        qDebug()<<("String recibido...");
-        qDebug()<<(msj);
-        qDebug()<<("*******************");
-
-        AnalizadorDeMensajes(msj);
-    }
+    AnalizadorDeMensajes(s);
 }
 /////////////////////////////////////////////////////////
 ///Mensajes Standar
 const QString GestionDeMensajes::Msj_divisor = "->";
 const QString GestionDeMensajes::Msj_divisor_2 = "_";
 const QString GestionDeMensajes::Msj_cerrar = "close";
-///FUNCTIONS Standar
+
+    ///FUNCTIONS Standar
 QString GestionDeMensajes::Enviar_MSJ_conectado()
 {
     return Msj_conectado;
 }
+
 ///////////////***********************/////////////////////
 const QString GestionDeMensajes::Msj_conectado = "connect";
 ///Mensajes TO ACO
@@ -69,31 +53,59 @@ const QString GestionDeMensajes::MSJEnvio_Prefijo_Mat = "Mat";
 const QString GestionDeMensajes::MSJEnvio_Prefijo_Dist = "Dist";
 ///Mensajes TO SMA
 const QString GestionDeMensajes::Msj_solicitudTrayectoria = "CorrectMe";
+const QString GestionDeMensajes::Msj_TrayectoriaCorrected = "Corrected"; //NUEVO!
+
+    ///FUNCTIONS SMA
+QString GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta)
+{
+    QString r = Msj_TrayectoriaCorrected + Msj_divisor +
+                                           QString::number(RobotID) + Msj_divisor_2 +
+                                           QString::number(teta);
+
+    return r;
+}
 /////////////////////////////////////////////////////////
-DataClient::DataClient(QString host, int port):
+Client::Client(QString host, int port):
     DataSend(&socket),
     DataRecibe(&socket)
 {
-    connected = false;
+    connected_B = false;
     this->host = host;
     this->port = port;
 }
 
-void DataClient::connectToHost(bool iniciarEscucha)
+void Client::connectToHost()
 {
     socket.connectToHost(host, port);
 
-    if(socket.waitForConnected(3000))//connected
-    {
-        connected = true;
-        enviar( Tools::Network::GestionDeMensajes::Enviar_MSJ_conectado() );
+    connected_B = socket.waitForConnected(3000);
 
-        if(iniciarEscucha)
-            start();
+    if(connected_B)//connected
+    {
+        connect(&socket, SIGNAL(connected()), this, SLOT(connected()));
+        connect(&socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+        connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
+        connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+
+        enviar( Tools::Network::GestionDeMensajes::Enviar_MSJ_conectado() );//el error está aquí
     }
     else
-        connected = false;
+    {
+        qDebug()<<"ERROR al intentar conectar con -> "<<host<<":"<<port;
+    }
 }
 
+void Client::connected()
+{
+    qDebug()<<"CONECTADO a -> "<<host<<":"<<port;
+}
 
+void Client::disconnected()
+{
+     qDebug()<<"DESCONECTADO de -> "<<host<<":"<<port;
+}
 
+void Client::bytesWritten(qint64 bytes)
+{
+    qDebug()<<"Bytes escritos"<<bytes;
+}

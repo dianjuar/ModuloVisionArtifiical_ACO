@@ -1,19 +1,18 @@
 #ifndef CONFIG_CROPPER_H
 #define CONFIG_CROPPER_H
 
-#include "INCLUDE_opencv.h"
+#include "config_configbase.h"
 #include "stand_Tools.h"
 #include "stand_capturadorimagen.h"
 
 namespace CONFIG
 {
 
-class cropper
+class cropper: public configBase
 {
     Mat imagen_Rayada;
     Mat canny_edges;
     Rect contenedor;
-    bool hay_Contenedor;
 
     int canny_umbral_1, canny_umbral_2;
 
@@ -29,9 +28,8 @@ public:
     void set_cannyU_2(int);
     Mat get_ImagenRayada(){ return imagen_Rayada; }
     Mat get_ImagenCanny(){ return canny_edges; }
-    bool hayContenedor(){  return hay_Contenedor; }
 
-    void calibracion(Mat mat);
+    void calibrar(Mat mat);
     void cortarImagen(Mat &);
     void reset_contenedor();
 

@@ -13,7 +13,7 @@ void cropper::set_cannyU_2(int c)
     canny_umbral_2 =c;
 }
 
-void cropper::calibracion(Mat mat)
+void cropper::calibrar(Mat mat)
 {
     imagen_Rayada = mat.clone();
 
@@ -50,12 +50,12 @@ void cropper::cortarImagen(Mat &m)
                    altoMayorAncho ?  ( centrado + (esPar ? 0:1) ):0  ,
                    BORDER_CONSTANT);
 
-    STAND::capturadorImagen::setImagen_procesada( m );
+    STAND::capturadorImagen::Imagen_Procesada = m;
 }
 
 void cropper::reset_contenedor()
 {
-    hay_Contenedor = false;
+    todoEnOrden = false;
     contenedor = Rect();
 }
 
@@ -78,7 +78,7 @@ void cropper::set_MayorContenedor(Rect r)
 {
     if(r.area() > contenedor.area())
     {
-        hay_Contenedor = true;
+        todoEnOrden = true;
         contenedor = r;
     }
 
@@ -88,7 +88,7 @@ cropper::cropper(int canny_umbral_1, int canny_umbral_2)
 {
     this->canny_umbral_1 = canny_umbral_1;
     this->canny_umbral_2 = canny_umbral_2;
-    hay_Contenedor = false;
+    todoEnOrden = false;
 
     contenedor = Rect();
 }

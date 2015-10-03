@@ -2,7 +2,7 @@
 
 using namespace CONFIG::Network;
 
-conexion_ACO::conexion_ACO(QString serverDir):DataClient(serverDir,port)
+conexion_ACO::conexion_ACO(QString serverDir):Client(serverDir,port)
 {
 
 }

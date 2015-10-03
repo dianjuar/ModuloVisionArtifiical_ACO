@@ -3,7 +3,23 @@
 using namespace CONFIG;
 using namespace coTra;
 
-colorDetector::colorDetector()
+void colorDetector_MANAGER::inicializar_sesgadores(int NumeroDeColores)
+{
+    this->NumeroDeColores = NumeroDeColores;
+    colorDetectorWORKERS = new colorDetector_WORKER*[NumeroDeColores];
+
+    for (int i = 0; i < NumeroDeColores; i++)
+    {
+        colorDetectorWORKERS[i] = new colorDetector_WORKER(i+1,&low_diff,&high_diff,&conn,&val,&flags,&kernel_rectangular,&kernel_ovalado);
+
+        connect(colorDetectorWORKERS[i], SIGNAL(DESPACHAR_SolicitudDeTratectoria(int,float)),
+                this, SLOT(RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int,float)));
+    }
+
+
+}
+
+colorDetector_MANAGER::colorDetector_MANAGER()
 {
     //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
     low_diff = 20;
@@ -14,15 +30,10 @@ colorDetector::colorDetector()
     kernel_rectangular = getStructuringElement(MORPH_RECT, Size(5, 5));
     kernel_ovalado = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
 
-    NumeroDeColores = 3;
-    sesgador3colores = new sesgador[NumeroDeColores];
-
-    for (int i = 0; i < NumeroDeColores; i++)
-        sesgador3colores[i].set_parameters4sesgo(i+1,&low_diff,&high_diff,&conn,&val,&flags,&kernel_rectangular,&kernel_ovalado);
-
+    inicializar_sesgadores(3);
 }
 
-void colorDetector::write(FileStorage &fs) const
+void colorDetector_MANAGER::write(FileStorage &fs) const
 {
     fs << "{";
 
@@ -31,10 +42,10 @@ void colorDetector::write(FileStorage &fs) const
         fs << "Colores"<<"[";
         for (int i = 0; i < NumeroDeColores; i++)
         {
-            double h_h = sesgador3colores[i].get_h_h();
-            double l_h = sesgador3colores[i].get_l_h();
-            double h_s = sesgador3colores[i].get_h_s();
-            double l_s = sesgador3colores[i].get_l_s();
+            double h_h = colorDetectorWORKERS[i]->get_h_h();
+            double l_h = colorDetectorWORKERS[i]->get_l_h();
+            double h_s = colorDetectorWORKERS[i]->get_h_s();
+            double l_s = colorDetectorWORKERS[i]->get_l_s();
 
             fs << "{:";
                 fs << "h_h" << h_h;
@@ -47,13 +58,9 @@ void colorDetector::write(FileStorage &fs) const
     fs<<"}";
 }
 
-void colorDetector::read(const FileNode &node)
+void colorDetector_MANAGER::read(const FileNode &node)
 {
-    NumeroDeColores = (int)node["numeroDeColores"];
-    sesgador3colores = new sesgador [NumeroDeColores];
-   /* for (int i = 0; i < NumeroDeColores; i++)
-        sesgador3colores[i]= sesgador(i+1);*/
-
+    inicializar_sesgadores( (int)node["numeroDeColores"] );
 
     FileNode features = node["Colores"];
 
@@ -68,17 +75,29 @@ void colorDetector::read(const FileNode &node)
         double h_s = (double)(*it)["h_s"];
         double l_s = (double)(*it)["l_s"];
 
-        sesgador3colores[i].set_values4sesgo(h_h,l_h,h_s,l_s);
+        colorDetectorWORKERS[i]->set_values4sesgo(h_h,l_h,h_s,l_s);
     }
 
 }
 
-void colorDetector::calibrar(int Nsesgo)
+void colorDetector_MANAGER::calibrar(int Nsesgo)
 {
-    sesgador3colores[Nsesgo].calibrar();
+    colorDetectorWORKERS[Nsesgo]->calibrar();
 }
+
+void colorDetector_MANAGER::RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
+                                                                   int RobotPoint_Nominal_X, int RobotPoint_Nominal_Y)
+{
+    colorDetectorWORKERS[RobotID-1]->corregirTrayectoria(direccionRobot_Nominal, Point(RobotPoint_Nominal_X, RobotPoint_Nominal_Y));
+}
+
+void colorDetector_MANAGER::RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta)
+{
+    emit DESPACHARsolicitud_CorreccionTrayectoria(robotID, teta);
+}
+
 ///////////////////////////////////////////////////
-void sesgador::set_values4sesgo(double h_h, double l_h, double h_s, double l_s)
+void colorDetector_WORKER::set_values4sesgo(double h_h, double l_h, double h_s, double l_s)
 {
     this-> h_h = h_h;
     this-> l_h = l_h;
@@ -86,36 +105,51 @@ void sesgador::set_values4sesgo(double h_h, double l_h, double h_s, double l_s)
     this-> l_s = l_s;
 }
 
-void sesgador::recortar()
+void colorDetector_WORKER::recortar()
 {
     vector<vector<Point> > contornos;
     vector<Vec4i> hierarchy;
 
     findContours(frame_thresholded.clone(),contornos, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
-    Rect roi = Tools::OpenCV::contenedorMasGrande( contornos );
-    frame_sesgado = frame->clone()(roi);
+    rectanguloSesgador = Tools::OpenCV::contenedorMasGrande( contornos );
+
+    //frame_sesgado = frame->clone()(roi);
+    frame_sesgado = STAND::capturadorImagen::Imagen_Procesada(rectanguloSesgador);
 }
 
-sesgador::sesgador()
+bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional)
 {
-    h_h = l_h = h_s = l_s = 0;
-    selected = false;
-    frame_sesgado = Mat::zeros( 20, 20, CV_8UC3 );
-    frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
+    vector<Vec3f> circulos = Tools::OpenCV::DetectarCirculos( frame_sesgado );
 
-    frame = STAND::capturadorImagen::getImagen_pointer_procesada();
+    if( circulos.size() != 2 )// esto debe cambiarse para que detecte 1 solo circulo.
+        return false;
+
+    int radio1 = circulos[0][2];
+    Point centro1(circulos[0][0] + rectanguloSesgador.x,
+                  circulos[0][1] + rectanguloSesgador.y);
+
+    int radio2 = circulos[1][2];
+    Point centro2(circulos[1][0] + rectanguloSesgador.x,
+                  circulos[1][1] + rectanguloSesgador.y);
+
+    if(radio1 > radio2)
+    {
+        base = Tools::math::circulo(centro1,radio1);
+        direccional = Tools::math::circulo(centro2, radio2);
+    }
+    else
+    {
+        direccional = Tools::math::circulo(centro1, radio2);
+        base = Tools::math::circulo(centro2, radio2);
+    }
+
+    return true;
 }
 
-void sesgador::set_parameters4sesgo(int ID,
-                                    const int *low_diff, const int *high_diff,
-                                    const int *conn,
-                                    const int *val,
-                                    const int *flags,
-                                    const Mat *kernel_rectangular, const Mat *kernel_ovalado)
+colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const int *high_diff, const int *conn, const int *val, const int *flags, const Mat *kernel_rectangular, const Mat *kernel_ovalado)
 {
     this->ID = ID;
-
     this->low_diff = low_diff;
     this->high_diff = high_diff;
     this->conn = conn;
@@ -123,17 +157,22 @@ void sesgador::set_parameters4sesgo(int ID,
     this->flags = flags;
     this->kernel_rectangular = kernel_rectangular;
     this->kernel_ovalado = kernel_ovalado;
+
+    h_h = l_h = h_s = l_s = 0;
+    selected = false;
+    frame_sesgado = Mat::zeros( 20, 20, CV_8UC3 );
+    frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
+
+    frame = &STAND::capturadorImagen::Imagen_Procesada;
 }
 
-void sesgador::calibrar(/*Mat m*/)
+void colorDetector_WORKER::calibrar()
 {
-    //frame = m;
-
     if(!this->isRunning())
         start();
 }
 
-void sesgador::set_seedPoint(Point p)
+void colorDetector_WORKER::set_seedPoint(Point p)
 {
     selected = true;
 
@@ -156,16 +195,18 @@ void sesgador::set_seedPoint(Point p)
 
 }
 
-void sesgador::corregirTrayectoria(const int direccionRobot_Nominal, const Point RobotPoint_Nominal)
+void colorDetector_WORKER::corregirTrayectoria(const int direccionRobot_Nominal, const Point RobotPoint_Nominal)
 {
+    isPeticion=true;
+    this->direccionRobot_Nominal = direccionRobot_Nominal;
+    this->RobotPoint_Nominal = RobotPoint_Nominal;
 
-
-    emit correccionDeTrayectoriaProcesada(ID,0.0,0.0);
+    start();
 }
 
-void sesgador::run()
+void colorDetector_WORKER::run()
 {
-    //codigo sacado de la página 101 del libre Practical Opencv
+   //codigo sacado de la página 101 del libre Practical Opencv
    if(!selected)
    {
        sync.lock();
@@ -173,7 +214,7 @@ void sesgador::run()
        sync.unlock();
    }
 
-   cvtColor(frame->clone(), frame_hsv, CV_BGR2HSV);
+   cvtColor( *frame, frame_hsv, CV_BGR2HSV);
 
    // extract the hue and saturation channels
    int from_to[] = {0,0, 1,1};
@@ -197,8 +238,43 @@ void sesgador::run()
    morphologyEx(aux, aux, MORPH_CLOSE, *kernel_rectangular);
    morphologyEx(aux, aux, MORPH_OPEN, *kernel_rectangular);
 
-
    frame_thresholded = aux;
 
    recortar();
+
+    if(isPeticion)
+    {
+       Tools::math::circulo base, direccional;
+
+       if( detectarCirculos(base,direccional) ) //detectados exitosamente
+       {
+            Tools::math::lineaRecta rectaRobot(base.centro, direccional.centro);
+
+            int tamano_cuadros_imgReal = frame->cols/ INTMatBuilder::n;
+
+            Tools::math::lineaRecta rectaRobot_Destino( Point(rectaRobot.puntoMedio.x,
+                                                              rectaRobot.puntoMedio.y),
+                                                        Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
+                                                              tamano_cuadros_imgReal*(RobotPoint_Nominal.y + 0.5)) );
+
+
+            Mat imToDraw = frame->clone();
+
+            float teta, anguloInicial;
+            Tools::OpenCV::dibujarAnguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
+
+            QString ruta = QString("/tmp/PruebasAngulo/")+
+                           QString::number(ID)+ QString("/")+
+                           QString::number(RobotPoint_Nominal.x) + QString("_")+
+                           QString::number(RobotPoint_Nominal.y) + QString(" ")+
+                           QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
+                           QString(".jpg") ;
+            qDebug()<<ruta;
+            imwrite( ruta.toUtf8().data(), imToDraw);
+
+            emit DESPACHAR_SolicitudDeTratectoria(ID,teta);
+       }
+
+    isPeticion=false;
+    }
 }

@@ -1,6 +1,7 @@
 #ifndef CONFIG_MATINTSENDER_H
 #define CONFIG_MATINTSENDER_H
 
+#include "config_configbase.h"
 #include "stand_Tools.h"
 #include "stand_networking.h"
 
@@ -8,7 +9,7 @@ namespace CONFIG
 {
     namespace Network
     {
-        class conexion_ACO : public ::Network::DataClient
+        class conexion_ACO: public ::Network::Client, public configBase
         {
         public:
             static const int port = 5000;
