@@ -91,7 +91,7 @@ namespace Tools
             ///Mensajes TO SMA
             static const QString Msj_solicitudTrayectoria;
             static const QString Msj_TrayectoriaCorrected;
-            static QString Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta);
+            static QString Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta, double distanciaDesface, float anguloDesface);
         };
     }// namespaceNetwork
 }// namespaceTools

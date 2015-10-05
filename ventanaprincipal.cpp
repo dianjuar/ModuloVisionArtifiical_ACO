@@ -102,8 +102,8 @@ void VentanaPrincipal::set_connects()
             colorDetect,SLOT(RECIBIRsolicitud_CorreccionTrayectoria(int,int,int,int)) );
 
     //Connect la RESPUESTA a la llegada de las peticiones de corrección de trayectoria
-    connect(colorDetect, SIGNAL(DESPACHARsolicitud_CorreccionTrayectoria(int,float)),
-            c_SMA, SLOT(RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int,float)));
+    connect(colorDetect, SIGNAL(DESPACHARsolicitud_CorreccionTrayectoria(int,float,double,float)),
+            c_SMA, SLOT(RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int,float,double,float)));
     //-------------------------------------
 
 }

@@ -56,11 +56,13 @@ const QString GestionDeMensajes::Msj_solicitudTrayectoria = "CorrectMe";
 const QString GestionDeMensajes::Msj_TrayectoriaCorrected = "Corrected"; //NUEVO!
 
     ///FUNCTIONS SMA
-QString GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta)
+QString GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta, double distanciaDesface, float anguloDesface)
 {
     QString r = Msj_TrayectoriaCorrected + Msj_divisor +
                                            QString::number(RobotID) + Msj_divisor_2 +
-                                           QString::number(teta);
+                                           QString::number(teta) + Msj_divisor_2 +
+                                           QString::number(distanciaDesface) + Msj_divisor_2 +
+                                           QString::number(anguloDesface);
 
     return r;
 }

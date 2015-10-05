@@ -35,7 +35,7 @@ QString conexion_ACO::prepararMSJ_enviarMatrix(int **mat, float dist, int n)
 {
     QString sms=Tools::Network::GestionDeMensajes::MSJEnvio_Prefijo_Mat;
 
-    sms.append( Tools::Cfunctions::IntMat2QString( mat, n ));
+    sms.append( Tools::general::IntMat2QString( mat, n ));
 
     sms.append( Tools::Network::GestionDeMensajes::Msj_divisor );
 

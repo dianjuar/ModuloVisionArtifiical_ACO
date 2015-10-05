@@ -153,7 +153,7 @@ void INTMatBuilder::read(const FileNode &node)
 
 void INTMatBuilder::buildQSINTmat()
 {
-    QSINT_mat = Tools::Cfunctions::IntMat2QString( INT_mat, n );
+    QSINT_mat = Tools::general::IntMat2QString( INT_mat, n );
 }
 
 void INTMatBuilder::Cartoon_dibujarEnsima(Mat &m)

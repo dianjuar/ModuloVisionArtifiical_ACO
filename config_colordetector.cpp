@@ -3,6 +3,17 @@
 using namespace CONFIG;
 using namespace coTra;
 
+int colorDetector_MANAGER::NumeroDeColores;
+
+extern const int NORTE;
+extern const int NORESTE;
+extern const int ESTE;
+extern const int SURESTE;
+extern const int SUR;
+extern const int SUROESTE;
+extern const int OESTE;
+extern const int NOROESTE;
+
 void colorDetector_MANAGER::inicializar_sesgadores(int NumeroDeColores)
 {
     this->NumeroDeColores = NumeroDeColores;
@@ -12,10 +23,14 @@ void colorDetector_MANAGER::inicializar_sesgadores(int NumeroDeColores)
     {
         colorDetectorWORKERS[i] = new colorDetector_WORKER(i+1,&low_diff,&high_diff,&conn,&val,&flags,&kernel_rectangular,&kernel_ovalado);
 
-        connect(colorDetectorWORKERS[i], SIGNAL(DESPACHAR_SolicitudDeTratectoria(int,float)),
-                this, SLOT(RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int,float)));
+        connect(colorDetectorWORKERS[i], SIGNAL(DESPACHAR_SolicitudDeTratectoria(int,float,double,float)),
+                this, SLOT(RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int,float,double,float)));
     }
 
+}
+
+float colorDetector_MANAGER::calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal)
+{
 
 }
 
@@ -29,6 +44,15 @@ colorDetector_MANAGER::colorDetector_MANAGER()
     flags = conn + (val << 8) + CV_FLOODFILL_MASK_ONLY;
     kernel_rectangular = getStructuringElement(MORPH_RECT, Size(5, 5));
     kernel_ovalado = getStructuringElement(MORPH_ELLIPSE, Size(30, 30));
+
+    if( Tools::general::DEBUG )
+    {
+        system("rm /tmp/PruebasAngulo/*/*.jpg");
+        QString ruta = "mkdir /tmp/PruebasAngulo/";
+        system(ruta.toUtf8().data());
+        for (int i = 1; i <= colorDetector_MANAGER::NumeroDeColores; i++)
+            system( QString( ruta+QString::number(i) ).toUtf8().data() );
+    }
 
     inicializar_sesgadores(3);
 }
@@ -91,9 +115,9 @@ void colorDetector_MANAGER::RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, 
     colorDetectorWORKERS[RobotID-1]->corregirTrayectoria(direccionRobot_Nominal, Point(RobotPoint_Nominal_X, RobotPoint_Nominal_Y));
 }
 
-void colorDetector_MANAGER::RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta)
+void colorDetector_MANAGER::RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta, double distanciaDesface, float anguloDesface)
 {
-    emit DESPACHARsolicitud_CorreccionTrayectoria(robotID, teta);
+    emit DESPACHARsolicitud_CorreccionTrayectoria(robotID, teta, distanciaDesface, anguloDesface);
 }
 
 ///////////////////////////////////////////////////
@@ -147,6 +171,34 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
     return true;
 }
 
+float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot, float teta, int DireccionNominal)
+{
+    Tools::math::lineaRecta nuevaRectaRobot();
+
+    /*switch (DireccionNominal)
+    {
+    case NORTE:
+    case SUR:
+
+        break;
+
+    case NOROESTE:
+    case SURESTE:
+
+        break;
+
+    case OESTE:
+    case ESTE:
+
+        break;
+
+    case SUROESTE:
+    case NORESTE:
+
+        break;
+    }*/
+}
+
 colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const int *high_diff, const int *conn, const int *val, const int *flags, const Mat *kernel_rectangular, const Mat *kernel_ovalado)
 {
     this->ID = ID;
@@ -164,6 +216,7 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
 
     frame = &STAND::capturadorImagen::Imagen_Procesada;
+
 }
 
 void colorDetector_WORKER::calibrar()
@@ -257,22 +310,28 @@ void colorDetector_WORKER::run()
                                                         Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
                                                               tamano_cuadros_imgReal*(RobotPoint_Nominal.y + 0.5)) );
 
-
             Mat imToDraw = frame->clone();
 
             float teta, anguloInicial;
-            Tools::OpenCV::dibujarAnguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
+            Tools::OpenCV::anguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
 
-            QString ruta = QString("/tmp/PruebasAngulo/")+
-                           QString::number(ID)+ QString("/")+
-                           QString::number(RobotPoint_Nominal.x) + QString("_")+
-                           QString::number(RobotPoint_Nominal.y) + QString(" ")+
-                           QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
-                           QString(".jpg") ;
-            qDebug()<<ruta;
-            imwrite( ruta.toUtf8().data(), imToDraw);
+            if( Tools::general::DEBUG )
+            {
+                QString ruta = "/tmp/PruebasAngulo/";
+                ruta = ruta + QString::number(ID)+ QString("/x")+
+                              QString::number(RobotPoint_Nominal.x) + QString("_y")+
+                              QString::number(RobotPoint_Nominal.y) + QString(" ")+
+                              QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
+                              QString(".jpg") ;
+                imwrite( ruta.toUtf8().data(), imToDraw);
+            }
 
-            emit DESPACHAR_SolicitudDeTratectoria(ID,teta);
+
+            double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
+
+            float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
+
+            emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
        }
 
     isPeticion=false;

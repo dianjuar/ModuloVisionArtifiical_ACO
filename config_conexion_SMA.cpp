@@ -4,7 +4,7 @@ using namespace CONFIG::Network;
 
 void conexion_SMA::AnalizadorDeMensajes(QString msj)
 {
-    vector<QString> msjDividido = Tools::Cfunctions::split(msj, Tools::Network::GestionDeMensajes::Msj_divisor );
+    vector<QString> msjDividido = Tools::general::split(msj, Tools::Network::GestionDeMensajes::Msj_divisor );
 
     QString encabezado = msjDividido.at(0);
     QString cuerpo = msjDividido.at(1);
@@ -15,7 +15,7 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
         /*SolCorTray -> RobotID _ DireccionNominal _ RobotPointNominal
          *si RobotPoint(-1,-1) es la primera vez que se solicita por lo tanto no se sabe cual es.*/
 
-        vector<QString> cuerpoVec = Tools::Cfunctions::split( cuerpo, Tools::Network::GestionDeMensajes::Msj_divisor_2 );
+        vector<QString> cuerpoVec = Tools::general::split( cuerpo, Tools::Network::GestionDeMensajes::Msj_divisor_2 );
 
         int RobotID = QString(cuerpoVec.at(0)).toInt();
         int direccionRobot_Nominal = QString(cuerpoVec.at(1)).toInt();
@@ -49,8 +49,8 @@ void conexion_SMA::read(const FileNode &node)
     host = QString::fromUtf8( server.c_str() );
 }
 
-void conexion_SMA::RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta)
+void conexion_SMA::RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta, double distanciaDesface, float anguloDesface)
 {
-    enviar( Tools::Network::GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(robotID,teta) );
+    enviar( Tools::Network::GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(robotID,teta, distanciaDesface, anguloDesface) );
 }
 

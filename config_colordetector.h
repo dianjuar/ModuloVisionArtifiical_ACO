@@ -3,11 +3,11 @@
 
 #include "config_configbase.h"
 #include "config_conexion_SMA.h"
+#include "config_calibrador.h"
 #include "INCLUDE_QTstuff.h"
 #include "stand_Tools.h"
 #include "stand_capturadorimagen.h"
 #include "config_INTMatBuilder.h"
-
 
 namespace CONFIG
 {
@@ -31,14 +31,13 @@ namespace CONFIG
             Mat kernel_rectangular;
             Mat kernel_ovalado;
 
-            int NumeroDeColores;
-
-            Network::conexion_SMA *co_SMA;
-
             void recortar();
             void inicializar_sesgadores(int NumeroDeColores);
+            float calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal);
 
         public:
+            static int NumeroDeColores;
+
             colorDetector_MANAGER();
 
             void write(FileStorage &fs) const;
@@ -47,7 +46,7 @@ namespace CONFIG
             void calibrar(int Nsesgo);
 
             //getter
-            int get_numeroDecolores(){ return NumeroDeColores; }
+            int get_numeroDecolores(){ return NumeroDeColores; }           
 
             colorDetector_WORKER **colorDetectorWORKERS;
 
@@ -55,10 +54,10 @@ namespace CONFIG
             void RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
                                                          int RobotPoint_Nominal_X, int RobotPoint_Nominal_Y);
         private slots:
-            void RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta);
+            void RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int robotID, float teta, double distanciaDesface, float anguloDesface);
 
         signals:
-            void DESPACHARsolicitud_CorreccionTrayectoria(int robotID, float teta);
+            void DESPACHARsolicitud_CorreccionTrayectoria(int robotID, float teta, double distanciaDesface, float anguloDesface);
 
 
         };
@@ -97,6 +96,7 @@ namespace CONFIG
 
             double h_h, l_h, h_s, l_s;
             bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
+            float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot, int DireccionNominal);
 
         public:
 
@@ -130,7 +130,7 @@ namespace CONFIG
         public slots:
 
         signals:
-            void DESPACHAR_SolicitudDeTratectoria(int ID, float teta);
+            void DESPACHAR_SolicitudDeTratectoria(int ID, float teta, double distanciaDesface, float anguloDesface);
 
         };
         //////////////////////////////////////////////////////////////////

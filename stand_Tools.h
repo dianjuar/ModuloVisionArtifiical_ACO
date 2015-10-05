@@ -9,7 +9,7 @@ namespace Tools
 
 //class prototyping *************************
 class OpenCV;
-class Cfunctions;
+class general;
 
 namespace math
 {
@@ -35,7 +35,7 @@ public:
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
     static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);
     //R1 siempre será la recta del robot
-    static void dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial);
+    static void anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial, bool dibujar = true);
 
 private:
     static void dibujarCirculos(Mat mat, vector<Vec3f> circles);
@@ -43,9 +43,10 @@ private:
 
 ////////////////////////////////////////////
 
-class Cfunctions
+class general
 {
 public:
+    static bool DEBUG;
     static QString IntMat2QString(int **mat, int n);
 
     static std::vector<std::string> split(std::string s, const std::string delim);
@@ -73,6 +74,8 @@ public:
             //para el calculo del angulo entre las 2 rectas es necesario ordenar primero las rectas.
         public:
             lineaRecta(float m, float b, Point A, Point B);
+            lineaRecta(float m, float b);
+            //lineaRecta(float m, float b, );
             lineaRecta(Point A, Point B);
             lineaRecta(){}
 

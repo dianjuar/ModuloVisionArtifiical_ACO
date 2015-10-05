@@ -30,7 +30,7 @@ namespace CONFIG
                                                        int RobotPoint_Nominal_X, int RobotPoint_Nominal_Y);
 
         private slots:
-            void RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta);
+            void RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta, double distanciaDesface, float anguloDesface);
 
         };
     } //namespace Network

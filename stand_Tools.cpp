@@ -2,6 +2,17 @@
 
 using namespace Tools;
 
+bool general::DEBUG = true;
+
+extern const int NORTE = 0;
+extern const int NORESTE = 1;
+extern const int ESTE = 2;
+extern const int SURESTE = 3;
+extern const int SUR = 4;
+extern const int SUROESTE = 5;
+extern const int OESTE = 6;
+extern const int NOROESTE = 7;
+
 Mat OpenCV::tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur)
 {
     Mat aux;
@@ -118,7 +129,7 @@ void OpenCV::dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo, bool
     de la recta que sirve de lado terminal del ángulo.*/
     Scalar Color = colorRojo ? Scalar(0,0,255): Scalar(0,255,0);
 
-    line(mat, linea.A, linea.B, Color, 2  );
+    line(mat, linea.B, linea.A, Color, 2  );
 
     if(dibujarCentro)
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
@@ -131,14 +142,11 @@ void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, in
              Scalar( 255, 0, 0 ), 2 );
 }
 
-void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial)
+void OpenCV::anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial, bool dibujar)
 {
     math::lineaRecta rectaRobot = R1;
 
     math::lineaRecta::OrganizarRectas(R1,R2);
-
-    dibujarRecta(mat,R1,false);
-    dibujarRecta(mat,R2);
 
     teta = math::lineaRecta::anguloEntre2Rectas(R1,R2);
 
@@ -154,18 +162,26 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
                     cuando las 2 rectas son negativas*/
                    ((R1.m<0 && R2.m<0) ? -1:1);
 
-    qDebug()<<"Angulo entre la recta robot y el eje X"<<anguloInicial;
-    qDebug()<<"Angulo entre las 2 rectas"<<teta;
+    if(Tools::general::DEBUG)
+    {
+        qDebug()<<"Angulo entre la recta robot y el eje X"<<anguloInicial;
+        qDebug()<<"Angulo entre las 2 rectas"<<teta;
+    }
 
+    if(dibujar)
+    {
         int angle = anguloInicial,
         startAngle = 0,
         endAngle = teta;
+                                    //así sabrá si dibujar el centro de la recta o no.
+        bool a = (rectaRobot.A == R1.A && rectaRobot.B == R1.B);
+        bool b = (rectaRobot.A == R2.A && rectaRobot.B == R2.B);
 
-        dibujarRecta(mat,R1,false);
-        dibujarRecta(mat,R2);
-
-        OpenCV::dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
-        OpenCV::dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
+        dibujarRecta(mat,R1,false, a );
+        dibujarRecta(mat,R2,true, b);
+        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
+        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
+    }
 
 }
 
@@ -184,7 +200,7 @@ void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
 
 //////////////////////////////////////////////////////
 
-QString Cfunctions::IntMat2QString(int **mat, int n)
+QString general::IntMat2QString(int **mat, int n)
 {
     QString matQSt;
 
@@ -201,7 +217,7 @@ QString Cfunctions::IntMat2QString(int **mat, int n)
     return matQSt;
 }
 
-std::vector<string> Cfunctions::split(string s, const string delim)
+std::vector<string> general::split(string s, const string delim)
 {
     std::vector< std::string >vector;
     std::string token;
@@ -218,7 +234,7 @@ std::vector<string> Cfunctions::split(string s, const string delim)
    return vector;
 }
 
-std::vector<QString> Cfunctions::split(QString s, const QString delim)
+std::vector<QString> general::split(QString s, const QString delim)
 {
     vector<QString> vecQS;
     vector<string> vec = split( s.toStdString(), delim.toStdString() );
@@ -299,6 +315,12 @@ math::lineaRecta::lineaRecta(float m, float b, Point A, Point B)
 
     puntoMedio = Point( (A.x+B.x)/2 , (A.y+B.y)/2 );
     calcularDistancia();
+}
+
+math::lineaRecta::lineaRecta(float m, float b)
+{
+    this->m = m;
+    this->b = b;
 }
 
 math::lineaRecta::lineaRecta(Point A, Point B)

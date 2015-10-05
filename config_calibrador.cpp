@@ -3,9 +3,15 @@
 using namespace CONFIG;
 using namespace std;
 
-#include <iostream>
-using std::count;
-using std::endl;
+double calibrador::C33;
+double calibrador::C22;
+double calibrador::C13;
+double calibrador::C32;
+double calibrador::C12;
+double calibrador::C23;
+double calibrador::C11;
+double calibrador::C31;
+double calibrador::C21;
 
 calibrador::calibrador()
 {
@@ -19,10 +25,7 @@ void calibrador::set_distanciaEntreCuadros(int distanciaEntreCuadros_PX, int n)
     Point A(n2*distanciaEntreCuadros_PX,n2*distanciaEntreCuadros_PX);
     Point B(n2*distanciaEntreCuadros_PX, (n2+1)*distanciaEntreCuadros_PX);
 
-    Point RealPointA = pixelPoint2realPoint(A);
-    Point RealPointB = pixelPoint2realPoint(B);
-
-    distanciaEntreCuadros_REAL = distanciaEntreDosPuntosReales(RealPointA, RealPointB);
+    distanciaEntreCuadros_REAL = distanciaReal_2PuntosPixeles(A, B);
 }
 
 float calibrador::get_distanciaEntreCuadros_REAL()
@@ -124,7 +127,15 @@ Point calibrador::pixelPoint2realPoint(Point Ppx)
     return realP;
 }
 
-double calibrador::distanciaEntreDosPuntosReales(Point P_RealA, Point P_RealB)
+double calibrador::distanciaReal_2PuntosReales(Point P_RealA, Point P_RealB)
 {
     return sqrt( qPow(P_RealA.x - P_RealB.x, 2) + qPow(P_RealA.y - P_RealB.y, 2) );
+}
+
+double calibrador::distanciaReal_2PuntosPixeles(Point Px_A, Point Px_B)
+{
+    Point P_RealA = pixelPoint2realPoint(Px_A);
+    Point P_RealB = pixelPoint2realPoint(Px_B);
+
+    return distanciaReal_2PuntosReales(P_RealA, P_RealB);
 }
