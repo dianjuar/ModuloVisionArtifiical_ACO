@@ -113,7 +113,7 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, bool dibujar)
     HoughCircles( matGrayScale,
                   circulosDetectados,
                   CV_HOUGH_GRADIENT,
-                  1, 15, 20, 20, 5,75);
+                  1, 5, 117, 15, 5,75);
 
     qDebug()<<"Circulos detectados = "<<circulosDetectados.size();
 

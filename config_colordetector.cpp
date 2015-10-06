@@ -216,7 +216,6 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
 
     frame = &STAND::capturadorImagen::Imagen_Procesada;
-
 }
 
 void colorDetector_WORKER::calibrar()
@@ -295,6 +294,8 @@ void colorDetector_WORKER::run()
 
    recortar();
 
+   //imshow("a", frame_thresholded);
+
     if(isPeticion)
     {
        Tools::math::circulo base, direccional;
@@ -327,9 +328,9 @@ void colorDetector_WORKER::run()
             }
 
 
-            double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
+             double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
 
-            float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
+            //float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
 
             emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
        }

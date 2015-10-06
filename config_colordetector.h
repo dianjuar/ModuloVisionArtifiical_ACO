@@ -96,7 +96,8 @@ namespace CONFIG
 
             double h_h, l_h, h_s, l_s;
             bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
-            float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot, int DireccionNominal);
+            float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot,
+                                         float teta, int DireccionNominal);
 
         public:
 

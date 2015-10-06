@@ -34,6 +34,7 @@ public slots:
 
 signals:
         void tell();
+        void devise_Changed(Mat &frame);
 private:
 
     //sincronización del hilo

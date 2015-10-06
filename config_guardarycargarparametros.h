@@ -9,6 +9,7 @@
 #include "config_conexion_ACO.h"
 #include "config_conexion_SMA.h"
 #include "config_INTMatBuilder.h"
+#include "INCLUDE_QTstuff.h"
 
 namespace CONFIG
 {

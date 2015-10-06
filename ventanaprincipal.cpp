@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -121,11 +121,13 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             if(!calibrando)
                 crop->cortarImagen(m);
 
+            Mat imagen = m.clone();
+
             if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
-                IntMatB->Cartoon_dibujarEnsima(m);
+                IntMatB->Cartoon_dibujarEnsima(imagen);
 
 
-            ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(m, !calibrando, 500 ) );
+            ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(imagen, !calibrando, 500 ) );
             break;
         }
 

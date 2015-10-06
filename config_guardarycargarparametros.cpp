@@ -60,6 +60,8 @@ void guardarYCargarParametros::cargar()
     FileNode n = fs[QScap.toUtf8().data()];
     cap->read( n );
 
+    QThread::msleep(500);
+
     n = fs[QScalib.toUtf8().data()];
     calib->read( n );
 
