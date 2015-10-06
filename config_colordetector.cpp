@@ -335,6 +335,8 @@ void colorDetector_WORKER::run()
             emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
        }
 
+    imshow("",*frame);
+    imshow("a", frame_sesgado);
     isPeticion=false;
     }
 }

@@ -103,17 +103,52 @@ Rect OpenCV::contenedorMasGrande(vector<vector<Point> > contours)
         return Rect();
 }
 
-vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, bool dibujar)
+vector<Vec3f> OpenCV::DetectarCirculos(Mat &mat, int n,bool dibujar)
 {
-    Mat matGrayScale = OpenCV::tratamientoDeImagenStantdar(mat);
+    vector<Vec3f> ListacirculosDetectados;
+    int tasaDeError = 3; //pixeles
 
-    vector<Vec3f> circulosDetectados;
+    for(;;)
+    {
+        Mat matClone = mat.clone(); //se evita que a mitad de camino cambie la matriz
+        Mat matGrayScale = OpenCV::tratamientoDeImagenStantdar(matClone);
 
-    //acomodar con los parametros correctos
-    HoughCircles( matGrayScale,
-                  circulosDetectados,
-                  CV_HOUGH_GRADIENT,
-                  1, 5, 117, 15, 5,75);
+        vector<Vec3f> circulosDetectados;
+
+        //acomodar con los parametros correctos
+        HoughCircles( matGrayScale,
+                      circulosDetectados,
+                      CV_HOUGH_GRADIENT,
+                      1, 5, 116, 20, 5,75);
+
+        if( circulosDetectados.size() <= n )
+        {
+            if(ListacirculosDetectados.size() == 0 )
+                ListacirculosDetectados = circulosDetectados;
+            else
+            {
+                for (int i = 0; i < ListacirculosDetectados.size(); i++)
+                {
+                    Vec3f guardado = ListacirculosDetectados.at(i);
+
+                    for (int j = 0; j < circulosDetectados.size(); j++)
+                    {
+                        Vec3f detectado = circulosDetectados.at(i);
+
+                        /* Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+                           int radius = cvRound(circles[i][2]);*/
+                    }
+                }
+            }
+
+            if(ListacirculosDetectados.size() == n)
+                break;
+        }
+
+        QThread::msleep(1);
+    }
+
+
 
     qDebug()<<"Circulos detectados = "<<circulosDetectados.size();
 
