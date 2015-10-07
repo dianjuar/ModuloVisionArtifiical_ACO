@@ -83,6 +83,7 @@ namespace CONFIG
             Mat frame_sesgado;
             Rect rectanguloSesgador;
 
+            vector<Vec3f> ListacirculosDetectados;
 
             bool selected;
             bool isPeticion;

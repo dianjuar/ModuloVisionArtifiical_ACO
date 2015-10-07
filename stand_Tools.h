@@ -30,7 +30,7 @@ public:
 
     static Rect contenedorMasGrande( vector< vector<Point> > contours);
 
-    static vector<Vec3f> DetectarCirculos(Mat &mat, int n=2, bool dibujar=true);
+    static vector<Vec3f> DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetectados,int n=2, bool dibujar=true);
 
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
     static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);

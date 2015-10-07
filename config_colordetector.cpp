@@ -144,7 +144,7 @@ void colorDetector_WORKER::recortar()
 
 bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional)
 {
-    vector<Vec3f> circulos = Tools::OpenCV::DetectarCirculos( frame_sesgado );
+    vector<Vec3f> circulos = Tools::OpenCV::DetectarCirculos( frame_sesgado, ListacirculosDetectados);
 
     if( circulos.size() != 2 )// esto debe cambiarse para que detecte 1 solo circulo.
         return false;
@@ -258,85 +258,95 @@ void colorDetector_WORKER::corregirTrayectoria(const int direccionRobot_Nominal,
 
 void colorDetector_WORKER::run()
 {
-   //codigo sacado de la página 101 del libre Practical Opencv
-   if(!selected)
-   {
-       sync.lock();
-       mask.create(frame->rows+2, frame->cols+2, CV_8UC1);
-       sync.unlock();
-   }
+    bool anotherRun = false;
 
-   cvtColor( *frame, frame_hsv, CV_BGR2HSV);
-
-   // extract the hue and saturation channels
-   int from_to[] = {0,0, 1,1};
-   Mat hs(frame->size(), CV_8UC2);
-   mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
-
-   // check for the range of H and S obtained from floodFill
-   Mat aux; //esto se hace para que al usuario se muestre la umbralización con todas las operaciones morfoligicas aplicadas
-
-   inRange(hs,
-           Scalar( l_h, l_s ),
-           Scalar( h_h, h_s ),
-           aux);
-
-   // open and close to remove noise
-   morphologyEx(aux, aux, MORPH_OPEN, *kernel_rectangular);
-   morphologyEx(aux, aux, MORPH_CLOSE, *kernel_rectangular);
-
-   morphologyEx(aux, aux, MORPH_CLOSE, *kernel_ovalado);
-
-   morphologyEx(aux, aux, MORPH_CLOSE, *kernel_rectangular);
-   morphologyEx(aux, aux, MORPH_OPEN, *kernel_rectangular);
-
-   frame_thresholded = aux;
-
-   recortar();
-
-   //imshow("a", frame_thresholded);
-
-    if(isPeticion)
+    do
     {
-       Tools::math::circulo base, direccional;
+        //codigo sacado de la página 101 del libre Practical Opencv
+        if(!selected)
+        {
+            sync.lock();
+            mask.create(frame->rows+2, frame->cols+2, CV_8UC1);
+            sync.unlock();
+        }
 
-       if( detectarCirculos(base,direccional) ) //detectados exitosamente
-       {
-            Tools::math::lineaRecta rectaRobot(base.centro, direccional.centro);
+        cvtColor( *frame, frame_hsv, CV_BGR2HSV);
 
-            int tamano_cuadros_imgReal = frame->cols/ INTMatBuilder::n;
+        // extract the hue and saturation channels
+        int from_to[] = {0,0, 1,1};
+        Mat hs(frame->size(), CV_8UC2);
+        mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
 
-            Tools::math::lineaRecta rectaRobot_Destino( Point(rectaRobot.puntoMedio.x,
-                                                              rectaRobot.puntoMedio.y),
-                                                        Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
-                                                              tamano_cuadros_imgReal*(RobotPoint_Nominal.y + 0.5)) );
+        // check for the range of H and S obtained from floodFill
+        Mat aux; //esto se hace para que al usuario se muestre la umbralización con todas las operaciones morfoligicas aplicadas
 
-            Mat imToDraw = frame->clone();
+        inRange(hs,
+                Scalar( l_h, l_s ),
+                Scalar( h_h, h_s ),
+                aux);
 
-            float teta, anguloInicial;
-            Tools::OpenCV::anguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
+        // open and close to remove noise
+        morphologyEx(aux, aux, MORPH_OPEN, *kernel_rectangular);
+        morphologyEx(aux, aux, MORPH_CLOSE, *kernel_rectangular);
 
-            if( Tools::general::DEBUG )
+        morphologyEx(aux, aux, MORPH_CLOSE, *kernel_ovalado);
+
+        morphologyEx(aux, aux, MORPH_CLOSE, *kernel_rectangular);
+        morphologyEx(aux, aux, MORPH_OPEN, *kernel_rectangular);
+
+        frame_thresholded = aux;
+
+        recortar();
+
+        //imshow("a", frame_thresholded);
+
+        if(isPeticion)
+        {
+            Tools::math::circulo base, direccional;
+
+            if( detectarCirculos(base,direccional) ) //detectados exitosamente
             {
-                QString ruta = "/tmp/PruebasAngulo/";
-                ruta = ruta + QString::number(ID)+ QString("/x")+
-                              QString::number(RobotPoint_Nominal.x) + QString("_y")+
-                              QString::number(RobotPoint_Nominal.y) + QString(" ")+
-                              QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
-                              QString(".jpg") ;
-                imwrite( ruta.toUtf8().data(), imToDraw);
+                Tools::math::lineaRecta rectaRobot(base.centro, direccional.centro);
+
+                int tamano_cuadros_imgReal = frame->cols/ INTMatBuilder::n;
+
+                Tools::math::lineaRecta rectaRobot_Destino( Point(rectaRobot.puntoMedio.x,
+                                                               rectaRobot.puntoMedio.y),
+                                                         Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
+                                                               tamano_cuadros_imgReal*(RobotPoint_Nominal.y + 0.5)) );
+                Mat imToDraw = frame->clone();
+
+                float teta, anguloInicial;
+                Tools::OpenCV::anguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
+
+                if( Tools::general::DEBUG )
+                {
+                    QString ruta = "/tmp/PruebasAngulo/";
+                    ruta = ruta + QString::number(ID)+ QString("/x")+
+                            QString::number(RobotPoint_Nominal.x) + QString("_y")+
+                            QString::number(RobotPoint_Nominal.y) + QString(" ")+
+                            QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
+                            QString(".jpg") ;
+
+                    imwrite( ruta.toUtf8().data(), imToDraw);
+                }
+
+                double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
+
+                //float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
+
+                emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
+                anotherRun = false;
             }
+            else
+                anotherRun = true;
 
+            /*
+            imshow("",*frame);
+            imshow("a", frame_sesgado);*/
+        }
 
-             double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
+    }while(anotherRun);
 
-            //float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
-
-            emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
-       }
-
-    imshow("",*frame);
-    imshow("a", frame_sesgado);
     isPeticion=false;
-    }
 }

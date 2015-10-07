@@ -103,23 +103,26 @@ Rect OpenCV::contenedorMasGrande(vector<vector<Point> > contours)
         return Rect();
 }
 
-vector<Vec3f> OpenCV::DetectarCirculos(Mat &mat, int n,bool dibujar)
+vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetectados, int n, bool dibujar)
 {
-    vector<Vec3f> ListacirculosDetectados;
-    int tasaDeError = 3; //pixeles
+    int tasaDeError = 5; //pixeles
 
-    for(;;)
-    {
+        if(Tools::general::DEBUG)
+            qDebug()<<"*******************iteración para detectar circulos*******************";
+
         Mat matClone = mat.clone(); //se evita que a mitad de camino cambie la matriz
         Mat matGrayScale = OpenCV::tratamientoDeImagenStantdar(matClone);
 
         vector<Vec3f> circulosDetectados;
 
         //acomodar con los parametros correctos
+        int param1 = 116;
+        int param2 = 20;
+
         HoughCircles( matGrayScale,
                       circulosDetectados,
                       CV_HOUGH_GRADIENT,
-                      1, 5, 116, 20, 5,75);
+                      1, 30, param1, param2, 5);
 
         if( circulosDetectados.size() <= n )
         {
@@ -127,38 +130,49 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat &mat, int n,bool dibujar)
                 ListacirculosDetectados = circulosDetectados;
             else
             {
-                for (int i = 0; i < ListacirculosDetectados.size(); i++)
+                for (int i = 0; i < circulosDetectados.size(); i++)
                 {
-                    Vec3f guardado = ListacirculosDetectados.at(i);
+                    bool circuloUnico = false;
+                    Vec3f Cdetectado = circulosDetectados.at(i);
 
-                    for (int j = 0; j < circulosDetectados.size(); j++)
+                    Point centroDect(Cdetectado[0], Cdetectado[1]);
+                    float radioDect = Cdetectado[2];
+
+
+                    for (int j = 0; j < ListacirculosDetectados.size(); j++)
                     {
-                        Vec3f detectado = circulosDetectados.at(i);
+                        Vec3f Cguardado = ListacirculosDetectados.at(i);
 
-                        /* Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-                           int radius = cvRound(circles[i][2]);*/
+                        Point centroGuar(Cguardado[0], Cguardado[1]);
+                        float radioGuar = Cguardado[2];
+
+
+                        /*verificar que sea el mismo RADIO y el mismo PUNTO, como los circulos
+                         * los detecta con un ligero error, se verifica que esté fuera de ese error*/
+
+                            //centro del circulo
+                        if( (abs(centroDect.x - centroGuar.x) > tasaDeError &&
+                             abs(centroDect.y - centroGuar.y) > tasaDeError) &&
+                            //radio del circulo
+                             abs(radioDect - radioGuar) > tasaDeError )
+                            circuloUnico = true;
                     }
+
+                    if(circuloUnico)
+                        ListacirculosDetectados.push_back( Cdetectado );
                 }
             }
-
-            if(ListacirculosDetectados.size() == n)
-                break;
         }
 
-        QThread::msleep(1);
-    }
-
-
-
-    qDebug()<<"Circulos detectados = "<<circulosDetectados.size();
+    qDebug()<<"Ciruclos Detectados"<<ListacirculosDetectados.size();
 
     if(dibujar)
-        dibujarCirculos(mat,circulosDetectados);
+        dibujarCirculos(mat,ListacirculosDetectados);
 
-    return circulosDetectados;
+    return ListacirculosDetectados;
 }
 
-void OpenCV::dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo, bool dibujarCentro)
+void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, bool dibujarCentro)
 {
     /*donde m1 es la pendiente de la recta que sirve de lado inicial del ángulo y m2 es la pendiente
     de la recta que sirve de lado terminal del ángulo.*/
