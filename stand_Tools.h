@@ -90,6 +90,8 @@ public:
 
             static void OrganizarRectas(lineaRecta &R1, lineaRecta &R2);
             static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB);
+
+            bool operator==(const lineaRecta& other);
         };
     }
 //////////////////////////////////////////

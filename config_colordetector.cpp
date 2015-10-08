@@ -319,19 +319,21 @@ void colorDetector_WORKER::run()
                 float teta, anguloInicial;
                 Tools::OpenCV::anguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
 
+                double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
+
                 if( Tools::general::DEBUG )
                 {
                     QString ruta = "/tmp/PruebasAngulo/";
                     ruta = ruta + QString::number(ID)+ QString("/x")+
                             QString::number(RobotPoint_Nominal.x) + QString("_y")+
-                            QString::number(RobotPoint_Nominal.y) + QString(" ")+
-                            QString::number( teta ) + QString(",") + QString::number(anguloInicial) +
+                            QString::number(RobotPoint_Nominal.y) + QString(" teta:")+
+                            QString::number( teta ) + QString(", ") +
+                            QString("Dist:") + QString::number(Distancia_desface) +
                             QString(".jpg") ;
 
                     imwrite( ruta.toUtf8().data(), imToDraw);
                 }
 
-                double Distancia_desface = calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B);
 
                 //float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
 
