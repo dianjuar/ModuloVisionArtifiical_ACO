@@ -10,7 +10,7 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
     QString cuerpo = msjDividido.at(1);
 
     //si le solicitan corregir trayectoria.
-    if( QString::compare(encabezado, Tools::Network::GestionDeMensajes::Msj_solicitudTrayectoria, Qt::CaseInsensitive ) == 0 )
+    if( QString::compare(encabezado, Tools::Network::GestionDeMensajes::Msj_SMAtoMDV_solicitudTrayectoria, Qt::CaseInsensitive ) == 0 )
     {
         /*SolCorTray -> RobotID _ DireccionNominal _ RobotPointNominal
          *si RobotPoint(-1,-1) es la primera vez que se solicita por lo tanto no se sabe cual es.*/
@@ -25,9 +25,14 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
         if(RobotPoint_Nominal.x == -1 && RobotPoint_Nominal.y == -1) //primera vez
             RobotPoint_Nominal = INTMatBuilder::P_Inicio;
 
-        //después de procesada la información, pide que se haga la corrección de trayectoria.        
+        //después de procesada la información, pide que se haga la corrección de trayectoria.
         emit EMITIRsolicitud_CorreccionTrayectoria(RobotID,direccionRobot_Nominal,
                                                    RobotPoint_Nominal.x,RobotPoint_Nominal.y);
+    }
+    else
+    {
+        int RobotID = cuerpo.toInt();
+        coTra::colorDetector_MANAGER::rectasToDraw[ RobotID-1 ] = NULL;
     }
 }
 

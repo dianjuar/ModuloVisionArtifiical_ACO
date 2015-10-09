@@ -172,7 +172,7 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
     return ListacirculosDetectados;
 }
 
-void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, bool dibujarCentro)
+void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta &linea, bool colorRojo, bool dibujarCentro)
 {
     /*donde m1 es la pendiente de la recta que sirve de lado inicial del ángulo y m2 es la pendiente
     de la recta que sirve de lado terminal del ángulo.*/
@@ -182,6 +182,11 @@ void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, boo
 
     if(dibujarCentro)
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
+}
+
+void OpenCV::dibujarRecta(Mat &mat, math::lineaRecta *linea, bool colorRojo, bool dibujarCentro)
+{
+    dibujarRecta(mat,linea,colorRojo,dibujarCentro);
 }
 
 void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle)
@@ -358,6 +363,13 @@ void math::lineaRecta::OrganizarRectas(math::lineaRecta &R1, math::lineaRecta &R
     }//else
 }
 
+bool math::lineaRecta::isRectaR1( math::lineaRecta Recta, math::lineaRecta R1, math::lineaRecta R2)
+{
+    OrganizarRectas(R1,R2);
+
+    return Recta == R1;
+}
+
 math::lineaRecta::lineaRecta(float m, float b, Point A, Point B)
 {
     this->m = m;
@@ -410,6 +422,11 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
     float tangTeta = (m1-m2)/(1+m1*m2);
 
     return atan( tangTeta )*(180/M_PI);
+}
+
+bool math::lineaRecta::isM_positivo()
+{
+    return m > 0;
 }
 
 bool math::lineaRecta::operator==(const math::lineaRecta &other)

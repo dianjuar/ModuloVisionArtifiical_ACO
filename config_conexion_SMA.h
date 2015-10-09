@@ -6,6 +6,7 @@
 #include "stand_networking.h"
 #include "stand_capturadorimagen.h"
 #include "config_INTMatBuilder.h"
+#include "config_colordetector.h"
 
 namespace CONFIG
 {
@@ -28,7 +29,6 @@ namespace CONFIG
         signals:
             void EMITIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
                                                        int RobotPoint_Nominal_X, int RobotPoint_Nominal_Y);
-
         private slots:
             void RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta, double distanciaDesface, float anguloDesface);
 

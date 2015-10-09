@@ -89,8 +89,9 @@ namespace Tools
             static const QString MSJEnvio_Prefijo_Mat;
             static const QString MSJEnvio_Prefijo_Dist;
             ///Mensajes TO SMA
-            static const QString Msj_solicitudTrayectoria;
-            static const QString Msj_TrayectoriaCorrected;
+            static const QString Msj_SMAtoMDV_solicitudTrayectoria;
+            static const QString Msj_SMAtoMDV_correctedTrayectoriaAPPLIED;
+            static const QString Msj_MDVtoSMA_DespachoSolicitudTrayectoria;
             static QString Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta, double distanciaDesface, float anguloDesface);
         };
     }// namespaceNetwork

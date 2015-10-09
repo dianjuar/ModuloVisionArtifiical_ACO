@@ -52,13 +52,15 @@ const QString GestionDeMensajes::Msj_conectado = "connect";
 const QString GestionDeMensajes::MSJEnvio_Prefijo_Mat = "Mat";
 const QString GestionDeMensajes::MSJEnvio_Prefijo_Dist = "Dist";
 ///Mensajes TO SMA
-const QString GestionDeMensajes::Msj_solicitudTrayectoria = "CorrectMe";
-const QString GestionDeMensajes::Msj_TrayectoriaCorrected = "Corrected"; //NUEVO!
+const QString GestionDeMensajes::Msj_SMAtoMDV_solicitudTrayectoria = "CorrectMe";
+const QString GestionDeMensajes::Msj_SMAtoMDV_correctedTrayectoriaAPPLIED = "CorrectFIN";
+//---
+const QString GestionDeMensajes::Msj_MDVtoSMA_DespachoSolicitudTrayectoria = "Corrected";
 
     ///FUNCTIONS SMA
 QString GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(int RobotID, float teta, double distanciaDesface, float anguloDesface)
 {
-    QString r = Msj_TrayectoriaCorrected + Msj_divisor +
+    QString r = Msj_MDVtoSMA_DespachoSolicitudTrayectoria + Msj_divisor +
                                            QString::number(RobotID) + Msj_divisor_2 +
                                            QString::number(teta) + Msj_divisor_2 +
                                            QString::number(distanciaDesface) + Msj_divisor_2 +

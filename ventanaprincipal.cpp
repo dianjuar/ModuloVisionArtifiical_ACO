@@ -124,8 +124,15 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             Mat imagen = m.clone();
 
             if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
+            {
                 IntMatB->Cartoon_dibujarEnsima(imagen);
-
+                //dibujar las rectas.
+                for(int i =0; i < CONFIG::coTra::colorDetector_MANAGER::NumeroDeColores; i++)
+                {
+                    if( CONFIG::coTra::colorDetector_MANAGER::rectasToDraw[i] != NULL )
+                        Tools::OpenCV::dibujarRecta(m, CONFIG::coTra::colorDetector_MANAGER::rectasToDraw[i], false);
+                }
+            }
 
             ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(imagen, !calibrando, 500 ) );
             break;

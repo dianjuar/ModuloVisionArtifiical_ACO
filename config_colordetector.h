@@ -32,11 +32,12 @@ namespace CONFIG
             Mat kernel_ovalado;
 
             void recortar();
-            void inicializar_sesgadores(int NumeroDeColores);
+            void inicializar_sesgadores();
             float calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal);
 
         public:
             static int NumeroDeColores;
+            static vector<Tools::math::lineaRecta> rectasToDraw;
 
             colorDetector_MANAGER();
 
@@ -46,7 +47,7 @@ namespace CONFIG
             void calibrar(int Nsesgo);
 
             //getter
-            int get_numeroDecolores(){ return NumeroDeColores; }           
+            int get_numeroDecolores(){ return NumeroDeColores; }
 
             colorDetector_WORKER **colorDetectorWORKERS;
 
@@ -99,6 +100,11 @@ namespace CONFIG
             bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
             float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot,
                                          float teta, int DireccionNominal);
+            void guardarImagenes(const Mat imToDraw, const float teta, double Distancia_desface);
+
+            void sesgar();
+
+            double procesarDistanciaARecorrer(double distancia, float const teta, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
 
         public:
 
