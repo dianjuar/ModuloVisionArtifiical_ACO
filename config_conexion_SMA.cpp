@@ -29,10 +29,13 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
         emit EMITIRsolicitud_CorreccionTrayectoria(RobotID,direccionRobot_Nominal,
                                                    RobotPoint_Nominal.x,RobotPoint_Nominal.y);
     }
-    else
+    else if( QString::compare( Tools::Network::GestionDeMensajes::Msj_SMAtoMDV_correctedTrayectoriaAPPLIED,
+                               encabezado, Qt::CaseInsensitive ) == 0 )
     {
         int RobotID = cuerpo.toInt();
-        coTra::colorDetector_MANAGER::rectasToDraw[ RobotID-1 ] = NULL;
+        coTra::colorDetector_MANAGER::rectasToDraw.erase(
+                    coTra::colorDetector_MANAGER::rectasToDraw.begin() +
+                    (RobotID -1) );
     }
 }
 

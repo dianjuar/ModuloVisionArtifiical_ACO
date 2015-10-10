@@ -4,12 +4,13 @@ using namespace CONFIG;
 using namespace coTra;
 
 int colorDetector_MANAGER::NumeroDeColores = 3;
-Tools::math::lineaRecta **colorDetector_MANAGER::rectasToDraw;
+Tools::math::lineaRecta** colorDetector_MANAGER::rectasToDraw;
 
 void colorDetector_MANAGER::inicializar_sesgadores()
 {
     colorDetectorWORKERS = new colorDetector_WORKER*[NumeroDeColores];
-    rectasToDraw = new Tools::math::lineaRecta*[NumeroDeColores];
+    rectasToDraw = new Tools::math::lineaRecta*[ NumeroDeColores ];
+    //rectasToDraw = new Tools::math::lineaRecta*[NumeroDeColores];
 
     for (int i = 0; i < NumeroDeColores; i++)
     {
@@ -17,6 +18,8 @@ void colorDetector_MANAGER::inicializar_sesgadores()
 
         connect(colorDetectorWORKERS[i], SIGNAL(DESPACHAR_SolicitudDeTratectoria(int,float,double,float)),
                 this, SLOT(RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int,float,double,float)));
+
+        rectasToDraw[i] = NULL;
     }
 
 }
@@ -272,6 +275,8 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
         teta < 0)
             return distancia*-1;
 
+    return distancia;
+
 }
 
 colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const int *high_diff, const int *conn, const int *val, const int *flags, const Mat *kernel_rectangular, const Mat *kernel_ovalado)
@@ -359,8 +364,7 @@ void colorDetector_WORKER::run()
                                                             Point(rectaRobot.puntoMedio.x,
                                                                   rectaRobot.puntoMedio.y));
 
-
-                colorDetector_MANAGER::rectasToDraw[ID-1] = &rectaRobot_Destino;
+                colorDetector_MANAGER::rectasToDraw[ ID-1 ] = &rectaRobot_Destino;
 
                 Mat imToDraw = frame->clone();
 

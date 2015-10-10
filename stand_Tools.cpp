@@ -184,11 +184,6 @@ void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta &linea, bool colorRojo, bo
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
 }
 
-void OpenCV::dibujarRecta(Mat &mat, math::lineaRecta *linea, bool colorRojo, bool dibujarCentro)
-{
-    dibujarRecta(mat,linea,colorRojo,dibujarCentro);
-}
-
 void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle)
 {
     ellipse( mat, center, Size( radio, radio ),

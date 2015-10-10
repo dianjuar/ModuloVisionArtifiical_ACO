@@ -37,7 +37,7 @@ namespace CONFIG
 
         public:
             static int NumeroDeColores;
-            static vector<Tools::math::lineaRecta> rectasToDraw;
+            static Tools::math::lineaRecta **rectasToDraw;
 
             colorDetector_MANAGER();
 
