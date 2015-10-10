@@ -33,9 +33,7 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
                                encabezado, Qt::CaseInsensitive ) == 0 )
     {
         int RobotID = cuerpo.toInt();
-        coTra::colorDetector_MANAGER::rectasToDraw.erase(
-                    coTra::colorDetector_MANAGER::rectasToDraw.begin() +
-                    (RobotID -1) );
+        coTra::colorDetector_MANAGER::rectasToDraw[ RobotID -1 ] = NULL;
     }
 }
 
