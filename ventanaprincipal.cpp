@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -128,11 +128,25 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
                 IntMatB->Cartoon_dibujarEnsima(imagen);
 
                 //dibujar las rectas.
-                Tools::math::lineaRecta ***rects = &CONFIG::coTra::colorDetector_MANAGER::rectasToDraw;
+                Tools::math::lineaRecta **rects = CONFIG::coTra::colorDetector_MANAGER::rectasToDraw;
 
-                for(int i =0; i < CONFIG::coTra::colorDetector_MANAGER::NumeroDeColores; i++)
-                    if( rects[i] != NULL )
-                        Tools::OpenCV::dibujarRecta(imagen, **rects[i], false);
+                int asd = sizeof(rects);
+
+                if(*rects != NULL)
+                    for(int i =0; i < CONFIG::coTra::colorDetector_MANAGER::NumeroDeColores; i++)
+                    {
+                        try
+                        {
+                            if(rects[i] != NULL )
+                                Tools::OpenCV::dibujarRecta(imagen, *rects[i], false);
+                        }
+                        catch(exception& e)
+                        {
+
+                        }
+                    }
+
+                imshow("",imagen);
 
             }
 

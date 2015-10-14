@@ -10,7 +10,6 @@ void colorDetector_MANAGER::inicializar_sesgadores()
 {
     colorDetectorWORKERS = new colorDetector_WORKER*[NumeroDeColores];
     rectasToDraw = new Tools::math::lineaRecta*[ NumeroDeColores ];
-    //rectasToDraw = new Tools::math::lineaRecta*[NumeroDeColores];
 
     for (int i = 0; i < NumeroDeColores; i++)
     {
@@ -364,7 +363,8 @@ void colorDetector_WORKER::run()
                                                             Point(rectaRobot.puntoMedio.x,
                                                                   rectaRobot.puntoMedio.y));
 
-                colorDetector_MANAGER::rectasToDraw[ ID-1 ] = &rectaRobot_Destino;
+                Tools::math::lineaRecta ***rects = &CONFIG::coTra::colorDetector_MANAGER::rectasToDraw;
+                *rects[ID-1] = &rectaRobot_Destino;
 
                 Mat imToDraw = frame->clone();
 

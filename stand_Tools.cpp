@@ -179,7 +179,7 @@ void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta &linea, bool colorRojo, bo
     Scalar Color = colorRojo ? Scalar(0,0,255): Scalar(0,255,0);
 
     line(mat, linea.B, linea.A, Color, 2  );
-
+    imshow("l",mat);
     if(dibujarCentro)
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
 }
