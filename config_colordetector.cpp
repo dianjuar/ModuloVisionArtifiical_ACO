@@ -4,23 +4,17 @@ using namespace CONFIG;
 using namespace coTra;
 
 int colorDetector_MANAGER::NumeroDeColores = 3;
-Tools::math::lineaRecta** colorDetector_MANAGER::rectasToDraw;
 
 void colorDetector_MANAGER::inicializar_sesgadores()
 {
     colorDetectorWORKERS = new colorDetector_WORKER*[NumeroDeColores];
-    rectasToDraw = new Tools::math::lineaRecta*[ NumeroDeColores ];
-
     for (int i = 0; i < NumeroDeColores; i++)
     {
         colorDetectorWORKERS[i] = new colorDetector_WORKER(i+1,&low_diff,&high_diff,&conn,&val,&flags,&kernel_rectangular,&kernel_ovalado);
 
         connect(colorDetectorWORKERS[i], SIGNAL(DESPACHAR_SolicitudDeTratectoria(int,float,double,float)),
                 this, SLOT(RECIBIR_Despacho_CorreccionTrayectoria_FromWORKER(int,float,double,float)));
-
-        rectasToDraw[i] = NULL;
     }
-
 }
 
 float colorDetector_MANAGER::calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal)
@@ -102,6 +96,22 @@ void colorDetector_MANAGER::read(const FileNode &node)
 void colorDetector_MANAGER::calibrar(int Nsesgo)
 {
     colorDetectorWORKERS[Nsesgo]->calibrar();
+}
+
+vector<Tools::math::lineaRecta *> colorDetector_MANAGER::getRectasToDraw()
+{
+    vector<Tools::math::lineaRecta *> r;
+
+    for (int i = 0; i < NumeroDeColores; i++)
+        if( colorDetectorWORKERS[i]->rectaToDraw != NULL )
+            r.push_back(colorDetectorWORKERS[i]->rectaToDraw);
+
+    return r;
+}
+
+void colorDetector_MANAGER::eliminarRecta(int RobotID)
+{
+    colorDetectorWORKERS[RobotID-1]->rectaToDraw = NULL;
 }
 
 void colorDetector_MANAGER::RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
@@ -295,6 +305,7 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
 
     frame = &STAND::capturadorImagen::Imagen_Procesada;
+    rectaToDraw = NULL;
 }
 
 void colorDetector_WORKER::calibrar()
@@ -363,8 +374,8 @@ void colorDetector_WORKER::run()
                                                             Point(rectaRobot.puntoMedio.x,
                                                                   rectaRobot.puntoMedio.y));
 
-                Tools::math::lineaRecta ***rects = &CONFIG::coTra::colorDetector_MANAGER::rectasToDraw;
-                *rects[ID-1] = &rectaRobot_Destino;
+                rectaToDraw = &rectaRobot_Destino;
+
 
                 Mat imToDraw = frame->clone();
 

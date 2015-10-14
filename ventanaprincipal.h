@@ -102,6 +102,8 @@ private:
     void inhabilitarTodasLasPestanas();
     void set_connects();
 
+    void dibujarRectas(Mat &m);
+
     int config_index;
     int config_indexSESGO;
     int config_Nparametros;

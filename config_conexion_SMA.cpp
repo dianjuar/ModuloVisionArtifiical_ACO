@@ -33,12 +33,15 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
                                encabezado, Qt::CaseInsensitive ) == 0 )
     {
         int RobotID = cuerpo.toInt();
-        coTra::colorDetector_MANAGER::rectasToDraw[ RobotID -1 ] = NULL;
+
+
+
     }
 }
 
-conexion_SMA::conexion_SMA(QString serverDir):Client(serverDir,port)
+conexion_SMA::conexion_SMA(QString serverDir, coTra::colorDetector_MANAGER *colorDetector):Client(serverDir,port)
 {
+    this->colorDetector = colorDetector;
 }
 
 void conexion_SMA::write(FileStorage &fs) const

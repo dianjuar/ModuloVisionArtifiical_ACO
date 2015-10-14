@@ -37,7 +37,6 @@ namespace CONFIG
 
         public:
             static int NumeroDeColores;
-            static Tools::math::lineaRecta **rectasToDraw;
 
             colorDetector_MANAGER();
 
@@ -49,7 +48,9 @@ namespace CONFIG
             //getter
             int get_numeroDecolores(){ return NumeroDeColores; }
 
-            colorDetector_WORKER **colorDetectorWORKERS;
+            static colorDetector_WORKER **colorDetectorWORKERS;
+            vector< Tools::math::lineaRecta *> getRectasToDraw();
+            void eliminarRecta(int RobotID);
 
         public slots:
             void RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
@@ -93,7 +94,6 @@ namespace CONFIG
             int direccionRobot_Nominal;
             Point RobotPoint_Nominal;
 
-
             QMutex sync;
 
             double h_h, l_h, h_s, l_s;
@@ -107,6 +107,7 @@ namespace CONFIG
             double procesarDistanciaARecorrer(double distancia, float const teta, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
 
         public:
+            Tools::math::lineaRecta* rectaToDraw;
 
             colorDetector_WORKER(int ID,
                                  const int *low_diff, const int *high_diff,

@@ -5,8 +5,8 @@
 #include "config_configbase.h"
 #include "stand_networking.h"
 #include "stand_capturadorimagen.h"
-#include "config_INTMatBuilder.h"
 #include "config_colordetector.h"
+#include "config_INTMatBuilder.h"
 
 namespace CONFIG
 {
@@ -17,11 +17,12 @@ namespace CONFIG
             Q_OBJECT
         private:
             static const int port = 5003;
+            coTra::colorDetector_MANAGER *colorDetector;
 
             void AnalizadorDeMensajes(QString msj);
 
         public:
-            conexion_SMA(QString serverDir);
+            conexion_SMA(QString serverDir, ::CONFIG::coTra::colorDetector_MANAGER *colorDetector);
 
             void write(FileStorage &fs) const;
             void read(const FileNode& node);

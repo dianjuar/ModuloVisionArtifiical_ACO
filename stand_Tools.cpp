@@ -4,15 +4,6 @@ using namespace Tools;
 
 bool general::DEBUG = true;
 
-extern const int NORTE = 0;
-extern const int NORESTE = 1;
-extern const int ESTE = 2;
-extern const int SURESTE = 3;
-extern const int SUR = 4;
-extern const int SUROESTE = 5;
-extern const int OESTE = 6;
-extern const int NOROESTE = 7;
-
 Mat OpenCV::tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur)
 {
     Mat aux;
@@ -138,14 +129,12 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
                     Point centroDect(Cdetectado[0], Cdetectado[1]);
                     float radioDect = Cdetectado[2];
 
-
                     for (int j = 0; j < ListacirculosDetectados.size(); j++)
                     {
                         Vec3f Cguardado = ListacirculosDetectados.at(i);
 
                         Point centroGuar(Cguardado[0], Cguardado[1]);
                         float radioGuar = Cguardado[2];
-
 
                         /*verificar que sea el mismo RADIO y el mismo PUNTO, como los circulos
                          * los detecta con un ligero error, se verifica que esté fuera de ese error*/
@@ -172,14 +161,14 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
     return ListacirculosDetectados;
 }
 
-void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta &linea, bool colorRojo, bool dibujarCentro)
+void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, bool dibujarCentro)
 {
     /*donde m1 es la pendiente de la recta que sirve de lado inicial del ángulo y m2 es la pendiente
     de la recta que sirve de lado terminal del ángulo.*/
     Scalar Color = colorRojo ? Scalar(0,0,255): Scalar(0,255,0);
 
     line(mat, linea.B, linea.A, Color, 2  );
-    imshow("l",mat);
+
     if(dibujarCentro)
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
 }
@@ -429,7 +418,20 @@ bool math::lineaRecta::operator==(const math::lineaRecta &other)
     return this->m == other.m &&
            this->b == other.b &&
            this->A == other.A &&
-           this->B == other.B;
+            this->B == other.B;
+}
+
+void math::lineaRecta::operator=(const math::lineaRecta &other)
+{
+    this->A = other.A;
+    this->B= other.B;
+    this->puntoMedio = other.puntoMedio;
+
+    this->b = other.b;
+    this->m = other.m;
+    this->distanciaDelaRecta = other.distanciaDelaRecta;
+
+
 }
 
 

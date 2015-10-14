@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_Video;
+    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -32,7 +32,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n() );
     c_ACO = new CONFIG::Network::conexion_ACO( ui->lineEdit_setverDir_F5->text());
-    c_SMA = new CONFIG::Network::conexion_SMA( ui->lineEdit_setverDir_SMA->text() );
+    c_SMA = new CONFIG::Network::conexion_SMA( ui->lineEdit_setverDir_SMA->text(), colorDetect );
     calib = new CONFIG::calibrador();
 
     GCparam = new CONFIG::guardarYCargarParametros(cap,calib,crop,colorDetect,IntMatB,c_ACO,c_SMA);
@@ -108,6 +108,14 @@ void VentanaPrincipal::set_connects()
 
 }
 
+void VentanaPrincipal::dibujarRectas(Mat &m)
+{
+    vector<Tools::math::lineaRecta *>rs = colorDetect->getRectasToDraw();
+
+    for (int i = 0; i < rs.size(); i++)
+        Tools::OpenCV::dibujarRecta(m,*(rs.at(i)),false,false);
+}
+
 void VentanaPrincipal::set_labelDisplay(Mat m)
 {
     if(config_index > FASE_cortarContenido)
@@ -126,28 +134,7 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
             {
                 IntMatB->Cartoon_dibujarEnsima(imagen);
-
-                //dibujar las rectas.
-                Tools::math::lineaRecta **rects = CONFIG::coTra::colorDetector_MANAGER::rectasToDraw;
-
-                int asd = sizeof(rects);
-
-                if(*rects != NULL)
-                    for(int i =0; i < CONFIG::coTra::colorDetector_MANAGER::NumeroDeColores; i++)
-                    {
-                        try
-                        {
-                            if(rects[i] != NULL )
-                                Tools::OpenCV::dibujarRecta(imagen, *rects[i], false);
-                        }
-                        catch(exception& e)
-                        {
-
-                        }
-                    }
-
-                imshow("",imagen);
-
+                dibujarRectas( imagen );
             }
 
             ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(imagen, !calibrando, 500 ) );
