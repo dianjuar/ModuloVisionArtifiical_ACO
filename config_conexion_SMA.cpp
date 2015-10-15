@@ -34,8 +34,7 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
     {
         int RobotID = cuerpo.toInt();
 
-
-
+        colorDetector->eliminarRecta( RobotID );
     }
 }
 

@@ -1,3 +1,4 @@
+#include <limits>
 #include "stand_Tools.h"
 
 using namespace Tools;
@@ -381,6 +382,18 @@ math::lineaRecta::lineaRecta(Point A, Point B)
 
     puntoMedio = Point( (this->A.x+this->B.x)/2 , (this->A.y+this->B.y)/2 );
     calcularDistancia();
+}
+
+math::lineaRecta::lineaRecta()
+{
+    this->m = std::numeric_limits<float>::min();
+    this->b = std::numeric_limits<float>::min();
+
+    this->A = Point( std::numeric_limits<int>::min(),
+                     std::numeric_limits<int>::min() );
+
+    this->B  = Point( std::numeric_limits<int>::min(),
+                      std::numeric_limits<int>::min() );
 }
 
 float math::lineaRecta::puntoEnY(float puntoX)

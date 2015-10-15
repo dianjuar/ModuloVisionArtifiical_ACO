@@ -1,9 +1,9 @@
 #include "config_colordetector.h"
 
-using namespace CONFIG;
-using namespace coTra;
+using namespace CONFIG::coTra;
 
 int colorDetector_MANAGER::NumeroDeColores = 3;
+colorDetector_WORKER **colorDetector_MANAGER::colorDetectorWORKERS;
 
 void colorDetector_MANAGER::inicializar_sesgadores()
 {
@@ -98,20 +98,20 @@ void colorDetector_MANAGER::calibrar(int Nsesgo)
     colorDetectorWORKERS[Nsesgo]->calibrar();
 }
 
-vector<Tools::math::lineaRecta *> colorDetector_MANAGER::getRectasToDraw()
+vector<Tools::math::lineaRecta> colorDetector_MANAGER::getRectasToDraw()
 {
-    vector<Tools::math::lineaRecta *> r;
+    vector<Tools::math::lineaRecta> r;
 
     for (int i = 0; i < NumeroDeColores; i++)
-        if( colorDetectorWORKERS[i]->rectaToDraw != NULL )
-            r.push_back(colorDetectorWORKERS[i]->rectaToDraw);
+        if( !(colorDetectorWORKERS[i]->rectaToDraw == Tools::math::lineaRecta()) )
+            r.push_back( colorDetectorWORKERS[i]->rectaToDraw );
 
     return r;
 }
 
 void colorDetector_MANAGER::eliminarRecta(int RobotID)
 {
-    colorDetectorWORKERS[RobotID-1]->rectaToDraw = NULL;
+    colorDetectorWORKERS[RobotID-1]->rectaToDraw = Tools::math::lineaRecta();
 }
 
 void colorDetector_MANAGER::RECIBIRsolicitud_CorreccionTrayectoria(int RobotID, int direccionRobot_Nominal,
@@ -279,9 +279,7 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
 
     //el punto A siempre es la base y el punto B es el direccional
     if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
-        R1.isM_positivo() &&
-        !R2.isM_positivo() &&
-        teta < 0)
+        (R1.isM_positivo() && !R2.isM_positivo() && teta < 0 && absBase > absDirec) )
             return distancia*-1;
 
     return distancia;
@@ -305,7 +303,8 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     frame_thresholded = Mat::zeros( 20, 20, CV_8UC3 );
 
     frame = &STAND::capturadorImagen::Imagen_Procesada;
-    rectaToDraw = NULL;
+
+    rectaToDraw = Tools::math::lineaRecta();
 }
 
 void colorDetector_WORKER::calibrar()
@@ -374,8 +373,7 @@ void colorDetector_WORKER::run()
                                                             Point(rectaRobot.puntoMedio.x,
                                                                   rectaRobot.puntoMedio.y));
 
-                rectaToDraw = &rectaRobot_Destino;
-
+                rectaToDraw = rectaRobot_Destino;
 
                 Mat imToDraw = frame->clone();
 

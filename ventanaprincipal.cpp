@@ -22,7 +22,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
@@ -110,10 +110,16 @@ void VentanaPrincipal::set_connects()
 
 void VentanaPrincipal::dibujarRectas(Mat &m)
 {
-    vector<Tools::math::lineaRecta *>rs = colorDetect->getRectasToDraw();
+    vector<Tools::math::lineaRecta> rs = colorDetect->getRectasToDraw();
+
+    if(rs.empty())
+        return;
 
     for (int i = 0; i < rs.size(); i++)
-        Tools::OpenCV::dibujarRecta(m,*(rs.at(i)),false,false);
+    {
+        Tools::math::lineaRecta r = rs.at(i);
+        Tools::OpenCV::dibujarRecta(m, r, false, false);
+    }
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)

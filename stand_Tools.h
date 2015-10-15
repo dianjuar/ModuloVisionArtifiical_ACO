@@ -77,7 +77,7 @@ public:
             lineaRecta(float m, float b);
             //lineaRecta(float m, float b, );
             lineaRecta(Point A, Point B);
-            lineaRecta(){}
+            lineaRecta();
 
             float m;
             float b;

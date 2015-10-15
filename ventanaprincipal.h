@@ -26,10 +26,6 @@ class VentanaPrincipal : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit VentanaPrincipal(QWidget *parent = 0);
-    void set_labelDisplay( Mat );
-    ~VentanaPrincipal();
-
     static int FASE_NumeroFases;
     static const int FASE_Color_NumeroFases = 3;
 
@@ -44,6 +40,12 @@ public:
     static const int FASE_EnvioSMA = 8;
 
     static const int EscalaVisualizacion_FaseSegmentacion = 2;
+
+    explicit VentanaPrincipal(QWidget *parent = 0);
+    ~VentanaPrincipal();
+
+    void set_labelDisplay( Mat );
+
     
 private slots:
     void setted_PuntoI(bool);

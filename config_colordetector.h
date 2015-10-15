@@ -2,12 +2,13 @@
 #define CONFIG_COLORDETECTOR_H
 
 #include "config_configbase.h"
-#include "config_conexion_SMA.h"
 #include "config_calibrador.h"
 #include "INCLUDE_QTstuff.h"
 #include "stand_Tools.h"
 #include "stand_capturadorimagen.h"
 #include "config_INTMatBuilder.h"
+#include "config_conexion_SMA.h"
+
 
 namespace CONFIG
 {
@@ -45,11 +46,8 @@ namespace CONFIG
 
             void calibrar(int Nsesgo);
 
-            //getter
-            int get_numeroDecolores(){ return NumeroDeColores; }
-
             static colorDetector_WORKER **colorDetectorWORKERS;
-            vector< Tools::math::lineaRecta *> getRectasToDraw();
+            vector< Tools::math::lineaRecta> getRectasToDraw();
             void eliminarRecta(int RobotID);
 
         public slots:
@@ -107,7 +105,7 @@ namespace CONFIG
             double procesarDistanciaARecorrer(double distancia, float const teta, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
 
         public:
-            Tools::math::lineaRecta* rectaToDraw;
+            Tools::math::lineaRecta rectaToDraw;
 
             colorDetector_WORKER(int ID,
                                  const int *low_diff, const int *high_diff,
