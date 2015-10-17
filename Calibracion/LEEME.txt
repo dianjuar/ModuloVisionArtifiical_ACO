@@ -1,0 +1,1 @@
+./calibracion -w 4 -h 7 -s 20 -oe img.xml -op -o camera.yml
