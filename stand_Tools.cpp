@@ -181,14 +181,12 @@ void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, in
              Scalar( 255, 0, 0 ), 2 );
 }
 
-void OpenCV::anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial, bool dibujar)
+void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta)
 {
+    //siempre R1 será la recta del robot
     math::lineaRecta rectaRobot = R1;
-    math::lineaRecta rectaDestino = R2;
 
     math::lineaRecta::OrganizarRectas(R1,R2);
-
-    teta = math::lineaRecta::anguloEntre2Rectas(R1,R2);
 
     math::lineaRecta ejeX( Point(0,rectaRobot.puntoMedio.y),
                            Point(1000,rectaRobot.puntoMedio.y) );
@@ -197,7 +195,7 @@ void OpenCV::anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R
     math::lineaRecta rb = ejeX;
     math::lineaRecta::OrganizarRectas(ra,rb);
 
-    anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb) *
+    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb) *
                    /* por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
                     cuando las 2 rectas son negativas*/
                    ((R1.m<0 && R2.m<0) ? -1:1);
@@ -209,8 +207,6 @@ void OpenCV::anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R
         qDebug()<<"Angulo entre las 2 rectas"<<teta;
     }
 
-    if(dibujar)
-    {
         int angle = anguloInicial,
         startAngle = 0,
         endAngle = teta;
@@ -222,9 +218,6 @@ void OpenCV::anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R
         dibujarRecta(mat,R2,true, b);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
-    }
-
-    teta = teta * (rectaDestino == R2 ? -1:1);
 }
 
 void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
@@ -244,6 +237,7 @@ void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
 
 QString general::IntMat2QString(int **mat, int n)
 {
+
     QString matQSt;
 
     for(int i=0;i<n;i++)
@@ -415,10 +409,16 @@ float math::lineaRecta::puntoEnX(float puntoY)
 
 float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB)
 {
+    math::lineaRecta rectaDestino = lB;
+
     OrganizarRectas(lA,lB);
-    qDebug()<<"------------------------";
-    qDebug()<<"m1"<<lA.m<<" - "<<"m2"<<lB.m;
-    qDebug()<<"------------------------";
+
+    if(Tools::general::DEBUG)
+    {
+        qDebug()<<"------------------------";
+        qDebug()<<"m1"<<lA.m<<" - "<<"m2"<<lB.m;
+        qDebug()<<"------------------------";
+    }
 
     float m1 = lA.m;
     float m2 = lB.m;
@@ -426,6 +426,11 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
     float tangTeta = (m1-m2)/(1+m1*m2);
 
     return atan( tangTeta )*(180/M_PI);
+
+    float teta = teta * (rectaDestino == lB ? -1:1);
+
+    return teta;
+
 }
 
 bool math::lineaRecta::isM_positivo()
@@ -438,7 +443,7 @@ bool math::lineaRecta::operator==(const math::lineaRecta &other)
     return this->m == other.m &&
            this->b == other.b &&
            this->A == other.A &&
-            this->B == other.B;
+           this->B == other.B;
 }
 
 void math::lineaRecta::operator=(const math::lineaRecta &other)

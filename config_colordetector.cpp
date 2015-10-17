@@ -171,10 +171,10 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
     return true;
 }
 
-float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float teta, int DireccionNominal)
+float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, int DireccionNominal)
 {
     float angulo;
-    int distancia = 5;
+    int distancia = 100;
 
     //el punto A siempre será a donde debe llegar de la rectaDistancia
     //el punto A siempre será la base y el puntoB será el direccional
@@ -182,12 +182,12 @@ float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta recta
     {
         case Tools::general::NORTE:
         case Tools::general::SUR:
-            angulo = 90.0;
+            angulo = M_PI/2;
         break;
 
         case Tools::general::NOR_ESTE:
         case Tools::general::SUR_ESTE:
-            angulo = 45.0;
+            angulo = (3*M_PI)/4;
         break;
 
         case Tools::general::OESTE:
@@ -197,18 +197,25 @@ float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta recta
 
         case Tools::general::SUR_OESTE:
         case Tools::general::NOR_OESTE:
-            angulo = -45.0;
+            angulo = M_PI/4;
         break;
     }
 
-    angulo *= M_PI/180;
-    Point extremoB = Point( distancia*cos(angulo), distancia*sin(angulo) );
+    angulo = (M_PI)/4;
 
-    Tools::math::lineaRecta nuevaRectaRobot(rectaDestino.A,  extremoB );
+    Point extremoB = Point( rectaDestino.A.x + (distancia)*cos(angulo), rectaDestino.A.y + (distancia)*sin(angulo) );
 
-    Mat hola = frame->clone();
-    Tools::OpenCV::dibujarRecta(hola,nuevaRectaRobot);
-    imshow("/tmp/a.jpg",hola);
+    Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x , rectaDestino.A.y ),
+                                            extremoB );
+
+    Tools::OpenCV::dibujarRecta(*frame,nuevaRectaRobot);
+
+    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino);
+    //Tools::OpenCV::dibujarAnguloEntreRectas(*frame, nuevaRectaRobot, rectaDestino,tetaDesface);
+
+    imshow("/tmp/a.jpg",*frame);
+
+    return tetaDesface;
 }
 
 void colorDetector_WORKER::guardarImagenes(Mat const imToDraw,float const teta, double Distancia_desface)
@@ -285,9 +292,9 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
 
     //R1	R2	R1m	R2m	Teta
     //D 	R 	+ 	- 	-
-    Tools::math::lineaRecta R1 = rectaRobot,
+    /*Tools::math::lineaRecta R1 = rectaRobot,
                             R2 = rectaDistancia;
-    Tools::math::lineaRecta::OrganizarRectas(R1,R2);
+    Tools::math::lineaRecta::OrganizarRectas(R1,R2);*/
 
     //el punto A siempre es la base y el punto B es el direccional
     /*if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
@@ -389,10 +396,10 @@ void colorDetector_WORKER::run()
 
                 rectaToDraw = rectaRobot_Destino;
 
-                Mat imToDraw = frame->clone();
+                Mat imToDraw = Tools::general::DEBUG ? *frame:frame->clone();
 
-                float teta, anguloInicial;
-                Tools::OpenCV::anguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta,anguloInicial);
+                float teta = Tools::math::lineaRecta::anguloEntre2Rectas(rectaRobot, rectaRobot_Destino);
+                Tools::OpenCV::dibujarAnguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta);
 
                 double Distancia_desface =
                         procesarDistanciaARecorrer( calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B),
@@ -403,7 +410,9 @@ void colorDetector_WORKER::run()
                 if( Tools::general::DEBUG )
                     guardarImagenes(imToDraw,teta,Distancia_desface);
 
-                float angulo_desface = calcular_anguloDesface(rectaRobot_Destino, teta,direccionRobot_Nominal);
+
+                //verificar si este angulo es el correcto.
+                float angulo_desface = calcular_anguloDesface(rectaRobot_Destino,direccionRobot_Nominal);
 
                 emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface, angulo_desface);
                 anotherRun = false;

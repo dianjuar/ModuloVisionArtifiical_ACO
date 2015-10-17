@@ -35,7 +35,7 @@ public:
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
     static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);
     //R1 siempre será la recta del robot
-    static void anguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float &teta, float &anguloInicial, bool dibujar = true);
+    static void dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta);
 
 private:
     static void dibujarCirculos(Mat mat, vector<Vec3f> circles);
