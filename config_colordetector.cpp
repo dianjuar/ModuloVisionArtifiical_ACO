@@ -17,11 +17,6 @@ void colorDetector_MANAGER::inicializar_sesgadores()
     }
 }
 
-float colorDetector_MANAGER::calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal)
-{
-
-}
-
 colorDetector_MANAGER::colorDetector_MANAGER()
 {
     //estos 5 valores fueron sacados despues de varias pruebas en el laboratorio de prototipos y fueron los que mejores resultado arrojaron
@@ -176,41 +171,54 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
     return true;
 }
 
-float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot, float teta, int DireccionNominal)
+float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float teta, int DireccionNominal)
 {
-    Tools::math::lineaRecta nuevaRectaRobot();
+    float angulo;
+    int distancia = 5;
 
-    /*switch (DireccionNominal)
+    //el punto A siempre será a donde debe llegar de la rectaDistancia
+    //el punto A siempre será la base y el puntoB será el direccional
+    switch (DireccionNominal)
     {
-    case NORTE:
-    case SUR:
-
+        case Tools::general::NORTE:
+        case Tools::general::SUR:
+            angulo = 90.0;
         break;
 
-    case NOROESTE:
-    case SURESTE:
-
+        case Tools::general::NOR_ESTE:
+        case Tools::general::SUR_ESTE:
+            angulo = 45.0;
         break;
 
-    case OESTE:
-    case ESTE:
-
+        case Tools::general::OESTE:
+        case Tools::general::ESTE:
+            angulo = 0.0;
         break;
 
-    case SUROESTE:
-    case NORESTE:
-
+        case Tools::general::SUR_OESTE:
+        case Tools::general::NOR_OESTE:
+            angulo = -45.0;
         break;
-    }*/
+    }
+
+    angulo *= M_PI/180;
+    Point extremoB = Point( distancia*cos(angulo), distancia*sin(angulo) );
+
+    Tools::math::lineaRecta nuevaRectaRobot(rectaDestino.A,  extremoB );
+
+    Mat hola = frame->clone();
+    Tools::OpenCV::dibujarRecta(hola,nuevaRectaRobot);
+    imshow("/tmp/a.jpg",hola);
 }
 
 void colorDetector_WORKER::guardarImagenes(Mat const imToDraw,float const teta, double Distancia_desface)
 {
     QString ruta = "/tmp/PruebasAngulo/";
-    ruta = ruta + QString::number(ID)+ QString("/x")+
-            QString::number(RobotPoint_Nominal.x) + QString("_y")+
-            QString::number(RobotPoint_Nominal.y) + QString(" teta:")+
-            QString::number( teta ) + QString(", ") +
+    ruta = ruta + QString::number(ID)+ QString("/")+
+            QString::number(++Nfoto) + QString(" -> ") +
+            QString("x") + QString::number(RobotPoint_Nominal.x) +
+            QString("_y") + QString::number(RobotPoint_Nominal.y) +
+            QString(" teta:") + QString::number( teta ) + QString(", ") +
             QString("Dist:") + QString::number(Distancia_desface) +
             QString(".jpg") ;
 
@@ -263,8 +271,12 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
 {
     //el punto A siempre será a donde debe llegar de la rectaDistancia
     //el punto A siempre será la base y el puntoB será el direccional
-    int absBase = abs(rectaRobot.A.x - rectaDistancia.A.x);
-    int absDirec = abs( rectaRobot.B.x - rectaDistancia.A.x );
+
+    Tools::math::lineaRecta recta_CirculoBase( rectaRobot.A, rectaDistancia.A );
+    Tools::math::lineaRecta recta_CirculoDireccional( rectaRobot.B, rectaDistancia.A );
+
+    int absBase = recta_CirculoBase.distanciaDelaRecta;
+    int absDirec = recta_CirculoDireccional.distanciaDelaRecta;
 
     //el punto base está más cerca del punto destino.
     if( absBase < absDirec )
@@ -278,9 +290,9 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
     Tools::math::lineaRecta::OrganizarRectas(R1,R2);
 
     //el punto A siempre es la base y el punto B es el direccional
-    if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
+    /*if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
         (R1.isM_positivo() && !R2.isM_positivo() && teta < 0 && absBase > absDirec) )
-            return distancia*-1;
+            return distancia*-1;*/
 
     return distancia;
 
@@ -305,6 +317,8 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     frame = &STAND::capturadorImagen::Imagen_Procesada;
 
     rectaToDraw = Tools::math::lineaRecta();
+
+    Nfoto = 0;
 }
 
 void colorDetector_WORKER::calibrar()
@@ -389,9 +403,9 @@ void colorDetector_WORKER::run()
                 if( Tools::general::DEBUG )
                     guardarImagenes(imToDraw,teta,Distancia_desface);
 
-                //float angulo_desface = calcular_anguloDesface(rectaRobot, direccionRobot_Nominal);
+                float angulo_desface = calcular_anguloDesface(rectaRobot_Destino, teta,direccionRobot_Nominal);
 
-                emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface,0.0);
+                emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface, angulo_desface);
                 anotherRun = false;
             }
             else

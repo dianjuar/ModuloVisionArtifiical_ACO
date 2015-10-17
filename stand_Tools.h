@@ -51,6 +51,15 @@ public:
 
     static std::vector<std::string> split(std::string s, const std::string delim);
     static std::vector<QString> split(QString s, const QString delim);
+
+    static const int NORTE    =0;
+    static const int NOR_ESTE =1;
+    static const int ESTE     =2;
+    static const int SUR_ESTE =3;
+    static const int SUR      =4;
+    static const int SUR_OESTE=5;
+    static const int OESTE    =6;
+    static const int NOR_OESTE=7;
 };
 
 ///////////////////////////////////////////

@@ -34,7 +34,6 @@ namespace CONFIG
 
             void recortar();
             void inicializar_sesgadores();
-            float calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, int direccion_Robot_Nominal);
 
         public:
             static int NumeroDeColores;
@@ -88,6 +87,7 @@ namespace CONFIG
             bool selected;
             bool isPeticion;
             int ID;
+            int Nfoto;
 
             int direccionRobot_Nominal;
             Point RobotPoint_Nominal;
@@ -96,7 +96,7 @@ namespace CONFIG
 
             double h_h, l_h, h_s, l_s;
             bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
-            float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, float DistanciaRectaRobot,
+            float calcular_anguloDesface(Tools::math::lineaRecta rectaDestino,
                                          float teta, int DireccionNominal);
             void guardarImagenes(const Mat imToDraw, const float teta, double Distancia_desface);
 

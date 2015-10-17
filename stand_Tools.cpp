@@ -378,6 +378,13 @@ math::lineaRecta::lineaRecta(Point A, Point B)
     this->B = B;
 
     m = (float)(this->B.y*-1 - this->A.y*-1)/(this->B.x - this->A.x);
+
+        if( abs(m) == std::numeric_limits<float>::infinity())
+        {
+            m = std::numeric_limits<float>::max();
+            b = -1* std::numeric_limits<float>::max();
+        }
+
     b = (float)(this->A.y*-1 - this->A.x*m);
 
     puntoMedio = Point( (this->A.x+this->B.x)/2 , (this->A.y+this->B.y)/2 );
