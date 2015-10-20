@@ -129,7 +129,7 @@ Point calibrador::pixelPoint2realPoint(Point Ppx)
 
 double calibrador::distanciaReal_2PuntosReales(Point P_RealA, Point P_RealB)
 {
-    return sqrt( qPow(P_RealA.x - P_RealB.x, 2) + qPow(P_RealA.y - P_RealB.y, 2) );
+    return Tools::math::distanciaEntre2Puntos(P_RealA, P_RealB);
 }
 
 double calibrador::distanciaReal_2PuntosPixeles(Point Px_A, Point Px_B)

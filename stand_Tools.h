@@ -30,7 +30,7 @@ public:
 
     static Rect contenedorMasGrande( vector< vector<Point> > contours);
 
-    static vector<Vec3f> DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetectados,int n=2, bool dibujar=true);
+    static void DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n=2, bool dibujar=true);
 
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
     static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);
@@ -73,8 +73,12 @@ public:
 
             circulo(Point centro, int radio);
 
+            static bool isCircleInsideOther(Tools::math::circulo c1, Tools::math::circulo c2);
+
             circulo();
         };
+        /////////////////////
+        double distanciaEntre2Puntos(Point A, Point B);
         /////////////////////
         class lineaRecta
         {
@@ -99,7 +103,9 @@ public:
 
             static void OrganizarRectas(lineaRecta &R1, lineaRecta &R2);
             static bool isRectaR1(lineaRecta Recta ,lineaRecta const R1, lineaRecta const R2 );
-            static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB);
+            static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB,
+                                            bool dibujar=false,
+                                            Mat *m = NULL);
 
             bool isM_positivo();
 

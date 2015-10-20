@@ -95,7 +95,7 @@ Rect OpenCV::contenedorMasGrande(vector<vector<Point> > contours)
         return Rect();
 }
 
-vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetectados, int n, bool dibujar)
+void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n, bool dibujar)
 {
     int tasaDeError = 5; //pixeles
 
@@ -114,7 +114,7 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
         HoughCircles( matGrayScale,
                       circulosDetectados,
                       CV_HOUGH_GRADIENT,
-                      1, 30, param1, param2, 5);
+                      1, 35, param1, param2, 5);
 
         if( circulosDetectados.size() <= n )
         {
@@ -132,7 +132,7 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
 
                     for (int j = 0; j < ListacirculosDetectados.size(); j++)
                     {
-                        Vec3f Cguardado = ListacirculosDetectados.at(i);
+                        Vec3f Cguardado = ListacirculosDetectados.at(j);
 
                         Point centroGuar(Cguardado[0], Cguardado[1]);
                         float radioGuar = Cguardado[2];
@@ -141,11 +141,17 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
                          * los detecta con un ligero error, se verifica que esté fuera de ese error*/
 
                             //centro del circulo
-                        if( (abs(centroDect.x - centroGuar.x) > tasaDeError &&
-                             abs(centroDect.y - centroGuar.y) > tasaDeError) &&
+                        if( (abs(centroDect.x - centroGuar.x) + abs(centroDect.y - centroGuar.y) > tasaDeError) &&
                             //radio del circulo
                              abs(radioDect - radioGuar) > tasaDeError )
-                            circuloUnico = true;
+                        {
+                            if(!Tools::math::circulo::isCircleInsideOther( math::circulo(centroDect, radioDect),
+                                                                            math::circulo(centroGuar, radioGuar)))
+                            {
+                                circuloUnico = true;
+                                break;
+                            }
+                        }
                     }
 
                     if(circuloUnico)
@@ -158,8 +164,6 @@ vector<Vec3f> OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> ListacirculosDetec
 
     if(dibujar)
         dibujarCirculos(mat,ListacirculosDetectados);
-
-    return ListacirculosDetectados;
 }
 
 void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, bool dibujarCentro)
@@ -195,11 +199,10 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
     math::lineaRecta rb = ejeX;
     math::lineaRecta::OrganizarRectas(ra,rb);
 
-    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb) *
-                   /* por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
-                    cuando las 2 rectas son negativas*/
-                   ((R1.m<0 && R2.m<0) ? -1:1);
-
+    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb); /*
+                    por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
+                    cuando las 2 rectas son negativas
+                   ((!R1.isM_positivo() && !R2.isM_positivo()) ? -1:1);*/
 
     if(Tools::general::DEBUG)
     {
@@ -210,14 +213,16 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
         int angle = anguloInicial,
         startAngle = 0,
         endAngle = teta;
-                                    //así sabrá si dibujar el centro de la recta o no.
-        bool a = (rectaRobot.A == R1.A && rectaRobot.B == R1.B);
-        bool b = (rectaRobot.A == R2.A && rectaRobot.B == R2.B);
+
+        //así sabrá si dibujar el centro de la recta o no.
+        bool a = rectaRobot == R1;
 
         dibujarRecta(mat,R1,false, a );
-        dibujarRecta(mat,R2,true, b);
+        dibujarRecta(mat,R2,true, !a);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
+
+        imshow("", mat);
 }
 
 void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
@@ -286,6 +291,13 @@ math::circulo::circulo(Point centro, int radio)
 {
     this->centro = centro;
     this->radio = radio;
+}
+
+bool math::circulo::isCircleInsideOther(math::circulo c1, math::circulo c2)
+{
+    double d = math::distanciaEntre2Puntos(c1.centro, c2.centro);
+
+    return d - c1.radio <= c2.radio;
 }
 
 math::circulo::circulo()
@@ -407,8 +419,10 @@ float math::lineaRecta::puntoEnX(float puntoY)
     return (puntoY-b) / m;
 }
 
-float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB)
+float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB, bool dibujar, Mat *m)
 {
+    //siempre R1 será la recta del robot
+    math::lineaRecta rectaRobot = lA;
     math::lineaRecta rectaDestino = lB;
 
     OrganizarRectas(lA,lB);
@@ -425,12 +439,12 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
 
     float tangTeta = (m1-m2)/(1+m1*m2);
 
-    return atan( tangTeta )*(180/M_PI);
+    float teta = (atan( tangTeta )*(180/M_PI));
 
-    float teta = teta * (rectaDestino == lB ? -1:1);
+    if(dibujar && m != NULL)
+        Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta);
 
-    return teta;
-
+    return teta*(rectaDestino == lB ? -1:1);
 }
 
 bool math::lineaRecta::isM_positivo()
@@ -455,8 +469,9 @@ void math::lineaRecta::operator=(const math::lineaRecta &other)
     this->b = other.b;
     this->m = other.m;
     this->distanciaDelaRecta = other.distanciaDelaRecta;
-
-
 }
-
-
+////////////////////////////////////////////////////////
+double math::distanciaEntre2Puntos(Point A, Point B)
+{
+    return sqrt( qPow(A.x - B.x, 2) + qPow(A.y - B.y, 2) );
+}

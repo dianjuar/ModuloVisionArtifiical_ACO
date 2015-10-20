@@ -5,6 +5,7 @@
 #include "INCLUDE_QTstuff.h"
 #include "time.h"
 #include "stand_capturadorimagen.h"
+#include "stand_Tools.h"
 
 #include "iostream"
 

@@ -144,18 +144,18 @@ void colorDetector_WORKER::recortar()
 
 bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional)
 {
-    vector<Vec3f> circulos = Tools::OpenCV::DetectarCirculos( frame_sesgado, ListacirculosDetectados);
+    Tools::OpenCV::DetectarCirculos( frame_sesgado, ListacirculosDetectados);
 
-    if( circulos.size() != 2 )// esto debe cambiarse para que detecte 1 solo circulo.
+    if( ListacirculosDetectados.size() != 2 )// esto debe cambiarse para que detecte 1 solo circulo.
         return false;
 
-    int radio1 = circulos[0][2];
-    Point centro1(circulos[0][0] + rectanguloSesgador.x,
-                  circulos[0][1] + rectanguloSesgador.y);
+    int radio1 = ListacirculosDetectados[0][2];
+    Point centro1(ListacirculosDetectados[0][0] + rectanguloSesgador.x,
+                  ListacirculosDetectados[0][1] + rectanguloSesgador.y);
 
-    int radio2 = circulos[1][2];
-    Point centro2(circulos[1][0] + rectanguloSesgador.x,
-                  circulos[1][1] + rectanguloSesgador.y);
+    int radio2 = ListacirculosDetectados[1][2];
+    Point centro2(ListacirculosDetectados[1][0] + rectanguloSesgador.x,
+                  ListacirculosDetectados[1][1] + rectanguloSesgador.y);
 
     if(radio1 > radio2)
     {
@@ -168,6 +168,7 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
         base = Tools::math::circulo(centro2, radio2);
     }
 
+    ListacirculosDetectados = vector<Vec3f>();
     return true;
 }
 
@@ -200,8 +201,6 @@ float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta recta
             angulo = M_PI/4;
         break;
     }
-
-    angulo = (M_PI)/4;
 
     Point extremoB = Point( rectaDestino.A.x + (distancia)*cos(angulo), rectaDestino.A.y + (distancia)*sin(angulo) );
 
@@ -297,7 +296,7 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
     Tools::math::lineaRecta::OrganizarRectas(R1,R2);*/
 
     //el punto A siempre es la base y el punto B es el direccional
-    /*if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
+   /* if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
         (R1.isM_positivo() && !R2.isM_positivo() && teta < 0 && absBase > absDirec) )
             return distancia*-1;*/
 
@@ -326,6 +325,7 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
     rectaToDraw = Tools::math::lineaRecta();
 
     Nfoto = 0;
+    isPeticion = false;
 }
 
 void colorDetector_WORKER::calibrar()
@@ -398,8 +398,9 @@ void colorDetector_WORKER::run()
 
                 Mat imToDraw = Tools::general::DEBUG ? *frame:frame->clone();
 
-                float teta = Tools::math::lineaRecta::anguloEntre2Rectas(rectaRobot, rectaRobot_Destino);
-                Tools::OpenCV::dibujarAnguloEntreRectas(imToDraw,rectaRobot,rectaRobot_Destino,teta);
+                float teta = Tools::math::lineaRecta::anguloEntre2Rectas(rectaRobot, rectaRobot_Destino,
+                                                                         true,
+                                                                         &imToDraw);
 
                 double Distancia_desface =
                         procesarDistanciaARecorrer( calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B),
@@ -412,7 +413,8 @@ void colorDetector_WORKER::run()
 
 
                 //verificar si este angulo es el correcto.
-                float angulo_desface = calcular_anguloDesface(rectaRobot_Destino,direccionRobot_Nominal);
+                float angulo_desface = 0.0;
+                        //= calcular_anguloDesface(rectaRobot_Destino,direccionRobot_Nominal);
 
                 emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface, angulo_desface);
                 anotherRun = false;
