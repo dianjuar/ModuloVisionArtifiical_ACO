@@ -288,20 +288,7 @@ double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
     if( absBase < absDirec )
         return distancia*-1;
 
-
-    //R1	R2	R1m	R2m	Teta
-    //D 	R 	+ 	- 	-
-    /*Tools::math::lineaRecta R1 = rectaRobot,
-                            R2 = rectaDistancia;
-    Tools::math::lineaRecta::OrganizarRectas(R1,R2);*/
-
-    //el punto A siempre es la base y el punto B es el direccional
-   /* if( Tools::math::lineaRecta::isRectaR1( rectaDistancia,rectaRobot,rectaDistancia ) &&
-        (R1.isM_positivo() && !R2.isM_positivo() && teta < 0 && absBase > absDirec) )
-            return distancia*-1;*/
-
     return distancia;
-
 }
 
 colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const int *high_diff, const int *conn, const int *val, const int *flags, const Mat *kernel_rectangular, const Mat *kernel_ovalado)

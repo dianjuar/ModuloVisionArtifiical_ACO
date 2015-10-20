@@ -199,10 +199,10 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
     math::lineaRecta rb = ejeX;
     math::lineaRecta::OrganizarRectas(ra,rb);
 
-    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb); /*
-                    por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
-                    cuando las 2 rectas son negativas
-                   ((!R1.isM_positivo() && !R2.isM_positivo()) ? -1:1);*/
+    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb)*
+                    /*por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
+                    cuando las 2 rectas son negativas*/
+                   ((!R1.isM_positivo() && !R2.isM_positivo()) ? -1:1);
 
     if(Tools::general::DEBUG)
     {
@@ -444,7 +444,8 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
     if(dibujar && m != NULL)
         Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta);
 
-    return teta*(rectaDestino == lB ? -1:1);
+        //solo si el angulo se necesita para dibujar se invierte si cumple el caso.
+    return teta*(dibujar && rectaDestino == lB ? -1:1);
 }
 
 bool math::lineaRecta::isM_positivo()
