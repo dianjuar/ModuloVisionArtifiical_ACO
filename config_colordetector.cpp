@@ -172,10 +172,12 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
     return true;
 }
 
-float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaDestino, int DireccionNominal)
+float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta rectaRobot,
+                                                   Tools::math::lineaRecta rectaDestino,
+                                                   int DireccionNominal)
 {
     float angulo;
-    int distancia = 100;
+    int distancia = 50;
 
     //el punto A siempre será a donde debe llegar de la rectaDistancia
     //el punto A siempre será la base y el puntoB será el direccional
@@ -202,15 +204,32 @@ float colorDetector_WORKER::calcular_anguloDesface(Tools::math::lineaRecta recta
         break;
     }
 
-    Point extremoB = Point( rectaDestino.A.x + (distancia)*cos(angulo), rectaDestino.A.y + (distancia)*sin(angulo) );
 
-    Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x , rectaDestino.A.y ),
+    Point extremoB = Point( rectaDestino.A.x + (distancia)*cos(angulo),
+                            rectaDestino.A.y + (distancia)*sin(angulo) );
+
+    Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x - (distancia)*cos(angulo),
+                                                   rectaDestino.A.y - (distancia)*sin(angulo)),
                                             extremoB );
 
-    Tools::OpenCV::dibujarRecta(*frame,nuevaRectaRobot);
+    Tools::OpenCV::dibujarRecta(*frame, nuevaRectaRobot);
 
-    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino);
-    //Tools::OpenCV::dibujarAnguloEntreRectas(*frame, nuevaRectaRobot, rectaDestino,tetaDesface);
+    float tetaDesface = -1*Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino, true, frame);
+
+    //el punto A siempre será la base y el punto B será el direccional
+    bool CaminandoSUR = rectaRobot.B.y > rectaRobot.A.y;
+
+    //Hay que corregirlo
+    if(DireccionNominal == Tools::general::NORTE && CaminandoSUR && !RobotEnRetroceso)
+    {
+        int vuelta = tetaDesface < 0 ? 180:-180;
+        tetaDesface = (tetaDesface + vuelta );
+    }
+   /* else if(DireccionNominal == Tools::general::SUR && !MirandoElSUR )
+        tetaDesface = -1*(180-tetaDesface);*/
+
+    if(Tools::general::DEBUG)
+        qDebug()<<"AnguloDesface:"<<tetaDesface;
 
     imshow("/tmp/a.jpg",*frame);
 
@@ -271,24 +290,16 @@ void colorDetector_WORKER::sesgar()
 }
 
 double colorDetector_WORKER::procesarDistanciaARecorrer(double distancia,
-                                                        const float teta,
                                                         const Tools::math::lineaRecta rectaRobot,
                                                         const Tools::math::lineaRecta rectaDistancia)
 {
     //el punto A siempre será a donde debe llegar de la rectaDistancia
     //el punto A siempre será la base y el puntoB será el direccional
 
-    Tools::math::lineaRecta recta_CirculoBase( rectaRobot.A, rectaDistancia.A );
-    Tools::math::lineaRecta recta_CirculoDireccional( rectaRobot.B, rectaDistancia.A );
-
-    int absBase = recta_CirculoBase.distanciaDelaRecta;
-    int absDirec = recta_CirculoDireccional.distanciaDelaRecta;
-
     //el punto base está más cerca del punto destino.
-    if( absBase < absDirec )
-        return distancia*-1;
+    RobotEnRetroceso = Tools::math::PointAisCloserTo(rectaRobot.A, rectaRobot.B,rectaDistancia.A);
 
-    return distancia;
+    return distancia*(RobotEnRetroceso ? -1:1);
 }
 
 colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const int *high_diff, const int *conn, const int *val, const int *flags, const Mat *kernel_rectangular, const Mat *kernel_ovalado)
@@ -391,17 +402,17 @@ void colorDetector_WORKER::run()
 
                 double Distancia_desface =
                         procesarDistanciaARecorrer( calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B),
-                                                    teta,
                                                     rectaRobot,
                                                     rectaRobot_Destino);
 
+                float angulo_desface = calcular_anguloDesface(rectaRobot,
+                                                              rectaRobot_Destino,
+                                                              direccionRobot_Nominal);
+
+
+
                 if( Tools::general::DEBUG )
                     guardarImagenes(imToDraw,teta,Distancia_desface);
-
-
-                //verificar si este angulo es el correcto.
-                float angulo_desface = 0.0;
-                        //= calcular_anguloDesface(rectaRobot_Destino,direccionRobot_Nominal);
 
                 emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface, angulo_desface);
                 anotherRun = false;

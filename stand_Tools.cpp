@@ -97,7 +97,7 @@ Rect OpenCV::contenedorMasGrande(vector<vector<Point> > contours)
 
 void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n, bool dibujar)
 {
-    int tasaDeError = 5; //pixeles
+    int tasaDeError = 7; //pixeles
 
         if(Tools::general::DEBUG)
             qDebug()<<"*******************iteración para detectar circulos*******************";
@@ -160,7 +160,10 @@ void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, i
             }
         }
 
+
     qDebug()<<"Ciruclos Detectados"<<ListacirculosDetectados.size();
+    if( ListacirculosDetectados.size() > n)
+        ListacirculosDetectados = vector<Vec3f>();
 
     if(dibujar)
         dibujarCirculos(mat,ListacirculosDetectados);
@@ -221,8 +224,6 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
         dibujarRecta(mat,R2,true, !a);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
         dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
-
-        imshow("", mat);
 }
 
 void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
@@ -309,7 +310,7 @@ math::circulo::circulo()
 ////////////////////////////////////////////////////////
 void math::lineaRecta::calcularDistancia()
 {
-    distanciaDelaRecta = sqrt( pow(B.x - A.x ,2) + pow( B.y - A.y ,2) );
+    distanciaDelaRecta = distanciaEntre2Puntos(A,B);
 }
 
 void math::lineaRecta::OrganizarRectas(math::lineaRecta &R1, math::lineaRecta &R2)
@@ -387,8 +388,8 @@ math::lineaRecta::lineaRecta(Point A, Point B)
 
         if( abs(m) == std::numeric_limits<float>::infinity())
         {
-            m = std::numeric_limits<float>::max();
-            b = -1* std::numeric_limits<float>::max();
+            m = std::numeric_limits<int>::max();
+            b = -1* std::numeric_limits<int>::max();
         }
 
     b = (float)(this->A.y*-1 - this->A.x*m);
@@ -422,6 +423,7 @@ float math::lineaRecta::puntoEnX(float puntoY)
 float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB, bool dibujar, Mat *m)
 {
     //siempre R1 será la recta del robot
+
     math::lineaRecta rectaRobot = lA;
     math::lineaRecta rectaDestino = lB;
 
@@ -437,9 +439,13 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
     float m1 = lA.m;
     float m2 = lB.m;
 
-    float tangTeta = (m1-m2)/(1+m1*m2);
+    if( general::DEBUG &&
+        (lA.m == std::numeric_limits<int>::max() || lB.m == std::numeric_limits<int>::max()) )
+        qDebug()<<"infinito";
 
-    float teta = (atan( tangTeta )*(180/M_PI));
+    long double tangTeta = ((long double)(m1-m2))/((long double)(1.0+m1*m2));
+
+    float teta = (atan( tangTeta )*(180.0/M_PI));
 
     if(dibujar && m != NULL)
         Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta);
@@ -475,4 +481,16 @@ void math::lineaRecta::operator=(const math::lineaRecta &other)
 double math::distanciaEntre2Puntos(Point A, Point B)
 {
     return sqrt( qPow(A.x - B.x, 2) + qPow(A.y - B.y, 2) );
+}
+
+
+bool math::PointAisCloserTo(Point A, Point B, Point Destino)
+{
+    lineaRecta rectaA_to_Destino( A, Destino );
+    lineaRecta rectaB_to_Destino( B, Destino );
+
+    if( rectaA_to_Destino.distanciaDelaRecta < rectaB_to_Destino.distanciaDelaRecta )
+        return true;
+
+    return false;
 }

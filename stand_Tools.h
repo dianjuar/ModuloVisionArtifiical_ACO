@@ -79,6 +79,7 @@ public:
         };
         /////////////////////
         double distanciaEntre2Puntos(Point A, Point B);
+        bool PointAisCloserTo(Point A, Point B, Point Destino);
         /////////////////////
         class lineaRecta
         {
