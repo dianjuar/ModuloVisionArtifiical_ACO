@@ -30,6 +30,8 @@ public:
 
     static Rect contenedorMasGrande( vector< vector<Point> > contours);
 
+    static void dibujarPunto(Mat &m, Point p, Scalar color = Scalar(255,255,255));
+
     static void DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n=2, bool dibujar=true);
 
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
@@ -89,9 +91,9 @@ public:
             circulo();
         };
         /////////////////////
-        double distanciaEntre2Puntos(Point A, Point B);
+        double distanciaEntre2Puntos(Point2f A, Point2f B);
         bool PointAisCloserTo(Point A, Point B, Point Destino);
-        int cuadranteDeUnPunto(Point p);
+        int cuadranteDeUnPunto(Point2f p);
         /////////////////////
         class lineaRecta
         {
@@ -99,17 +101,17 @@ public:
 
             //para el calculo del angulo entre las 2 rectas es necesario ordenar primero las rectas.
         public:
-            lineaRecta(float m, float b, Point A, Point B);
+            lineaRecta(float m, float b, Point2f A, Point2f B);
             lineaRecta(float m, float b);
             //lineaRecta(float m, float b, );
-            lineaRecta(Point A, Point B);
+            lineaRecta(Point2f A, Point2f B);
             lineaRecta();
 
             float m;
             float b;
             float distanciaDelaRecta;
-            Point puntoMedio;
-            Point A,B;
+            Point2f puntoMedio;
+            Point2f A,B;
 
             float puntoEnY(float puntoX);
             float puntoEnX(float puntoY);

@@ -26,7 +26,7 @@ public:
     bool get_todoEnOrden(){ return todoEnOrden; }
 
     static Point pixelPoint2realPoint(Point Ppx);
-    static double distanciaReal_2PuntosReales(Point P_RealA, Point P_RealB );
+    static double distanciaReal_2PuntosReales(Point2f P_RealA, Point2f P_RealB );
     static double distanciaReal_2PuntosPixeles( Point Px_A, Point Px_B  );
 
     float get_distanciaEntreCuadros_REAL();

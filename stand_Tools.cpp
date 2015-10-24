@@ -95,6 +95,11 @@ Rect OpenCV::contenedorMasGrande(vector<vector<Point> > contours)
         return Rect();
 }
 
+void OpenCV::dibujarPunto(Mat &m,Point p, Scalar color)
+{
+    circle(m, p, 4, color, -1);
+}
+
 void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n, bool dibujar)
 {
     int tasaDeError = 7; //pixeles
@@ -361,8 +366,8 @@ math::lineaRecta math::lineaRecta::ejeX(Point puntoMedio)
     //Point(0,rectaRobot.puntoMedio.y),
     //Point(1000,rectaRobot.puntoMedio.y)
     int distancia = 40;
-    return lineaRecta(Point(puntoMedio.x - distancia, puntoMedio.y),
-                      Point(puntoMedio.x + distancia, puntoMedio.y));
+    return lineaRecta(Point2f(puntoMedio.x - distancia, puntoMedio.y),
+                      Point2f(puntoMedio.x + distancia, puntoMedio.y));
 }
 
 bool math::lineaRecta::isRectaR1( math::lineaRecta Recta, math::lineaRecta R1, math::lineaRecta R2)
@@ -372,7 +377,7 @@ bool math::lineaRecta::isRectaR1( math::lineaRecta Recta, math::lineaRecta R1, m
     return Recta == R1;
 }
 
-math::lineaRecta::lineaRecta(float m, float b, Point A, Point B)
+math::lineaRecta::lineaRecta(float m, float b, Point2f A, Point2f B)
 {
     this->m = m;
     this->b = b;
@@ -389,7 +394,7 @@ math::lineaRecta::lineaRecta(float m, float b)
     this->b = b;
 }
 
-math::lineaRecta::lineaRecta(Point A, Point B)
+math::lineaRecta::lineaRecta(Point2f A, Point2f B)
 {
     this->A = A;
     this->B = B;
@@ -404,7 +409,7 @@ math::lineaRecta::lineaRecta(Point A, Point B)
 
     b = (float)(this->A.y*-1 - this->A.x*m);
 
-    puntoMedio = Point( (this->A.x+this->B.x)/2 , (this->A.y+this->B.y)/2 );
+    puntoMedio = Point2f( (this->A.x+this->B.x)/2 , (this->A.y+this->B.y)/2 );
     calcularDistancia();
 }
 
@@ -489,7 +494,7 @@ void math::lineaRecta::operator=(const math::lineaRecta &other)
     this->distanciaDelaRecta = other.distanciaDelaRecta;
 }
 ////////////////////////////////////////////////////////
-double math::distanciaEntre2Puntos(Point A, Point B)
+double math::distanciaEntre2Puntos(Point2f A, Point2f B)
 {
     return sqrt( qPow(A.x - B.x, 2) + qPow(A.y - B.y, 2) );
 }
@@ -506,7 +511,7 @@ bool math::PointAisCloserTo(Point A, Point B, Point Destino)
     return false;
 }
 
-int math::cuadranteDeUnPunto(Point p)
+int math::cuadranteDeUnPunto(Point2f p)
 {
     if( p.x > 0 && p.y > 0)
         return math::Cuadrante_I;

@@ -127,7 +127,7 @@ Point calibrador::pixelPoint2realPoint(Point Ppx)
     return realP;
 }
 
-double calibrador::distanciaReal_2PuntosReales(Point P_RealA, Point P_RealB)
+double calibrador::distanciaReal_2PuntosReales(Point2f P_RealA, Point2f P_RealB)
 {
     return Tools::math::distanciaEntre2Puntos(P_RealA, P_RealB);
 }

@@ -180,6 +180,7 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
 float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
                                                    Tools::math::lineaRecta rectaRobot,
                                                    Tools::math::lineaRecta rectaDestino,
+                                                   float tetaRobot,
                                                    int DireccionNominal)
 {
     float angulo;
@@ -190,29 +191,44 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
     //locura
     //calcular tita
         float tita = Tools::math::lineaRecta::anguloEntre2Rectas(Tools::math::lineaRecta::ejeX(rectaRobot.puntoMedio),rectaDestino,
-                                              true,true,&mat,Scalar(12,205,235));
+                                                    true,true,
+                                                    &mat,Scalar(12,205,235));
 
-        int cuadranteC = Tools::math::cuadranteDeUnPunto( Point(rectaRobot.B.x, -1.0*rectaRobot.B.y )-
-                                                          Point(rectaRobot.puntoMedio.x, -1.0*rectaRobot.puntoMedio.y) );
-        int signoR = (cuadranteC == Cuadrante_II || cuadranteC == Cuadrante_III )? -1:1;
+        int cuadranteC = Tools::math::cuadranteDeUnPunto( Point2f(rectaRobot.B.x - rectaRobot.puntoMedio.x,
+                                                                  -1.0*rectaRobot.B.y +rectaRobot.puntoMedio.y ));
+        int cuadranteD = Tools::math::cuadranteDeUnPunto( Point2f( rectaDestino.A.x - rectaRobot.puntoMedio.x,
+                                                                   -1.0*rectaDestino.A.y +rectaRobot.puntoMedio.y ));
 
-        Point Pdirec_TdestR( signoR*rectaRobot.distanciaDelaRecta/2*cos(tita) + rectaRobot.puntoMedio.x,
-                             signoR*rectaRobot.distanciaDelaRecta/2*sin(tita) + -1.0*rectaRobot.puntoMedio.y);
+        int signoR = 1.0;
 
-        Point Pdirec_TP0 = Pdirec_TdestR - Point(rectaDestino.A.x, -1.0*rectaDestino.A.y);
+        switch (cuadranteC)
+        {
+            case Cuadrante_I:
+            break;
+
+            case Cuadrante_II:
+                if(tetaRobot > 0)
+                    signoR = 1.0;
+            break;
+
+            case Cuadrante_III:
+            break;
+            case Cuadrante_IV:
+            break;
+        }
+        //= (cuadranteC == Cuadrante_II || cuadranteC == Cuadrante_III )? -1.0:1.0;
+
+        Point2f Pdirec_TdestR( signoR*(rectaRobot.distanciaDelaRecta/2)*cos(tita) + rectaRobot.puntoMedio.x,
+                               signoR*(rectaRobot.distanciaDelaRecta/2)*sin(tita) - rectaRobot.puntoMedio.y);
+
+        Tools::OpenCV::dibujarPunto(mat, Point2f(Pdirec_TdestR.x, -1.0*Pdirec_TdestR.y));
+
+        Point2f Pdirec_TP0 = Point2f( Pdirec_TdestR.x - rectaDestino.A.x ,
+                                      -Pdirec_TdestR.y + 1.0*rectaDestino.A.y);
+                //Pdirec_TdestR - Point(rectaDestino.A.x, -1.0*rectaDestino.A.y);
 
         int cuadranteC_FINAL = Tools::math::cuadranteDeUnPunto( Pdirec_TP0);
     //calcular tita
-
-    if(Tools::general::DEBUG)
-            qDebug()<<"Tita:"<<tita;
-
-    /*teta = teta/(180/M_PI);
-    Point puntoUnaVezRotado( r * cos(sigma+teta) + rectaRobot.puntoMedio.x - rectaDestino.B.x,
-                             r * sin(sigma+teta) + rectaRobot.puntoMedio.y - rectaDestino.B.x);
-
-    int cuadrante = Tools::math::cuadranteDeUnPunto( puntoUnaVezRotado );
-    //locura*/
 
     switch (DireccionNominal)
     {
@@ -247,19 +263,19 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
 
     Tools::OpenCV::dibujarRecta(*frame, nuevaRectaRobot);
 
-    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino, false ,true, frame);
+    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino, false ,false, frame);
 
     bool correccionDeAngulo = false;
     switch (DireccionNominal)
     {
         case Tools::general::NORTE:
-           /* if(cuadranteC_FINAL == Tools::math::Cuadrante_III || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
-                correccionDeAngulo = true;*/
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_III || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
+                correccionDeAngulo = true;
         break;
 
         case Tools::general::SUR:
-        /*if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_II )
-            correccionDeAngulo = true;*/
+        if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_II )
+            correccionDeAngulo = true;
         break;
 
         case Tools::general::NOR_ESTE:
@@ -280,6 +296,7 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
         case Tools::general::NOR_OESTE:
         break;
     }
+
 
     if(correccionDeAngulo)
     {
@@ -480,6 +497,7 @@ void colorDetector_WORKER::run()
 
                 float angulo_desface = calcular_anguloDesface(imToDraw,
                                                               rectaRobot,rectaRobot_Destino,
+                                                              teta,
                                                               direccionRobot_Nominal);
                 //como siempre el robot será la recta2 hay que invertirle el sentido al angulo de desface
                 //angulo_desface = angulo_desface*-1;
