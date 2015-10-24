@@ -97,12 +97,15 @@ namespace CONFIG
 
             double h_h, l_h, h_s, l_s;
             bool detectarCirculos(Tools::math::circulo &base, Tools::math::circulo &direccional);
-            float calcular_anguloDesface(Tools::math::lineaRecta rectaRobot, Tools::math::lineaRecta rectaDestino, int DireccionNominal);
-            void guardarImagenes(const Mat imToDraw, const float teta, double Distancia_desface);
+            float calcular_anguloDesface(Mat &mat, Tools::math::lineaRecta rectaRobot, Tools::math::lineaRecta rectaDestino, int DireccionNominal);
+            void guardarImagenes(const Mat imToDraw, const float teta, const float tita, double Distancia_desface);
 
             void sesgar();
 
-            double procesarDistanciaARecorrer(double distancia, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
+            double procesar_DistanciaARecorrer(double distancia, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
+
+            float calcular_teta(Mat &m,
+                                Tools::math::lineaRecta rectaRobot, Tools::math::lineaRecta rectaRobot_Destino);
 
         public:
             Tools::math::lineaRecta rectaToDraw;

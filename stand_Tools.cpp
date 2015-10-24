@@ -181,28 +181,24 @@ void OpenCV::dibujarRecta( Mat &mat, math::lineaRecta linea, bool colorRojo, boo
         circle( mat, linea.puntoMedio, 5, Scalar(0,0,0), -1, 8, 0 ); //centro de la línea
 }
 
-void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle)
+void OpenCV::dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle, Scalar color,int grosor)
 {
     ellipse( mat, center, Size( radio, radio ),
              BaseAngle, startAngle, endAngle,
-             Scalar( 255, 0, 0 ), 2 );
+             color, grosor );
 }
 
-void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta)
+void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta, Scalar color)
 {
     //siempre R1 será la recta del robot
     math::lineaRecta rectaRobot = R1;
-
     math::lineaRecta::OrganizarRectas(R1,R2);
 
-    math::lineaRecta ejeX( Point(0,rectaRobot.puntoMedio.y),
-                           Point(1000,rectaRobot.puntoMedio.y) );
-
     math::lineaRecta ra = R1;
-    math::lineaRecta rb = ejeX;
+    math::lineaRecta rb = math::lineaRecta::ejeX();
     math::lineaRecta::OrganizarRectas(ra,rb);
 
-    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb)*
+    float anguloInicial = math::lineaRecta::anguloEntre2Rectas(ra, rb,false)*
                     /*por alguna razón el angulo inicial hay que cambiarle de signo para que se pueda gráficar bien
                     cuando las 2 rectas son negativas*/
                    ((!R1.isM_positivo() && !R2.isM_positivo()) ? -1:1);
@@ -213,17 +209,17 @@ void OpenCV::dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::linea
         qDebug()<<"Angulo entre las 2 rectas"<<teta;
     }
 
-        int angle = anguloInicial,
+        int angle = 180-anguloInicial,
         startAngle = 0,
-        endAngle = teta;
+        endAngle = -teta;
 
         //así sabrá si dibujar el centro de la recta o no.
         bool a = rectaRobot == R1;
 
         dibujarRecta(mat,R1,false, a );
         dibujarRecta(mat,R2,true, !a);
-        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle);
-        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle);
+        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle,startAngle,endAngle,color);
+        dibujarCirculo(mat,rectaRobot.puntoMedio,rectaRobot.distanciaDelaRecta/2,angle+180,startAngle,endAngle, color);
 }
 
 void OpenCV::dibujarCirculos(Mat mat, vector<Vec3f> circles)
@@ -355,6 +351,20 @@ void math::lineaRecta::OrganizarRectas(math::lineaRecta &R1, math::lineaRecta &R
     }//else
 }
 
+math::lineaRecta math::lineaRecta::ejeX()
+{
+    return lineaRecta(0,0);
+}
+
+math::lineaRecta math::lineaRecta::ejeX(Point puntoMedio)
+{
+    //Point(0,rectaRobot.puntoMedio.y),
+    //Point(1000,rectaRobot.puntoMedio.y)
+    int distancia = 40;
+    return lineaRecta(Point(puntoMedio.x - distancia, puntoMedio.y),
+                      Point(puntoMedio.x + distancia, puntoMedio.y));
+}
+
 bool math::lineaRecta::isRectaR1( math::lineaRecta Recta, math::lineaRecta R1, math::lineaRecta R2)
 {
     OrganizarRectas(R1,R2);
@@ -420,7 +430,9 @@ float math::lineaRecta::puntoEnX(float puntoY)
     return (puntoY-b) / m;
 }
 
-float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB, bool dibujar, Mat *m)
+float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB,
+                                           bool radianes,bool dibujar,
+                                           Mat *m, Scalar color)
 {
     //siempre R1 será la recta del robot
 
@@ -443,15 +455,14 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
         (lA.m == std::numeric_limits<int>::max() || lB.m == std::numeric_limits<int>::max()) )
         qDebug()<<"infinito";
 
-    long double tangTeta = ((long double)(m1-m2))/((long double)(1.0+m1*m2));
+    long double tangTeta = ((long double)(m2-m1))/((long double)(1.0+m2*m1));
 
-    float teta = (atan( tangTeta )*(180.0/M_PI));
+    float teta = (atan( tangTeta )*(180.0/M_PI) );
 
     if(dibujar && m != NULL)
-        Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta);
+        Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta, color);
 
-        //solo si el angulo se necesita para dibujar se invierte si cumple el caso.
-    return teta*(dibujar && rectaDestino == lB ? -1:1);
+    return teta/( radianes ? 180.0/M_PI:1);
 }
 
 bool math::lineaRecta::isM_positivo()
@@ -493,4 +504,18 @@ bool math::PointAisCloserTo(Point A, Point B, Point Destino)
         return true;
 
     return false;
+}
+
+int math::cuadranteDeUnPunto(Point p)
+{
+    if( p.x > 0 && p.y > 0)
+        return math::Cuadrante_I;
+
+    if( p.x < 0 && p.y > 0)
+        return math::Cuadrante_II;
+
+    if( p.x < 0 && p.y < 0)
+        return math::Cuadrante_III;
+
+    return Cuadrante_IV;
 }

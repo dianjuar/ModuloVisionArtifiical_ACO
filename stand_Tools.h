@@ -33,9 +33,15 @@ public:
     static void DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, int n=2, bool dibujar=true);
 
     static void dibujarRecta(Mat &mat, math::lineaRecta linea, bool colorRojo=true, bool dibujarCentro = true);
-    static void dibujarCirculo(Mat &mat, Point center, int radio, int BaseAngle, int startAngle, int endAngle);
+    static void dibujarCirculo(Mat &mat,
+                               Point center,
+                               int radio,
+                               int BaseAngle, int startAngle, int endAngle,
+                               Scalar color = Scalar( 255, 0, 0 ),
+                               int grosor = 2);
+
     //R1 siempre será la recta del robot
-    static void dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta);
+    static void dibujarAnguloEntreRectas(Mat &mat, math::lineaRecta R1, math::lineaRecta R2, float teta, Scalar color = Scalar(255,0,0));
 
 private:
     static void dibujarCirculos(Mat mat, vector<Vec3f> circles);
@@ -65,6 +71,11 @@ public:
 ///////////////////////////////////////////
     namespace math
     {
+        const int Cuadrante_I   = 1;
+        const int Cuadrante_II  = 2;
+        const int Cuadrante_III = 3;
+        const int Cuadrante_IV  = 4;
+
         class circulo
         {
         public:
@@ -80,6 +91,7 @@ public:
         /////////////////////
         double distanciaEntre2Puntos(Point A, Point B);
         bool PointAisCloserTo(Point A, Point B, Point Destino);
+        int cuadranteDeUnPunto(Point p);
         /////////////////////
         class lineaRecta
         {
@@ -103,10 +115,13 @@ public:
             float puntoEnX(float puntoY);
 
             static void OrganizarRectas(lineaRecta &R1, lineaRecta &R2);
+            static lineaRecta ejeX();
+            static lineaRecta ejeX(Point puntoMedio);
             static bool isRectaR1(lineaRecta Recta ,lineaRecta const R1, lineaRecta const R2 );
             static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB,
+                                            bool radianes=true,
                                             bool dibujar=false,
-                                            Mat *m = NULL);
+                                            Mat *m = NULL, Scalar color = Scalar(255,0,0));
 
             bool isM_positivo();
 
