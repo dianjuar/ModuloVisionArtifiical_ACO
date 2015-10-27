@@ -123,7 +123,7 @@ public:
             static float anguloEntre2Rectas(lineaRecta lA, lineaRecta lB,
                                             bool radianes=true,
                                             bool dibujar=false,
-                                            Mat *m = NULL, Scalar color = Scalar(255,0,0));
+                                            Mat *m = NULL, Scalar color = Scalar(255,0,0), bool dibujarInvertio = false);
 
             bool isM_positivo();
 

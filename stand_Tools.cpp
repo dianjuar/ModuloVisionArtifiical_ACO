@@ -437,10 +437,9 @@ float math::lineaRecta::puntoEnX(float puntoY)
 
 float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta lB,
                                            bool radianes,bool dibujar,
-                                           Mat *m, Scalar color)
+                                           Mat *m, Scalar color, bool dibujarInvertio)
 {
     //siempre R1 será la recta del robot
-
     math::lineaRecta rectaRobot = lA;
     math::lineaRecta rectaDestino = lB;
 
@@ -462,10 +461,13 @@ float math::lineaRecta::anguloEntre2Rectas(math::lineaRecta lA, math::lineaRecta
 
     long double tangTeta = ((long double)(m2-m1))/((long double)(1.0+m2*m1));
 
-    float teta = (atan( tangTeta )*(180.0/M_PI) );
+    float teta = ( atan( tangTeta )*(180.0/M_PI) );
 
     if(dibujar && m != NULL)
-        Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta, color);
+        if(dibujarInvertio)
+            Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaDestino, rectaRobot, teta, color);
+        else
+            Tools::OpenCV::dibujarAnguloEntreRectas(*m, rectaRobot, rectaDestino,teta, color);
 
     return teta/( radianes ? 180.0/M_PI:1);
 }

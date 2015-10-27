@@ -236,17 +236,16 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
     }
 
     int distancia = 50;
-    Point extremoB = Point( rectaDestino.A.x + (distancia)*cos(angulo),
-                            rectaDestino.A.y + (distancia)*sin(angulo) );
-
     Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x - (distancia)*cos(angulo),
                                                    rectaDestino.A.y - (distancia)*sin(angulo)),
-                                            extremoB );
+                                            Point( rectaDestino.A.x + (distancia)*cos(angulo),
+                                                   rectaDestino.A.y + (distancia)*sin(angulo) ) );
 
     Tools::OpenCV::dibujarRecta(*frame, nuevaRectaRobot);
 
-    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(nuevaRectaRobot, rectaDestino, false , true, frame);
-
+    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(rectaDestino, nuevaRectaRobot,
+                                                                    false, true,
+                                                                    frame,Scalar(255,0,0),true);
     bool correccionDeAngulo = false;
     switch (DireccionNominal)
     {
@@ -267,9 +266,13 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
         break;
 
         case Tools::general::OESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
+                correccionDeAngulo = true;
         break;
 
         case Tools::general::ESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_II || cuadranteC_FINAL == Tools::math::Cuadrante_III )
+                correccionDeAngulo = true;
         break;
 
         case Tools::general::SUR_OESTE:
@@ -510,8 +513,6 @@ void colorDetector_WORKER::run()
                                                               rectaRobot,rectaRobot_Destino,
                                                               teta,
                                                               direccionRobot_Nominal);
-                //como siempre el robot será la recta2 hay que invertirle el sentido al angulo de desface
-                //angulo_desface = angulo_desface*-1;
 
                 if( Tools::general::DEBUG )
                 {
