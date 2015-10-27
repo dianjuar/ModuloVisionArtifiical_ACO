@@ -102,10 +102,12 @@ namespace CONFIG
 
             void sesgar();
 
+
             double procesar_DistanciaARecorrer(double distancia, const Tools::math::lineaRecta rectaRobot, const Tools::math::lineaRecta rectaDistancia);
 
             float calcular_teta(Mat &m,
                                 Tools::math::lineaRecta rectaRobot, Tools::math::lineaRecta rectaRobot_Destino);
+            float calcular_signoR(int cuadranteC, float teta, float tita);
 
         public:
             Tools::math::lineaRecta rectaToDraw;

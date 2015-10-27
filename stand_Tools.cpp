@@ -513,13 +513,13 @@ bool math::PointAisCloserTo(Point A, Point B, Point Destino)
 
 int math::cuadranteDeUnPunto(Point2f p)
 {
-    if( p.x > 0 && p.y > 0)
+    if( p.x >= 0 && p.y >= 0)
         return math::Cuadrante_I;
 
-    if( p.x < 0 && p.y > 0)
+    if( p.x <= 0 && p.y >= 0)
         return math::Cuadrante_II;
 
-    if( p.x < 0 && p.y < 0)
+    if( p.x <= 0 && p.y <= 0)
         return math::Cuadrante_III;
 
     return Cuadrante_IV;
