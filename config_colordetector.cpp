@@ -184,34 +184,7 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
                                                    int DireccionNominal)
 {
     float angulo;
-    //el punto A siempre será a donde debe llegar de la rectaDistancia
-    //el punto A siempre será la base y el puntoB será el direccional
-
-    //tita es el ángulo que forma la rectaDestino con el eje X
-        float tita = Tools::math::lineaRecta::anguloEntre2Rectas(Tools::math::lineaRecta::ejeX(rectaRobot.puntoMedio),rectaDestino,
-                                                    true,true,
-                                                    &mat,Scalar(12,205,235));
-
-        int cuadranteC = Tools::math::cuadranteDeUnPunto( Point2f(rectaRobot.B.x - rectaRobot.puntoMedio.x,
-                                                                  -1.0*rectaRobot.B.y +rectaRobot.puntoMedio.y ));
-
-        int signoR = calcular_signoR(cuadranteC,tetaRobot,tita);
-
-        Point2f Pdirec_TdestR( signoR*(rectaRobot.distanciaDelaRecta/2)*cos(tita)/* + rectaRobot.puntoMedio.x*/,
-                               signoR*(rectaRobot.distanciaDelaRecta/2)*sin(tita)/* - rectaRobot.puntoMedio.y*/);
-
-        //dibujar Puntos
-        if(Tools::general::DEBUG)
-        {
-            Tools::OpenCV::dibujarPunto(mat, Point2f(Pdirec_TdestR.x + rectaDestino.A.x,
-                                                     -1.0*Pdirec_TdestR.y + rectaDestino.A.y));
-            Tools::OpenCV::dibujarPunto(mat, Point2f(Pdirec_TdestR.x + rectaRobot.puntoMedio.x,
-                                                     -1.0*(Pdirec_TdestR.y - rectaRobot.puntoMedio.y)));
-        }
-        //dibujar Puntos
-
-        int cuadranteC_FINAL = Tools::math::cuadranteDeUnPunto( Pdirec_TdestR );
-
+    bool diagonal = false;
     switch (DireccionNominal)
     {
         case Tools::general::NORTE:
@@ -220,8 +193,9 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
         break;
 
         case Tools::general::NOR_ESTE:
-        case Tools::general::SUR_ESTE:
+        case Tools::general::SUR_OESTE:
             angulo = (3*M_PI)/4;
+            diagonal = true;
         break;
 
         case Tools::general::OESTE:
@@ -229,11 +203,66 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
             angulo = 0.0;
         break;
 
-        case Tools::general::SUR_OESTE:
         case Tools::general::NOR_OESTE:
+        case Tools::general::SUR_ESTE:
             angulo = M_PI/4;
+            diagonal = true;
         break;
     }
+
+    //el punto A siempre será a donde debe llegar de la rectaDistancia
+    //el punto A siempre será la base y el puntoB será el direccional
+
+    //tita es el ángulo que forma la rectaDestino con el eje X
+    float tita = Tools::math::lineaRecta::anguloEntre2Rectas(Tools::math::lineaRecta::ejeX(rectaRobot.puntoMedio),
+                                                             rectaDestino,
+                                                             true,true,
+                                                             &mat,Scalar(12,205,235));
+
+    int cuadranteC = Tools::math::cuadranteDeUnPunto( Point2f(rectaRobot.B.x - rectaRobot.puntoMedio.x,
+                                                              -1.0*rectaRobot.B.y +rectaRobot.puntoMedio.y ));
+
+    int signoR = calcular_signoR(cuadranteC, tetaRobot, tita);
+
+    Point2f Pdirec_TdestR( signoR*(rectaRobot.distanciaDelaRecta/2)*cos(tita),
+                           signoR*(rectaRobot.distanciaDelaRecta/2)*sin(tita) );
+
+    //dibujar Puntos
+    if(Tools::general::DEBUG)
+    {
+        Point2f Pdirec_TdestR_1( Pdirec_TdestR.x + rectaDestino.A.x,
+                                 -1.0*Pdirec_TdestR.y + rectaDestino.A.y );
+        Point2f Pdirec_TdestR_2( Pdirec_TdestR.x + rectaRobot.puntoMedio.x,
+                                -1.0*(Pdirec_TdestR.y - rectaRobot.puntoMedio.y ));
+
+        Tools::OpenCV::dibujarPunto(mat, Pdirec_TdestR_1 );
+        Tools::OpenCV::dibujarPunto(mat, Pdirec_TdestR_2 );
+
+            if( diagonal )
+            {
+                Point2f PdirecROTADO = Tools::math::translateAPoint(Pdirec_TdestR);
+
+                Point2f PdirecROTADO_Transladado1 = Point2f( PdirecROTADO.x + rectaDestino.A.x,
+                                                             -1.0*PdirecROTADO.y + rectaDestino.A.y  );
+                Point2f PdirecROTADO_Transladado2 = Point2f( PdirecROTADO.x + rectaRobot.puntoMedio.x,
+                                                             -1.0*(PdirecROTADO.y - rectaRobot.puntoMedio.y ));
+
+                Tools::OpenCV::dibujarPunto(mat,
+                                            PdirecROTADO_Transladado1,
+                                            Scalar(0,255,255) );
+                Tools::OpenCV::dibujarPunto(mat,
+                                            PdirecROTADO_Transladado2,
+                                            Scalar(0,255,255) );
+            }
+    }
+    //dibujar Puntos
+
+    int cuadranteC_FINAL = Tools::math::cuadranteDeUnPunto( diagonal ?
+                                                              Tools::math::translateAPoint(Pdirec_TdestR)
+                                                              :
+                                                              Pdirec_TdestR);
+    if( diagonal )
+        system(QString("echo \""+QString::number(cuadranteC)+"\" >> /tmp/PruebasAngulo/"+QString::number(ID)+"/t.txt ").toUtf8().data());
 
     int distancia = 50;
     Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x - (distancia)*cos(angulo),
@@ -246,6 +275,7 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
     float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(rectaDestino, nuevaRectaRobot,
                                                                     false, true,
                                                                     frame,Scalar(255,0,0),true);
+
     bool correccionDeAngulo = false;
     switch (DireccionNominal)
     {
@@ -258,13 +288,17 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
             if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_II )
                 correccionDeAngulo = true;
         break;
-
+        //-------------------------------------------
         case Tools::general::NOR_ESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_II || cuadranteC_FINAL == Tools::math::Cuadrante_III )
+                correccionDeAngulo = true;
         break;
 
-        case Tools::general::SUR_ESTE:
+        case Tools::general::SUR_OESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
+            correccionDeAngulo = true;
         break;
-
+        //-------------------------------------------
         case Tools::general::OESTE:
             if(cuadranteC_FINAL == Tools::math::Cuadrante_I || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
                 correccionDeAngulo = true;
@@ -274,11 +308,15 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
             if(cuadranteC_FINAL == Tools::math::Cuadrante_II || cuadranteC_FINAL == Tools::math::Cuadrante_III )
                 correccionDeAngulo = true;
         break;
-
-        case Tools::general::SUR_OESTE:
+        //-------------------------------------------
+        case Tools::general::NOR_OESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_III || cuadranteC_FINAL == Tools::math::Cuadrante_IV )
+                correccionDeAngulo = true;
         break;
 
-        case Tools::general::NOR_OESTE:
+        case Tools::general::SUR_ESTE:
+            if(cuadranteC_FINAL == Tools::math::Cuadrante_II || cuadranteC_FINAL == Tools::math::Cuadrante_I )
+                correccionDeAngulo = true;
         break;
     }
 
@@ -529,10 +567,6 @@ void colorDetector_WORKER::run()
             }
             else
                 anotherRun = true;
-
-            /*
-            imshow("",*frame);
-            imshow("a", frame_sesgado);*/
         }
 
     }while(anotherRun);

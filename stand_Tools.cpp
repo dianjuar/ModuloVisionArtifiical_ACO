@@ -526,3 +526,12 @@ int math::cuadranteDeUnPunto(Point2f p)
 
     return Cuadrante_IV;
 }
+
+Point2f math::translateAPoint(Point2f p, float teta)
+{
+    float x = p.x,
+          y = p.y;
+
+    return Point2f( x*cos(teta) - y*sin(teta),
+                    x*sin(teta) + y*cos(teta));
+}

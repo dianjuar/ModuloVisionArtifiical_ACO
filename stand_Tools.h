@@ -77,6 +77,7 @@ public:
         const int Cuadrante_II  = 2;
         const int Cuadrante_III = 3;
         const int Cuadrante_IV  = 4;
+        const float GtoR_45     = (1/4)*M_PI;
 
         class circulo
         {
@@ -94,6 +95,7 @@ public:
         double distanciaEntre2Puntos(Point2f A, Point2f B);
         bool PointAisCloserTo(Point A, Point B, Point Destino);
         int cuadranteDeUnPunto(Point2f p);
+        Point2f translateAPoint( Point2f p, float teta = -(1.0/4.0)*M_PI );
         /////////////////////
         class lineaRecta
         {
