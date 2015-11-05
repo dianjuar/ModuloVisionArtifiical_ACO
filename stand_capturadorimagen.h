@@ -15,15 +15,11 @@ public:
     static int const Modo_Video=1;
     static int modo_elegido;
 
+    static Mat Imagen;
+    static Mat Imagen_Procesada;
+
     capturadorImagen(int modo=0, int devise=-1);
     ~capturadorImagen();
-
-    //getter
-    Mat getImagen(){ return Imagen; }
-    static Mat getImagen_procesada(){ return Imagen_P; }
-    static Mat* getImagen_pointer_procesada(){ return &Imagen_P; }
-    //setter
-    static void setImagen_procesada(Mat mat){ Imagen_P = mat; }
 
     int get_device(){ return devise; }
     bool isCamaraAbierta();    
@@ -38,15 +34,14 @@ public slots:
 
 signals:
         void tell();
+        void devise_Changed(Mat &frame);
 private:
 
     //sincronización del hilo
     QMutex m_mutex;
     bool thread_stop;
 
-    VideoCapture vc;
-    Mat Imagen;
-    static Mat Imagen_P;
+    VideoCapture vc;    
 
     //funcionamiento interno
     int devise;

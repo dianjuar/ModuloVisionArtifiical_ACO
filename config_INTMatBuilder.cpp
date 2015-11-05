@@ -4,6 +4,7 @@ using namespace CONFIG;
 
 Point INTMatBuilder::P_Fin;
 Point INTMatBuilder::P_Inicio;
+int INTMatBuilder::n;
 
 void INTMatBuilder::construir_INTMat_and_cartoon()
 {
@@ -152,7 +153,7 @@ void INTMatBuilder::read(const FileNode &node)
 
 void INTMatBuilder::buildQSINTmat()
 {
-    QSINT_mat = Tools::Cfunctions::IntMat2QString( INT_mat, n );
+    QSINT_mat = Tools::general::IntMat2QString( INT_mat, n );
 }
 
 void INTMatBuilder::Cartoon_dibujarEnsima(Mat &m)
@@ -234,6 +235,13 @@ void INTMatBuilder::set_P_Inicio(Point Inicio)
     }
 
 }
+
+bool INTMatBuilder::isTodoEnOrden()
+{
+    todoEnOrden = bool_settedPuntoF&&bool_settedPuntoI;
+    return todoEnOrden;
+}
+
 
 void INTMatBuilder::set_P_Fin(Point Fin)
 {

@@ -4,18 +4,18 @@ using namespace CONFIG::Network;
 
 void conexion_SMA::AnalizadorDeMensajes(QString msj)
 {
-    vector<QString> msjDividido = Tools::Cfunctions::split(msj, Tools::Network::GestionDeMensajes::Msj_divisor );
+    vector<QString> msjDividido = Tools::general::split(msj, Tools::Network::GestionDeMensajes::Msj_divisor );
 
     QString encabezado = msjDividido.at(0);
     QString cuerpo = msjDividido.at(1);
 
     //si le solicitan corregir trayectoria.
-    if( QString::compare(encabezado, Tools::Network::GestionDeMensajes::Msj_solicitudTrayectoria, Qt::CaseInsensitive ) == 0 )
+    if( QString::compare(encabezado, Tools::Network::GestionDeMensajes::Msj_SMAtoMDV_solicitudTrayectoria, Qt::CaseInsensitive ) == 0 )
     {
         /*SolCorTray -> RobotID _ DireccionNominal _ RobotPointNominal
          *si RobotPoint(-1,-1) es la primera vez que se solicita por lo tanto no se sabe cual es.*/
 
-        vector<QString> cuerpoVec = Tools::Cfunctions::split( cuerpo, Tools::Network::GestionDeMensajes::Msj_divisor_2 );
+        vector<QString> cuerpoVec = Tools::general::split( cuerpo, Tools::Network::GestionDeMensajes::Msj_divisor_2 );
 
         int RobotID = QString(cuerpoVec.at(0)).toInt();
         int direccionRobot_Nominal = QString(cuerpoVec.at(1)).toInt();
@@ -25,18 +25,22 @@ void conexion_SMA::AnalizadorDeMensajes(QString msj)
         if(RobotPoint_Nominal.x == -1 && RobotPoint_Nominal.y == -1) //primera vez
             RobotPoint_Nominal = INTMatBuilder::P_Inicio;
 
-        colorD->sesgador3colores[RobotID].corregirTrayectoria(direccionRobot_Nominal,RobotPoint_Nominal);
+        //después de procesada la información, pide que se haga la corrección de trayectoria.
+        emit EMITIRsolicitud_CorreccionTrayectoria(RobotID,direccionRobot_Nominal,
+                                                   RobotPoint_Nominal.x,RobotPoint_Nominal.y);
+    }
+    else if( QString::compare( Tools::Network::GestionDeMensajes::Msj_SMAtoMDV_correctedTrayectoriaAPPLIED,
+                               encabezado, Qt::CaseInsensitive ) == 0 )
+    {
+        int RobotID = cuerpo.toInt();
+
+        colorDetector->eliminarRecta( RobotID );
     }
 }
 
-conexion_SMA::conexion_SMA(QString serverDir, coTra::colorDetector *colorD):DataClient(serverDir,port)
+conexion_SMA::conexion_SMA(QString serverDir, coTra::colorDetector_MANAGER *colorDetector):Client(serverDir,port)
 {
-    this->colorD = colorD;
-
-   /* for (int i = 0; i < colorD->get_numeroDecolores(); i++)
-        connect( colorD->sesgador3colores, SIGNAL(correccionDeTrayectoriaProcesada(int,float,float)),
-                 this, SLOT(recibirResultado_SolicitudCorreccionDeTrayectoria(int,float,float)) )*/
-
+    this->colorDetector = colorDetector;
 }
 
 void conexion_SMA::write(FileStorage &fs) const
@@ -53,7 +57,8 @@ void conexion_SMA::read(const FileNode &node)
     host = QString::fromUtf8( server.c_str() );
 }
 
-void conexion_SMA::recibirResultado_SolicitudCorreccionDeTrayectoria(int RobotID, float correc_grados, float correc_dist)
+void conexion_SMA::RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int robotID, float teta, double distanciaDesface, float anguloDesface)
 {
-
+    enviar( Tools::Network::GestionDeMensajes::Enviar_TOSMA_MSJ_TrayectoriaCorrected(robotID,teta, distanciaDesface, anguloDesface) );
 }
+

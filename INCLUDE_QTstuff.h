@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMutex>
 #include <QTcpSocket>
+#include <QAbstractSocket>
 #include <QMovie>
 #include <QTextCodec>
 #include <QPushButton>
@@ -16,6 +17,7 @@
 #include <QMouseEvent>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QMetaType>
 
 #include <iostream>
 using namespace std;

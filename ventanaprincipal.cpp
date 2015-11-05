@@ -15,8 +15,6 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     QTextCodec::setCodecForCStrings(linuxCodec);
     QTextCodec::setCodecForLocale(linuxCodec);*/
 
-    QString a;
-
     ui->setupUi(this);
 
     config_index = 0;
@@ -24,12 +22,10 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
     //ui->tabWidget->setCurrentIndex( config_index );
     FASE_NumeroFases = ui->tabWidget->count();
 
-    int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
-
     cap = new STAND::capturadorImagen( modoElegido, ui->Q_Ndispositivo_SpinBox->value() );
 
     crop = new CONFIG::cropper( ui->slider_CannyU_1->value(), ui->slider_CannyU_2->value() );
-    colorDetect = new CONFIG::coTra::colorDetector();
+    colorDetect = new CONFIG::coTra::colorDetector_MANAGER();
     umb = new CONFIG::umbralizador( ui->slider_umbralBlackAndWhite->value() );
     PNcuadros = new CONFIG::partirNcuadros( ui->slider_n->value() );
     IntMatB = new CONFIG::INTMatBuilder(umb->get_BlackAndWhite_SEGUIMIENTO(), PNcuadros->get_n() );
@@ -72,7 +68,7 @@ VentanaPrincipal::VentanaPrincipal(QWidget *parent) :
 }
 
 void VentanaPrincipal::set_connects()
-{
+{   
     //el hilo hará una llamada cada vez que capture una imagen por la cámara y la ventana principal atenderá esa llamada
     //OpenCv -> Qlabel
     connect(cap, SIGNAL(tell()),
@@ -99,6 +95,29 @@ void VentanaPrincipal::set_connects()
     connect(ui->label_display_SesgoNormal3, SIGNAL(clicked(int,int)),this,
             SLOT(Color_selected_click(int,int)) );
     //-------------------------------------
+    //Connect la llegada de las peticiones de corrección de trayectoria con el procesador
+    connect(c_SMA, SIGNAL(EMITIRsolicitud_CorreccionTrayectoria(int,int,int,int)),
+            colorDetect,SLOT(RECIBIRsolicitud_CorreccionTrayectoria(int,int,int,int)) );
+
+    //Connect la RESPUESTA a la llegada de las peticiones de corrección de trayectoria
+    connect(colorDetect, SIGNAL(DESPACHARsolicitud_CorreccionTrayectoria(int,float,double,float)),
+            c_SMA, SLOT(RECIBIR_DESPACHO_solicitud_CorreccionTrayectoria(int,float,double,float)));
+    //-------------------------------------
+
+}
+
+void VentanaPrincipal::dibujarRectas(Mat &m)
+{
+    vector<Tools::math::lineaRecta> rs = colorDetect->getRectasToDraw();
+
+    if(rs.empty())
+        return;
+
+    for (int i = 0; i < rs.size(); i++)
+    {
+        Tools::math::lineaRecta r = rs.at(i);
+        Tools::OpenCV::dibujarRecta(m, r, false, false);
+    }
 }
 
 void VentanaPrincipal::set_labelDisplay(Mat m)
@@ -114,11 +133,15 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
             if(!calibrando)
                 crop->cortarImagen(m);
 
+            Mat imagen = m.clone();
+
             if(ui->checkBox_aftercalibracion->isChecked()) //dibjuar toda la parnaferlaria.
-                IntMatB->Cartoon_dibujarEnsima(m);
+            {
+                IntMatB->Cartoon_dibujarEnsima(imagen);
+                dibujarRectas( imagen );
+            }
 
-
-            ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(m, !calibrando, 500 ) );
+            ui->label_displayF0->setPixmap( Tools::OpenCV::Mat2QPixmap(imagen, !calibrando, 500 ) );
             break;
         }
 
@@ -129,11 +152,11 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
 
         case FASE_cortarContenido:
         {
-            crop->calibracion( m );
+            crop->calibrar( m );
             ui->label_displayF1->setPixmap( Tools::OpenCV::Mat2QPixmap( crop->get_ImagenRayada() , 2)  );
             ui->label_cannyF1->setPixmap( Tools::OpenCV::Mat2QPixmap( crop->get_ImagenCanny(),2 ) );
 
-            if(crop->hayContenedor())
+            if(crop->isTodoEnOrden())
             {
                 ui->label_errorText_F1->setText("Todo en Orden");
                 ui->label_errorImg_F1->setPixmap( QPixmap("./media/TestConnection/Right.png")  );
@@ -149,8 +172,8 @@ void VentanaPrincipal::set_labelDisplay(Mat m)
         case FASE_seleccinColores:
         {
             colorDetect->calibrar(config_indexSESGO);
-            Mat binary = colorDetect->sesgador3colores[ config_indexSESGO ].get_frame_thresholded();
-            Mat sesgado = colorDetect->sesgador3colores[ config_indexSESGO ].get_frame_sesgado();
+            Mat binary = colorDetect->colorDetectorWORKERS[ config_indexSESGO ]->get_frame_thresholded();
+            Mat sesgado = colorDetect->colorDetectorWORKERS[ config_indexSESGO ]->get_frame_sesgado();
 
             switch (config_indexSESGO)
             {
@@ -211,7 +234,6 @@ VentanaPrincipal::~VentanaPrincipal()
     delete ui;
 }
 
-
 void VentanaPrincipal::setted_PuntoI(bool b)
 {
     if(b)
@@ -233,7 +255,7 @@ void VentanaPrincipal::Color_selected_click(int x, int y)
     x = x*EscalaVisualizacion_FaseSegmentacion;
     y = y*EscalaVisualizacion_FaseSegmentacion;
 
-    colorDetect->sesgador3colores[config_indexSESGO].set_seedPoint( Point(x,y) );
+    colorDetect->colorDetectorWORKERS[config_indexSESGO]->set_seedPoint( Point(x,y) );
 }
 
 void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
@@ -244,9 +266,8 @@ void VentanaPrincipal::on_Q_Ndispositivo_SpinBox_valueChanged(int arg1)
 
 void VentanaPrincipal::listen_matFromVideoCapture()
 {
-    set_labelDisplay( cap->getImagen() );
+    set_labelDisplay( cap->Imagen );
 }
-
 
 void VentanaPrincipal::set_PorcenAvance_IN_progressBar(int NFaseCalib)
 {
@@ -292,10 +313,10 @@ void VentanaPrincipal::AfterCalibracion()
     calibrando = false;
 
     c_ACO->connectToHost();
-    c_ACO->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
+    if(c_ACO->isConnected())
+        c_ACO->enviarInformacion(IntMatB->get_QSINT_mat(), calib->get_distanciaEntreCuadros_REAL() );
 
-    c_SMA->connectToHost(true);
-
+    c_SMA->connectToHost();
 }
 
 void VentanaPrincipal::inhabilitarTodasLasPestanas()
@@ -335,7 +356,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
        case FASE_cortarContenido:
        {
-            if(crop->hayContenedor())            
+            if(crop->isTodoEnOrden())
                pasarALaSiguienteEtapa();
 
             break;
@@ -357,7 +378,7 @@ void VentanaPrincipal::on_btn_siguiente_clicked()
 
         case FASE_InicioFin:
         {
-            if(IntMatB->get_todoEnOrden())
+            if(IntMatB->isTodoEnOrden())
             {
                 IntMatB->buildQSINTmat();
                 pasarALaSiguienteEtapa();
@@ -463,10 +484,9 @@ void VentanaPrincipal::Mouse_Pressed_DeteccionCirculos(int x, int y)
 
 void VentanaPrincipal::on_actionCargar_Configuraci_n_triggered()
 {
+    //para todos los hilos...
     GCparam->cargar();
     AfterCalibracion();
-
-
 }
 
 void VentanaPrincipal::on_pushButton_F1_1_buscarArchivo_clicked()

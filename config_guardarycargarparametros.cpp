@@ -12,7 +12,7 @@ const QString guardarYCargarParametros::QScSMA = QString("cSMA");
 const QString guardarYCargarParametros::QSINTmB = QString("INTmB");
 
 guardarYCargarParametros::guardarYCargarParametros(STAND::capturadorImagen *cap, calibrador *calib, cropper *crop,
-                                                   coTra::colorDetector *color, INTMatBuilder *INTmB,
+                                                   coTra::colorDetector_MANAGER *color, INTMatBuilder *INTmB,
                                                    Network::conexion_ACO *matSender, Network::conexion_SMA *cSMA)
 {
     this->cap = cap;
@@ -59,6 +59,8 @@ void guardarYCargarParametros::cargar()
 
     FileNode n = fs[QScap.toUtf8().data()];
     cap->read( n );
+
+    QThread::msleep(500);
 
     n = fs[QScalib.toUtf8().data()];
     calib->read( n );

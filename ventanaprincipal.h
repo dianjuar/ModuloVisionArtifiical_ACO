@@ -14,6 +14,7 @@
 #include "config_guardarycargarparametros.h"
 #include "config_conexion_SMA.h"
 #include "config_colordetector.h"
+#include "config_configbase.h"
 
 namespace Ui
 {
@@ -25,10 +26,6 @@ class VentanaPrincipal : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit VentanaPrincipal(QWidget *parent = 0);
-    void set_labelDisplay( Mat );
-    ~VentanaPrincipal();
-
     static int FASE_NumeroFases;
     static const int FASE_Color_NumeroFases = 3;
 
@@ -42,7 +39,15 @@ public:
     static const int FASE_EnvioEstacionCentral = 7;
     static const int FASE_EnvioSMA = 8;
 
+    static const int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+
     static const int EscalaVisualizacion_FaseSegmentacion = 2;
+
+    explicit VentanaPrincipal(QWidget *parent = 0);
+    ~VentanaPrincipal();
+
+    void set_labelDisplay( Mat );
+
     
 private slots:
     void setted_PuntoI(bool);
@@ -83,7 +88,7 @@ private:
     //objetos de las clases necesarias para la calibración
     STAND::capturadorImagen *cap;
     CONFIG::cropper *crop;
-    CONFIG::coTra::colorDetector *colorDetect;
+    CONFIG::coTra::colorDetector_MANAGER *colorDetect;
     CONFIG::umbralizador *umb;
     CONFIG::partirNcuadros *PNcuadros;
     CONFIG::INTMatBuilder *IntMatB;
@@ -100,6 +105,8 @@ private:
     void AfterCalibracion();
     void inhabilitarTodasLasPestanas();
     void set_connects();
+
+    void dibujarRectas(Mat &m);
 
     int config_index;
     int config_indexSESGO;
