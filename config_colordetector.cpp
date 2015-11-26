@@ -152,7 +152,17 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
     Tools::OpenCV::DetectarCirculos( frame_sesgado, ListacirculosDetectados);
 
     if( ListacirculosDetectados.size() != 2 )// esto debe cambiarse para que detecte 1 solo circulo.
+    {
+        if( deteccionErrada++ > 10)
+        {
+            imshow("debug_sesgo",frame_sesgado);
+            imshow("debug_blancoYNegro",frame_thresholded);
+        }
+
         return false;
+    }
+
+    deteccionErrada = 0;
 
     int radio1 = ListacirculosDetectados[0][2];
     Point centro1(ListacirculosDetectados[0][0] + rectanguloSesgador.x,
@@ -469,6 +479,7 @@ colorDetector_WORKER::colorDetector_WORKER(int ID, const int *low_diff, const in
 
     Nfoto = 0;
     isPeticion = false;
+    deteccionErrada = 0;
 }
 
 void colorDetector_WORKER::calibrar()
@@ -552,14 +563,14 @@ void colorDetector_WORKER::run()
                                                               teta,
                                                               direccionRobot_Nominal);
 
-                if( Tools::general::DEBUG )
+                /*if( Tools::general::DEBUG )
                 {
                     imshow("",imToDraw);
                     guardarImagenes(imToDraw,
                                     teta,
                                     angulo_desface,
                                     Distancia_desface);
-                }
+                }*/
 
                 emit DESPACHAR_SolicitudDeTratectoria(ID,teta,Distancia_desface, angulo_desface);
 

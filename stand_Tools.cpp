@@ -4,7 +4,7 @@
 using namespace Tools;
 
 bool general::DEBUG = true;
-
+int OpenCV::numeroDeVecesDetectadoUnCirculo = 0;
 Mat OpenCV::tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur)
 {
     Mat aux;
@@ -113,8 +113,8 @@ void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, i
         vector<Vec3f> circulosDetectados;
 
         //acomodar con los parametros correctos
-        int param1 = 116;
-        int param2 = 20;
+        int param1 = 116;//79
+        int param2 = 20;//23
 
         HoughCircles( matGrayScale,
                       circulosDetectados,
@@ -160,15 +160,19 @@ void OpenCV::DetectarCirculos(Mat mat, vector<Vec3f> &ListacirculosDetectados, i
                     }
 
                     if(circuloUnico)
-                        ListacirculosDetectados.push_back( Cdetectado );
+                        ListacirculosDetectados.push_back(   Cdetectado );
                 }
             }
         }
 
 
     qDebug()<<"Ciruclos Detectados"<<ListacirculosDetectados.size();
-    if( ListacirculosDetectados.size() > n)
+
+    if( ListacirculosDetectados.size() > n || numeroDeVecesDetectadoUnCirculo++ > 10)
+    {
         ListacirculosDetectados = vector<Vec3f>();
+        numeroDeVecesDetectadoUnCirculo = 0;
+    }
 
     if(dibujar)
         dibujarCirculos(mat,ListacirculosDetectados);

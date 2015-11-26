@@ -22,6 +22,7 @@ namespace math
 class OpenCV
 {
 public:
+    static int numeroDeVecesDetectadoUnCirculo;
     static Mat tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur=true); //pasar a escala de grises y aplicar guassianBlur
 
     static QPixmap Mat2QPixmap(Mat m, bool resize = false, int x=400);

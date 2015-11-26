@@ -75,6 +75,8 @@ namespace CONFIG
             const Mat *kernel_rectangular;
             const Mat *kernel_ovalado;
 
+            int deteccionErrada;
+
             Mat *frame;
             Mat frame_hsv;
             Mat mask;

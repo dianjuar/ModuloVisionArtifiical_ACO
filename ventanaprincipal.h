@@ -39,7 +39,7 @@ public:
     static const int FASE_EnvioEstacionCentral = 7;
     static const int FASE_EnvioSMA = 8;
 
-    static const int modoElegido = STAND::capturadorImagen::Modo_ImagenStatica;
+    static const int modoElegido = STAND::capturadorImagen::Modo_Video;
 
     static const int EscalaVisualizacion_FaseSegmentacion = 2;
 
