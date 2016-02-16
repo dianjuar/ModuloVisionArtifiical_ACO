@@ -38,7 +38,7 @@ QString conexion_ACO::prepararMSJ_enviarMatrix(int **mat, float dist, int n)
 
 QString conexion_ACO::prepararMSJ_enviarMatrix(QString mat, float dist)
 {
-    QString sms = mat + Tools::Network::GestionDeMensajes::Msj_divisor +
+    QString sms = mat + Tools::Network::GestionDeMensajes::Msj_divisor_2 +
                   QString::number(dist);
 
     return sms;
@@ -48,5 +48,3 @@ void conexion_ACO::AnalizadorDeMensajes(QString msj)
 {
     qDebug()<<"DIOS MEEEEOOOOO";
 }
-
-
