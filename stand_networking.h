@@ -85,9 +85,6 @@ namespace Tools
             static const QString Msj_cerrar;
             static const QString Msj_conectado;
             static QString Enviar_MSJ_conectado();
-            ///Mensajes TO ACO
-            static const QString MSJEnvio_Prefijo_Mat;
-            static const QString MSJEnvio_Prefijo_Dist;
             ///Mensajes TO SMA
             static const QString Msj_SMAtoMDV_solicitudTrayectoria;
             static const QString Msj_SMAtoMDV_correctedTrayectoriaAPPLIED;

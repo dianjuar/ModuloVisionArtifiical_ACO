@@ -48,9 +48,6 @@ QString GestionDeMensajes::Enviar_MSJ_conectado()
 
 ///////////////***********************/////////////////////
 const QString GestionDeMensajes::Msj_conectado = "connect";
-///Mensajes TO ACO
-const QString GestionDeMensajes::MSJEnvio_Prefijo_Mat = "Mat";
-const QString GestionDeMensajes::MSJEnvio_Prefijo_Dist = "Dist";
 ///Mensajes TO SMA
 const QString GestionDeMensajes::Msj_SMAtoMDV_solicitudTrayectoria = "CorrectMe";
 const QString GestionDeMensajes::Msj_SMAtoMDV_correctedTrayectoriaAPPLIED = "CorrectFIN";
@@ -91,7 +88,7 @@ void Client::connectToHost()
         connect(&socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
         connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 
-        enviar( Tools::Network::GestionDeMensajes::Enviar_MSJ_conectado() );//el error está aquí
+        //enviar( Tools::Network::GestionDeMensajes::Enviar_MSJ_conectado() );//el error está aquí
     }
     else
     {

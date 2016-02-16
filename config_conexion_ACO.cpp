@@ -33,26 +33,13 @@ void conexion_ACO::read(const FileNode &node)
 
 QString conexion_ACO::prepararMSJ_enviarMatrix(int **mat, float dist, int n)
 {
-    QString sms=Tools::Network::GestionDeMensajes::MSJEnvio_Prefijo_Mat;
-
-    sms.append( Tools::general::IntMat2QString( mat, n ));
-
-    sms.append( Tools::Network::GestionDeMensajes::Msj_divisor );
-
-    sms.append( Tools::Network::GestionDeMensajes::MSJEnvio_Prefijo_Dist);
-    sms.append( QString::number(dist) );
-
-    return sms;
+    return prepararMSJ_enviarMatrix( Tools::general::IntMat2QString( mat, n ),  dist );
 }
 
 QString conexion_ACO::prepararMSJ_enviarMatrix(QString mat, float dist)
 {
-    QString sms = Tools::Network::GestionDeMensajes::MSJEnvio_Prefijo_Mat;
-    sms.append( mat );
-    sms.append( Tools::Network::GestionDeMensajes::Msj_divisor );
-
-    sms.append( Tools::Network::GestionDeMensajes::MSJEnvio_Prefijo_Dist);
-    sms.append( QString::number(dist) );
+    QString sms = mat + Tools::Network::GestionDeMensajes::Msj_divisor +
+                  QString::number(dist);
 
     return sms;
 }
