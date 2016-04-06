@@ -24,7 +24,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -297,7 +297,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>/home/diego_juliao/ProgramerProyects/TESIS/Modulo Vision Artificial/build-ModuloDeVisionArtificial_1_1+GIT-Desktop_Qt_5_5_0_GCC_64bit-Release/Calibracion/camera.yml</string>
+             <string>/home/dianjuar/ProgramerProjects/ModuloVisionArtifiical/build-ModuloDeVisionArtificial_1_1+GIT-Desktop_Qt_5_5_1_GCC_64bit-Debug/Calibracion/camera.yml</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
