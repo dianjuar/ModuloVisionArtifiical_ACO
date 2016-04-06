@@ -27,10 +27,10 @@ DataRecibe::DataRecibe(QTcpSocket *socket)
 
 void DataRecibe::readyRead()
 {
-    qDebug()<<("*********Leyendo**********");
+    //qDebug()<<("*********Leyendo**********");
     QString s( socket->readAll() );
-    qDebug()<<s;
-    qDebug()<<("********Analizando***********");
+   // qDebug()<<s;
+   // qDebug()<<("********Analizando***********");
 
     AnalizadorDeMensajes(s);
 }
