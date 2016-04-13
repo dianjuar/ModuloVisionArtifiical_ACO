@@ -5,13 +5,13 @@ using namespace Tools;
 
 bool general::DEBUG = true;
 int OpenCV::numeroDeVecesDetectadoUnCirculo = 0;
-Mat OpenCV::tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur)
+Mat OpenCV::tratamientoDeImagenStantdar(Mat source, bool withGaussianBlur, int kernel, int sigmaXY)
 {
     Mat aux;
     cvtColor(source,aux,CV_RGBA2GRAY);
 
     if(withGaussianBlur)
-        GaussianBlur(aux,aux,Size(9,9),2,2);//se ha jugado con anterioridad estos parametros y dan buenos resultados para el propósito que se desea
+        GaussianBlur(aux,aux,Size(kernel,kernel),sigmaXY,sigmaXY);//se ha jugado con anterioridad estos parametros y dan buenos resultados para el propósito que se desea
 
     return aux;
 }
