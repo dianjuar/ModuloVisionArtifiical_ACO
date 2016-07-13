@@ -189,7 +189,7 @@ bool colorDetector_WORKER::detectarCirculos(Tools::math::circulo &base, Tools::m
 
 float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
                                                    Tools::math::lineaRecta rectaRobot,
-                                                   Tools::math::lineaRecta rectaDestino,
+                                                   Tools::math::lineaRecta rectaOrientacion,
                                                    float tetaRobot,
                                                    int DireccionNominal)
 {
@@ -223,14 +223,15 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
     //el punto A siempre será a donde debe llegar de la rectaDistancia
     //el punto A siempre será la base y el puntoB será el direccional
 
-    //tita es el ángulo que forma la rectaDestino con el eje X
+    //tita es el ángulo que forma la rectaOrientacion con el eje X
     float tita = Tools::math::lineaRecta::anguloEntre2Rectas(Tools::math::lineaRecta::ejeX(rectaRobot.puntoMedio),
-                                                             rectaDestino,
+                                                             rectaOrientacion,
                                                              true,true,
                                                              &mat,Scalar(12,205,235));
-
-    int cuadranteC = Tools::math::cuadranteDeUnPunto( Point2f(rectaRobot.B.x - rectaRobot.puntoMedio.x,
-                                                              -1.0*rectaRobot.B.y +rectaRobot.puntoMedio.y ));
+    //mover el punto de direccional al origen
+    Point2f direccionalToOrigin = Point2f(rectaRobot.B.x - rectaRobot.puntoMedio.x,
+                                          -1.0*rectaRobot.B.y +rectaRobot.puntoMedio.y );
+    int cuadranteC = Tools::math::cuadranteDeUnPunto( direccionalToOrigin );
 
     int signoR = calcular_signoR(cuadranteC, tetaRobot, tita);
 
@@ -240,8 +241,8 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
     //dibujar Puntos
     if(Tools::general::DEBUG)
     {
-        Point2f Pdirec_TdestR_1( Pdirec_TdestR.x + rectaDestino.A.x,
-                                 -1.0*Pdirec_TdestR.y + rectaDestino.A.y );
+        Point2f Pdirec_TdestR_1( Pdirec_TdestR.x + rectaOrientacion.A.x,
+                                 -1.0*Pdirec_TdestR.y + rectaOrientacion.A.y );
         Point2f Pdirec_TdestR_2( Pdirec_TdestR.x + rectaRobot.puntoMedio.x,
                                 -1.0*(Pdirec_TdestR.y - rectaRobot.puntoMedio.y ));
 
@@ -252,8 +253,8 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
             {
                 Point2f PdirecROTADO = Tools::math::translateAPoint(Pdirec_TdestR);
 
-                Point2f PdirecROTADO_Transladado1 = Point2f( PdirecROTADO.x + rectaDestino.A.x,
-                                                             -1.0*PdirecROTADO.y + rectaDestino.A.y  );
+                Point2f PdirecROTADO_Transladado1 = Point2f( PdirecROTADO.x + rectaOrientacion.A.x,
+                                                             -1.0*PdirecROTADO.y + rectaOrientacion.A.y  );
                 Point2f PdirecROTADO_Transladado2 = Point2f( PdirecROTADO.x + rectaRobot.puntoMedio.x,
                                                              -1.0*(PdirecROTADO.y - rectaRobot.puntoMedio.y ));
 
@@ -275,14 +276,15 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
         system(QString("echo \""+QString::number(cuadranteC)+"\" >> /tmp/PruebasAngulo/"+QString::number(ID)+"/t.txt ").toUtf8().data());
 
     int distancia = 50;
-    Tools::math::lineaRecta nuevaRectaRobot(Point( rectaDestino.A.x - (distancia)*cos(angulo),
-                                                   rectaDestino.A.y - (distancia)*sin(angulo)),
-                                            Point( rectaDestino.A.x + (distancia)*cos(angulo),
-                                                   rectaDestino.A.y + (distancia)*sin(angulo) ) );
+    //el punto A siempre será a donde debe llegar
+    Tools::math::lineaRecta nuevaRectaRobot(Point( rectaOrientacion.A.x - (distancia)*cos(angulo),
+                                                   rectaOrientacion.A.y - (distancia)*sin(angulo)),
+                                            Point( rectaOrientacion.A.x + (distancia)*cos(angulo),
+                                                   rectaOrientacion.A.y + (distancia)*sin(angulo) ) );
 
     Tools::OpenCV::dibujarRecta(*frame, nuevaRectaRobot);
 
-    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(rectaDestino, nuevaRectaRobot,
+    float tetaDesface = Tools::math::lineaRecta::anguloEntre2Rectas(rectaOrientacion, nuevaRectaRobot,
                                                                     false, true,
                                                                     frame,Scalar(255,0,0),true);
 
@@ -337,9 +339,9 @@ float colorDetector_WORKER::calcular_anguloDesface(Mat &mat,
         tetaDesface = (tetaDesface + vuelta );
     }
 
-    Tools::math::lineaRecta A=rectaDestino, B=nuevaRectaRobot;
+    Tools::math::lineaRecta A=rectaOrientacion, B=nuevaRectaRobot;
     Tools::math::lineaRecta::OrganizarRectas(A,B);
-    tetaDesface = tetaDesface * (A==rectaDestino  ? 1.0:-1.0);
+    tetaDesface = tetaDesface * (A==rectaOrientacion  ? 1.0:-1.0);
 
     if(Tools::general::DEBUG)
         qDebug()<<"AnguloDesface:"<<tetaDesface;
@@ -428,6 +430,8 @@ float colorDetector_WORKER::calcular_teta(Mat &m, Tools::math::lineaRecta rectaR
     return teta * (A==rectaRobot ? 1:-1);
 }
 
+
+//coordenadas polares
 float colorDetector_WORKER::calcular_signoR(int cuadranteC, float teta, float tita)
 {
     switch (cuadranteC)
@@ -451,7 +455,8 @@ float colorDetector_WORKER::calcular_signoR(int cuadranteC, float teta, float ti
 
         case Cuadrante_IV:
             if( tita > 0 && teta < 0 )
-                return -1.0;        break;
+                return -1.0;
+        break;
     }
 
     return 1.0;
@@ -541,25 +546,25 @@ void colorDetector_WORKER::run()
                 int tamano_cuadros_imgReal = frame->cols/ INTMatBuilder::n;
 
                 //el punto A siempre será a donde debe llegar
-                Tools::math::lineaRecta rectaRobot_Destino( Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
+                Tools::math::lineaRecta recta_orientacion( Point(tamano_cuadros_imgReal*(RobotPoint_Nominal.x + 0.5),
                                                                   tamano_cuadros_imgReal*(RobotPoint_Nominal.y + 0.5)),
                                                             Point(rectaRobot.puntoMedio.x,
                                                                   rectaRobot.puntoMedio.y));
 
-                rectaToDraw = rectaRobot_Destino;
+                rectaToDraw = recta_orientacion;
 
                 Mat imToDraw = Tools::general::DEBUG ? *frame:frame->clone();
 
                 float teta = calcular_teta(imToDraw,
-                                           rectaRobot,rectaRobot_Destino);
+                                           rectaRobot,recta_orientacion);
 
                 double Distancia_desface =
-                        procesar_DistanciaARecorrer( calibrador::distanciaReal_2PuntosPixeles(rectaRobot_Destino.A, rectaRobot_Destino.B),
+                        procesar_DistanciaARecorrer( calibrador::distanciaReal_2PuntosPixeles(recta_orientacion.A, recta_orientacion.B),
                                                     rectaRobot,
-                                                    rectaRobot_Destino);
+                                                    recta_orientacion);
 
                 float angulo_desface = calcular_anguloDesface(imToDraw,
-                                                              rectaRobot,rectaRobot_Destino,
+                                                              rectaRobot,recta_orientacion,
                                                               teta,
                                                               direccionRobot_Nominal);
 
