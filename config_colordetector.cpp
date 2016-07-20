@@ -514,6 +514,13 @@ void colorDetector_WORKER::set_seedPoint(Point p)
     minMaxLoc(channels[0], &this->l_h, &this->h_h, NULL, NULL, InputMask );
     minMaxLoc(channels[1], &this->l_s, &this->h_s, NULL, NULL, InputMask );
 
+    qDebug()<<"h_h:"<<h_h;
+    qDebug()<<"l_h:"<<l_h;
+    qDebug()<<"h_s:"<<h_s;
+    qDebug()<<"l_s:"<<l_s;
+    qDebug()<<"--------------";
+
+
 }
 
 void colorDetector_WORKER::corregirTrayectoria(const int direccionRobot_Nominal, const Point RobotPoint_Nominal)

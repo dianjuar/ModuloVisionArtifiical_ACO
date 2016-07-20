@@ -25,9 +25,9 @@ public:
 
     bool get_todoEnOrden(){ return todoEnOrden; }
 
-    static Point pixelPoint2realPoint(Point Ppx);
+    static Point2f pixelPoint2realPoint(Point2f Ppx, bool corregir=true);
     static double distanciaReal_2PuntosReales(Point2f P_RealA, Point2f P_RealB );
-    static double distanciaReal_2PuntosPixeles( Point Px_A, Point Px_B  );
+    static double distanciaReal_2PuntosPixeles(Point Px_A, Point Px_B, bool corregir=true);
 
     float get_distanciaEntreCuadros_REAL();
 
@@ -41,6 +41,14 @@ private :
 
     static double C22, C13, C32, C12, C33, C23;
     static double C11, C31, C21;
+
+    static double K1, K2;
+    static Mat distortion_coefficients, intrinsic;
+
+    static Point2f corregirDistorcion(Point2f p);
+    static Point2f normalizarPunto( Point2f p );
+    static Point2f corregirDistorcion_Radial(Point2f pNorm  );
+    static Point2f desnormalizarPunto(Point2f p);
 };
 
 }
